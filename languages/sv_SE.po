@@ -1,0 +1,337 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: IIS Zonemaster\n"
+"POT-Creation-Date: 2016-10-13 16:36+0200\n"
+"PO-Revision-Date: 2016-10-13 16:36+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: style.css\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#. Description of the plugin/theme
+#: header.php:21 zonemaster/class-zonemaster.php:616
+msgid "Zonemaster"
+msgstr "Zonemaster"
+
+#: header.php:39
+msgid ""
+"Config error! Polylang plugin is not active OR you havent choosen a default "
+"language"
+msgstr ""
+"Fel i konfigurationen! Polylang plugginet är inte aktiverat ELLER så är inte "
+"ett standardspråk valt."
+
+#: header.php:56 zonemaster/page-start.php:277
+msgid "Domain check"
+msgstr "Domäntest"
+
+#: header.php:59 zonemaster/class-zonemaster.php:897
+#: zonemaster/page-start.php:280
+msgid "Pre-delegated domain check"
+msgstr "Odelegerat domäntest"
+
+#: inc/scripts.php:30
+msgid "Test done. Waiting on results"
+msgstr "Testet är klart. Vi väntar på resultatet."
+
+#: inc/scripts.php:31
+msgid "This field is required"
+msgstr "Det här fältet behöver vara ifyllt"
+
+#: inc/scripts.php:32
+msgid "Fetching data.."
+msgstr "Hämtar data…"
+
+#: inc/scripts.php:33
+msgid "Error then trying to get parent zone data"
+msgstr "Ett fel uppstod när vi försökte hämta data från parent zone"
+
+#: inc/scripts.php:34
+msgid "Incorrect IP-address:"
+msgstr "Felaktig IP-adress:"
+
+#: inc/scripts.php:35
+msgid "Starting test.."
+msgstr "Startar testet…"
+
+#: inc/scripts.php:36
+msgid "Running test.."
+msgstr "Kör tester.."
+
+#: inc/scripts.php:37
+msgid "Something actually went wrong. Error :("
+msgstr "Något gick tyvärr fel. :("
+
+#: inc/scripts.php:38
+msgid "Copied!"
+msgstr "Kopierad!"
+
+#: inc/scripts.php:39
+msgid "Press"
+msgstr "Tryck"
+
+#: inc/scripts.php:40
+msgid "to"
+msgstr "för att"
+
+#: inc/scripts.php:41 zonemaster/class-zonemaster.php:856
+msgid "Copy"
+msgstr "Kopiera"
+
+#: menuparts/menu.php:5
+msgid "The Main Menu"
+msgstr "Huvudmenyn"
+
+#: zonemaster/class-zonemaster.php:594
+msgid "Option - check domain with "
+msgstr "Alternativ - kontrollera domän med "
+
+#: zonemaster/class-zonemaster.php:616
+msgid "IIS presents"
+msgstr "IIS presenterar"
+
+#: zonemaster/class-zonemaster.php:616 zonemaster/class-zonemaster.php:897
+msgid "with"
+msgstr "med"
+
+#: zonemaster/class-zonemaster.php:616
+msgid "Zonemaster engine"
+msgstr "Zonemaster testmotor "
+
+#: zonemaster/class-zonemaster.php:630
+msgid "Sorry, API is currently offline. Try again in a while."
+msgstr ""
+"Tyvärr är API som driver testmotorn just nu offline. Prova att ladda om "
+"sidan om en stund."
+
+#: zonemaster/class-zonemaster.php:681
+msgid "In a short while your test will be ready at "
+msgstr "Om ett par minuter kommer testet att finnas färdigt på "
+
+#: zonemaster/class-zonemaster.php:686
+msgid "Click the link to refresh the status of your test."
+msgstr "Klicka på länken för att uppdatera status för testet."
+
+#: zonemaster/class-zonemaster.php:695
+msgid "Currently checking"
+msgstr "Testar just nu"
+
+#: zonemaster/class-zonemaster.php:706
+msgid "Cancel test mode"
+msgstr "Avbryt testet"
+
+#: zonemaster/class-zonemaster.php:792 zonemaster/class-zonemaster.php:1192
+msgid "Contains warnings!"
+msgstr "Innehåller varningar!"
+
+#: zonemaster/class-zonemaster.php:797 zonemaster/class-zonemaster.php:1212
+msgid "Contains errors!"
+msgstr "Innehåller fel!"
+
+#: zonemaster/class-zonemaster.php:802 zonemaster/class-zonemaster.php:1202
+msgid "Contains critical errors!"
+msgstr "Innehåller kritiska fel!"
+
+#: zonemaster/class-zonemaster.php:807 zonemaster/class-zonemaster.php:812
+msgid "All is well!"
+msgstr "Allt är bra!"
+
+#: zonemaster/class-zonemaster.php:817 zonemaster/class-zonemaster.php:1242
+msgid "Sorry, we could not determ test results"
+msgstr "Tyvärr kunde vi inte leverera ett testresultat."
+
+#: zonemaster/class-zonemaster.php:826
+msgid ""
+"Test is not yet completely done, refresh this page in a while to see the "
+"progress"
+msgstr ""
+"Testet är inte helt klart, ladda om sidan om en stund för att se hur det går."
+
+#: zonemaster/class-zonemaster.php:845
+msgid "Link to this result is:"
+msgstr "Länk till detta resultat är:"
+
+#: zonemaster/class-zonemaster.php:893
+msgid "and"
+msgstr "och"
+
+#: zonemaster/class-zonemaster.php:895
+msgid "Checked with:"
+msgstr "Testad med:"
+
+#: zonemaster/class-zonemaster.php:948
+msgid "Result"
+msgstr "Resultat"
+
+#: zonemaster/class-zonemaster.php:958
+msgid "Earlier tests of "
+msgstr "Tidigare tester av "
+
+#: zonemaster/class-zonemaster.php:1006
+msgid "Critical error!"
+msgstr "Allvarligt fel!"
+
+#: zonemaster/class-zonemaster.php:1020
+msgid "Error!"
+msgstr "Fel!"
+
+#: zonemaster/class-zonemaster.php:1035
+msgid "Warning!"
+msgstr "Varning!"
+
+#: zonemaster/class-zonemaster.php:1050 zonemaster/class-zonemaster.php:1064
+#: zonemaster/class-zonemaster.php:1222 zonemaster/class-zonemaster.php:1232
+msgid "OK"
+msgstr "OK"
+
+#: zonemaster/class-zonemaster.php:1096
+msgid "Back to top"
+msgstr "Tillbaka upp"
+
+#: zonemaster/class-zonemaster.php:1161
+msgid "Creation time"
+msgstr "Testet skapades"
+
+#: zonemaster/class-zonemaster.php:1163
+msgid "Overall result"
+msgstr "Övergripande resultat"
+
+#: zonemaster/class-zonemaster.php:1175
+msgid "(This is current test.)"
+msgstr "(Detta är aktuellt test)"
+
+#: zonemaster/class-zonemaster.php:1273
+msgid ""
+"The test you´re looking for is either not yet ready or has been deleted."
+msgstr "Testet du söker är antingen ännu inte är redo eller har tagits bort."
+
+#: zonemaster/class-zonemaster.php:1273 zonemaster/page-start.php:478
+msgid "(Or Backend API might be offline)"
+msgstr "(Eller backend testmotor kan var tillfälligt offline)"
+
+#: zonemaster/page-start.php:68
+msgid "Sorry, we can´t test this."
+msgstr "Tyvärr kan vi inte testa detta."
+
+#: zonemaster/page-start.php:220
+msgid "Sorry, we can´t test right now, API seems to be offline."
+msgstr "Tyvärr kan vi inte göra tester just nu, testmotorns API är offline."
+
+#: zonemaster/page-start.php:230
+msgid "Checking is not possible."
+msgstr "Det går inte att testa."
+
+#: zonemaster/page-start.php:230
+msgid "API backend reports an error."
+msgstr "Testmotorns API rapporterar ett fel."
+
+#: zonemaster/page-start.php:283
+msgid "Test result"
+msgstr "Testresultat"
+
+#: zonemaster/page-start.php:301 zonemaster/page-start.php:330
+msgid "Test your DNS server today. "
+msgstr "Testa din DNS server och upptäck fel."
+
+#: zonemaster/page-start.php:309 zonemaster/page-start.php:336
+msgid "Input zone.tld"
+msgstr "Ange ditt domännamn"
+
+#: zonemaster/page-start.php:311 zonemaster/page-start.php:417
+msgid "Test Now"
+msgstr "Testa!"
+
+#: zonemaster/page-start.php:351
+msgid "Fetch data from parent zone"
+msgstr "Hämta data från parent zone"
+
+#: zonemaster/page-start.php:358
+msgid "Nameservers (up to 30)"
+msgstr "Namnservrar (max 30 st)"
+
+#: zonemaster/page-start.php:375
+msgid "Get IP-address"
+msgstr "Hämta IP-adress"
+
+#: zonemaster/page-start.php:378
+msgid ""
+"Leave ip-field empty if you want us to fetch the IP-address then you start "
+"the test"
+msgstr ""
+"Lämna ip-fältet tomt om du vill att vi ska hämta IP-adressen när du startar "
+"testet"
+
+#: zonemaster/page-start.php:386
+msgid "+ Add more nameservers"
+msgstr "+ Lägg till fler namnservrar"
+
+#: zonemaster/page-start.php:391
+msgid "Digests"
+msgstr "Digests"
+
+#: zonemaster/page-start.php:405
+msgid "+ Add row for digest"
+msgstr "+ Lägg till rad för digest"
+
+#: zonemaster/page-start.php:446
+msgid "What is pre-delegated domain check?"
+msgstr "Vad är ett odelegerat domäntest? "
+
+#: zonemaster/page-start.php:478
+msgid "The test you´re trying to get  is missing."
+msgstr "Testet du försöker komma åt saknas."
+
+#. Theme Name of the plugin/theme
+msgid "IIS Zonemaster"
+msgstr "IIS Zonemaster"
+
+#. Theme URI of the plugin/theme
+msgid "https://github.com/dotse/zonemaster-iis-frontend"
+msgstr "https://github.com/dotse/zonemaster-iis-frontend"
+
+#. Author of the plugin/theme
+msgid "The IIS Team"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://iis.se"
+msgstr ""
+
+#~ msgid "Back up"
+#~ msgstr "Tillbaka upp"
+
+#~ msgid "Test was made "
+#~ msgstr "Testet gjordes "
+
+#~ msgid " engine"
+#~ msgstr " testmotor"
+
+#~ msgid "to IP "
+#~ msgstr "till IP "
+
+#~ msgid "IP-versions checked:"
+#~ msgstr "Kontrollerade IP-versioner:"
+
+#~ msgid "Earlier tests"
+#~ msgstr "Tidigare test"
+
+#~ msgid "Do this test again"
+#~ msgstr "Gör detta test igen"
+
+#~ msgid "Basic result"
+#~ msgstr "Grundläggande resultat"
+
+#~ msgid "Advanced result"
+#~ msgstr "Avancerat resultat"

@@ -1,0 +1,303 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: IIS Zonemaster\n"
+"POT-Creation-Date: 2016-10-13 16:36+0200\n"
+"PO-Revision-Date: 2016-05-30 10:47+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: style.css\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#. Description of the plugin/theme
+#: header.php:21 zonemaster/class-zonemaster.php:616
+msgid "Zonemaster"
+msgstr ""
+
+#: header.php:39
+msgid ""
+"Config error! Polylang plugin is not active OR you havent choosen a default "
+"language"
+msgstr ""
+
+#: header.php:56 zonemaster/page-start.php:277
+msgid "Domain check"
+msgstr ""
+
+#: header.php:59 zonemaster/class-zonemaster.php:897
+#: zonemaster/page-start.php:280
+msgid "Pre-delegated domain check"
+msgstr ""
+
+#: inc/scripts.php:30
+msgid "Test done. Waiting on results"
+msgstr ""
+
+#: inc/scripts.php:31
+msgid "This field is required"
+msgstr ""
+
+#: inc/scripts.php:32
+msgid "Fetching data.."
+msgstr ""
+
+#: inc/scripts.php:33
+msgid "Error then trying to get parent zone data"
+msgstr ""
+
+#: inc/scripts.php:34
+msgid "Incorrect IP-address:"
+msgstr ""
+
+#: inc/scripts.php:35
+msgid "Starting test.."
+msgstr ""
+
+#: inc/scripts.php:36
+msgid "Running test.."
+msgstr ""
+
+#: inc/scripts.php:37
+msgid "Something actually went wrong. Error :("
+msgstr ""
+
+#: inc/scripts.php:38
+msgid "Copied!"
+msgstr ""
+
+#: inc/scripts.php:39
+msgid "Press"
+msgstr ""
+
+#: inc/scripts.php:40
+msgid "to"
+msgstr ""
+
+#: inc/scripts.php:41 zonemaster/class-zonemaster.php:856
+msgid "Copy"
+msgstr ""
+
+#: menuparts/menu.php:5
+msgid "The Main Menu"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:594
+msgid "Option - check domain with "
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:616
+msgid "IIS presents"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:616 zonemaster/class-zonemaster.php:897
+msgid "with"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:616
+msgid "Zonemaster engine"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:630
+msgid "Sorry, API is currently offline. Try again in a while."
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:681
+msgid "In a short while your test will be ready at "
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:686
+msgid "Click the link to refresh the status of your test."
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:695
+msgid "Currently checking"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:706
+msgid "Cancel test mode"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:792 zonemaster/class-zonemaster.php:1192
+msgid "Contains warnings!"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:797 zonemaster/class-zonemaster.php:1212
+msgid "Contains errors!"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:802 zonemaster/class-zonemaster.php:1202
+msgid "Contains critical errors!"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:807 zonemaster/class-zonemaster.php:812
+msgid "All is well!"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:817 zonemaster/class-zonemaster.php:1242
+msgid "Sorry, we could not determ test results"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:826
+msgid ""
+"Test is not yet completely done, refresh this page in a while to see the "
+"progress"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:845
+msgid "Link to this result is:"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:893
+msgid "and"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:895
+msgid "Checked with:"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:948
+msgid "Result"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:958
+msgid "Earlier tests of "
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:1006
+msgid "Critical error!"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:1020
+msgid "Error!"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:1035
+msgid "Warning!"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:1050 zonemaster/class-zonemaster.php:1064
+#: zonemaster/class-zonemaster.php:1222 zonemaster/class-zonemaster.php:1232
+msgid "OK"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:1096
+msgid "Back to top"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:1161
+msgid "Creation time"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:1163
+msgid "Overall result"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:1175
+msgid "(This is current test.)"
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:1273
+msgid ""
+"The test you´re looking for is either not yet ready or has been deleted."
+msgstr ""
+
+#: zonemaster/class-zonemaster.php:1273 zonemaster/page-start.php:478
+msgid "(Or Backend API might be offline)"
+msgstr ""
+
+#: zonemaster/page-start.php:68
+msgid "Sorry, we can´t test this."
+msgstr ""
+
+#: zonemaster/page-start.php:220
+msgid "Sorry, we can´t test right now, API seems to be offline."
+msgstr ""
+
+#: zonemaster/page-start.php:230
+msgid "Checking is not possible."
+msgstr ""
+
+#: zonemaster/page-start.php:230
+msgid "API backend reports an error."
+msgstr ""
+
+#: zonemaster/page-start.php:283
+msgid "Test result"
+msgstr ""
+
+#: zonemaster/page-start.php:301 zonemaster/page-start.php:330
+msgid "Test your DNS server today. "
+msgstr ""
+
+#: zonemaster/page-start.php:309 zonemaster/page-start.php:336
+msgid "Input zone.tld"
+msgstr ""
+
+#: zonemaster/page-start.php:311 zonemaster/page-start.php:417
+msgid "Test Now"
+msgstr ""
+
+#: zonemaster/page-start.php:351
+msgid "Fetch data from parent zone"
+msgstr ""
+
+#: zonemaster/page-start.php:358
+msgid "Nameservers (up to 30)"
+msgstr ""
+
+#: zonemaster/page-start.php:375
+msgid "Get IP-address"
+msgstr ""
+
+#: zonemaster/page-start.php:378
+msgid ""
+"Leave ip-field empty if you want us to fetch the IP-address then you start "
+"the test"
+msgstr ""
+
+#: zonemaster/page-start.php:386
+msgid "+ Add more nameservers"
+msgstr ""
+
+#: zonemaster/page-start.php:391
+msgid "Digests"
+msgstr ""
+
+#: zonemaster/page-start.php:405
+msgid "+ Add row for digest"
+msgstr ""
+
+#: zonemaster/page-start.php:446
+msgid "What is pre-delegated domain check?"
+msgstr ""
+
+#: zonemaster/page-start.php:478
+msgid "The test you´re trying to get  is missing."
+msgstr ""
+
+#. Theme Name of the plugin/theme
+msgid "IIS Zonemaster"
+msgstr ""
+
+#. Theme URI of the plugin/theme
+msgid "https://github.com/dotse/zonemaster-iis-frontend"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "The IIS Team"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://iis.se"
+msgstr ""

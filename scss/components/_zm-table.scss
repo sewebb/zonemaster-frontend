@@ -1,0 +1,9 @@
+table {
+	// not colored
+	@include table(none);
+	@include table-hover;
+
+	.callout {
+		border: none;
+	}
+}

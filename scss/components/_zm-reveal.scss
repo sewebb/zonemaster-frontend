@@ -1,0 +1,38 @@
+
+// Close button on old test in modal / reveal
+.old-test-reveal {
+	display: none;
+}
+
+.reveal {
+	max-height: 100vh !important;
+	top: 0 !important;
+
+	&.warning {
+		background-color: $warning-color;
+	}
+
+	&.alert {
+		background-color: $alert-color;
+	}
+
+	&.success {
+		background-color: $success-color;
+	}
+
+	&.primary {
+		background-color: $primary-color;
+	}
+
+	.old-test-reveal {
+		display: inline-block;
+		color: $white;
+		font-size: rem-calc(60);
+
+	}
+
+	&:focus {
+		outline: none;
+	}
+}
+

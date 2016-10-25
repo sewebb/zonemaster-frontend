@@ -1,0 +1,116 @@
+
+.tabs {
+	@include tabs-container;
+
+	&.white {
+		@include tabs-container(transparent);
+
+	}
+}
+
+.tabs-title {
+	@include tabs-title;
+
+	&.white {
+		@include tabs-title($white, $white, $black, $light-gray);
+	}
+}
+
+.tabs-content {
+	@include tabs-content;
+
+	&.white {
+		@include tabs-content($white);
+	}
+
+	&.white {
+		@include tabs-content($white);
+	}
+}
+// tab test_progress
+#test_progress {
+	padding: 0;
+}
+
+.polling-area {
+	padding: $gutter 0;
+	h3 {
+		color: $white;
+	}
+}
+
+.div-results {
+	background-color: $white;
+}
+
+.div-tab-area {
+	color: $white;
+
+	p {
+		margin: 0;
+		line-height: 1;
+	}
+
+	&.success {
+		background-color: $success-color;
+	}
+
+	&.alert {
+		background-color: $alert-color;
+	}
+
+	&.warning {
+		background-color: $warning-color;
+	}
+
+	&.footer {
+		padding: $gutter 0;
+
+		a {
+			color: $white;
+			text-decoration: underline;
+
+			&:hover {
+				color: $black;
+			}
+		}
+	}
+
+	.result-text-one {
+		font-size: rem-calc(36);
+		font-weight: 700;
+		margin-top: $gutter;
+	}
+
+	.result-text-two {
+		font-size: rem-calc(48);
+		font-weight: 700;
+	}
+
+	.result-text-three {
+		line-height: 1.2;
+		margin-top: $gutter / 3;
+		margin-bottom: $gutter;
+
+		a {
+			color: $white;
+			text-decoration: underline;
+			font-size: $global-font-size;
+
+			&:hover {
+				color: darken($white, 15%);
+			}
+		}
+
+		.small-font {
+			font-size: rem-calc(13);
+		}
+
+		.label {
+			font-weight: 700;
+			text-transform: uppercase;
+			display: block;
+			padding-left: 0;
+		}
+	}
+}

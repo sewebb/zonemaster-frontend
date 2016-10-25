@@ -1,0 +1,377 @@
+{
+    "key": "group_55c07f86b7f2f",
+    "title": "Backend server",
+    "fields": [
+        {
+            "key": "field_574be3a0b3622",
+            "label": "Transients is disabled!",
+            "name": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_574be2f7ead79",
+                        "operator": "==",
+                        "value": "yes"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": 50,
+                "class": "",
+                "id": ""
+            },
+            "message": "<div class=\"acf-error-message\"><p>You have disabled transients. Is it intentional?<\/p><\/div>",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_574be4808d099",
+            "label": "JS debug is active!",
+            "name": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_55c1feaf3c716",
+                        "operator": "==",
+                        "value": "yes"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": 50,
+                "class": "",
+                "id": ""
+            },
+            "message": "<div class=\"acf-error-message\"><p>If this is a production enviroment you should deactivate debugging.<\/p><\/div>",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_55c0856e83aa9",
+            "label": "Remember then starting web site",
+            "name": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": 60,
+                "class": "",
+                "id": ""
+            },
+            "message": "SETTINGS per installed web site\r\n\r\n<ol><li>Change in Settings -> Reading (\/wp-admin\/options-reading.php) to \"A static page\"<\/li>\r\n<li>The selected frontpage should use the template \"Start page with search\"<\/li>\r\n<li>Create a page explaining what an pre-delegated \/ un-delegated test is<\/li>\r\n<li>Select that page in the field \"What is pre-delegated domain check\"<\/li>\r\n<\/ol>",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_5804c33724558",
+            "label": "Site logo",
+            "name": "site_logo",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": 40,
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "preview_size": "thumbnail",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_574604bbcab11",
+            "label": "What is pre-delegated domain check",
+            "name": "what_is_pre_delegated_domain_check",
+            "type": "repeater",
+            "instructions": "Make a page explaining what pre-delegated domain check is. Select it below. This will show on second tab, with javascript as a modal, without js - below the form. One page per language.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": "",
+            "max": "",
+            "layout": "table",
+            "button_label": "Add Row",
+            "sub_fields": [
+                {
+                    "key": "field_57460607d8928",
+                    "label": "Page name",
+                    "name": "page_name",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "page"
+                    ],
+                    "taxonomy": [
+
+                    ],
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "return_format": "id",
+                    "ui": 1
+                },
+                {
+                    "key": "field_57460634d8929",
+                    "label": "Language",
+                    "name": "language",
+                    "type": "text",
+                    "instructions": "Input as \"sv\", \"en\", \"fr\" (without \"\")",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "sv or en or ...",
+                    "append": "",
+                    "maxlength": 2,
+                    "readonly": 0,
+                    "disabled": 0
+                }
+            ]
+        },
+        {
+            "key": "field_55c07f9c4dca6",
+            "label": "Server url",
+            "name": "api_server",
+            "type": "url",
+            "instructions": "The url to the backend server",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "http:\/\/backend.stage.zonemaster.iis.se:5000",
+            "placeholder": ""
+        },
+        {
+            "key": "field_55c209cc1a80a",
+            "label": "API start URL",
+            "name": "api_start_url",
+            "type": "text",
+            "instructions": "endpoint where API-calls is received (could be \"\/\")",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "\/",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": "",
+            "readonly": 0,
+            "disabled": 0
+        },
+        {
+            "key": "field_56ead69c50bcd",
+            "label": "Polling interval",
+            "name": "polling_interval",
+            "type": "number",
+            "instructions": "How often do you want the javascript to check on the results?",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": 50,
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1500,
+            "placeholder": "",
+            "prepend": "",
+            "append": "milliseconds",
+            "min": 500,
+            "max": "",
+            "step": 100,
+            "readonly": 0,
+            "disabled": 0
+        },
+        {
+            "key": "field_5747e4f6c244f",
+            "label": "Transient - allowed test intervall",
+            "name": "transient_start_test",
+            "type": "number",
+            "instructions": "How often should a specific test be done? Once every...",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": 50,
+                "class": "",
+                "id": ""
+            },
+            "default_value": 300,
+            "placeholder": "",
+            "prepend": "",
+            "append": "Seconds",
+            "min": 0,
+            "max": "",
+            "step": 1,
+            "readonly": 0,
+            "disabled": 0
+        },
+        {
+            "key": "field_5747e6023798d",
+            "label": "Transient - single old test",
+            "name": "transient_old_test",
+            "type": "number",
+            "instructions": "Set cache for old test",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": 33,
+                "class": "",
+                "id": ""
+            },
+            "default_value": 3600,
+            "placeholder": "",
+            "prepend": "",
+            "append": "Seconds",
+            "min": 0,
+            "max": "",
+            "step": "",
+            "readonly": 0,
+            "disabled": 0
+        },
+        {
+            "key": "field_5747e6833798e",
+            "label": "Transient - fetch ip for nameserver",
+            "name": "transient_ip_nameserver",
+            "type": "number",
+            "instructions": "How often to look for new ip-adress based on nameserver",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": 33,
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1800,
+            "placeholder": "",
+            "prepend": "",
+            "append": "Seconds",
+            "min": 0,
+            "max": "",
+            "step": "",
+            "readonly": 0,
+            "disabled": 0
+        },
+        {
+            "key": "field_5747e6fc056e5",
+            "label": "Transient - fetch parent zone data",
+            "name": "transient_parent_zone",
+            "type": "number",
+            "instructions": "How often to look for new parent zone data",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": 33,
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1800,
+            "placeholder": "",
+            "prepend": "",
+            "append": "Seconds",
+            "min": 0,
+            "max": "",
+            "step": "",
+            "readonly": 0,
+            "disabled": 0
+        },
+        {
+            "key": "field_55c1feaf3c716",
+            "label": "Debug",
+            "name": "debug",
+            "type": "radio",
+            "instructions": "IMPORTANT! Should not be used in production, but can be of some value on test\/stage\/local enviroments",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": 50,
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "yes": "Yes",
+                "no": "No"
+            },
+            "other_choice": 0,
+            "save_other_choice": 0,
+            "default_value": "no : No",
+            "layout": "horizontal"
+        },
+        {
+            "key": "field_574be2f7ead79",
+            "label": "Temp disable transients",
+            "name": "temp_disable_transients",
+            "type": "radio",
+            "instructions": "IMPORTANT! Should not be used in production, but can be of some value on test\/stage\/local enviroments",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": 50,
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "yes": "Yes",
+                "no": "No"
+            },
+            "other_choice": 0,
+            "save_other_choice": 0,
+            "default_value": "no : No",
+            "layout": "horizontal"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-api-server"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": 1,
+    "description": "",
+    "modified": 1476707232
+}

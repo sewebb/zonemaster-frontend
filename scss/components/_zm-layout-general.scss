@@ -1,0 +1,15 @@
+// newer browsers, if you want footer to stick to bottom,
+// add a class to body-tag ( .sticky-footer-class )
+.sticky-footer-class {
+
+	&.zm {
+		display: flex;
+		min-height: 100vh;
+		flex-direction: column;
+	}
+
+	.site-wrapper {
+		flex: 1 0;
+	}
+
+}

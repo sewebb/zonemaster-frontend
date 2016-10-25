@@ -1,0 +1,10 @@
+@charset 'UTF-8';
+
+@mixin progress-stacked($bg) {
+	background: $bg;
+	display: block;
+	height: 100%;
+	float: left;
+	width: 0%;
+}
+

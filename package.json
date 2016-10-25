@@ -1,0 +1,35 @@
+{
+	"name": "iis-zonemaster",
+	"version": "1.0.0",
+	"author": "iis",
+	"homepage": "https://iis.se",
+	"engines": {
+		"node": ">= 0.10.0"
+	},
+	"devDependencies": {
+		"autoprefixer": "",
+		"foundation-sites": "~6.1.1",
+		"grunt": "",
+		"grunt-contrib-clean": "",
+		"grunt-contrib-cssmin": "",
+		"grunt-contrib-jshint": "",
+		"grunt-contrib-uglify": "",
+		"grunt-contrib-watch": "",
+		"grunt-gitinfo": "",
+		"grunt-htmlhint-inline": "",
+		"grunt-jscs": "",
+		"grunt-jsvalidate": "",
+		"grunt-phpcs": "",
+		"grunt-postcss": "",
+		"grunt-rsync": "",
+		"grunt-sass": "",
+		"grunt-scss-lint": "",
+		"grunt-wp-assets": "",
+		"matchdep": "",
+		"pixrem": "",
+		"grunt-retire": ""
+	},
+	"peerDependencies": {
+		"grunt-cli": ""
+	}
+}
