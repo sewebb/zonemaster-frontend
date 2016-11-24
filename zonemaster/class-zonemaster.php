@@ -757,10 +757,9 @@ class Zonemaster extends ZonemasterSettings
         if (isset($testresults['error'])) {
             _log('$testresults[error] - could be a problem with many test at the same time?');
         } else {
-            $fqdn            = $testresults['result']['domain'];
-            $donestatus      = $testresults['result']['progress'];
             $testresult      = $testresults['result']['results'];
             $frontend_params = $testresults['result']['params'];
+			$fqdn            = $frontend_params['domain'];
 
             $get_history_params  = array(
                                     'offset'          => 0,
@@ -821,9 +820,6 @@ class Zonemaster extends ZonemasterSettings
             }
 
             if ('' !== $fqdn && null !== $fqdn) {
-                if ('100' !== $donestatus) {
-                    echo '<div class="row"><div class="columns"><div class="callout warning">' . __('Test is not yet completely done, refresh this page in a while to see the progress', 'zm_text') . '</div></div></div>';
-                }
 
                 // Button is only used for then single tests are shown in modal / reveal?>
                 <button class="close-button old-test-reveal" data-close aria-label="Close reveal" type="button">
