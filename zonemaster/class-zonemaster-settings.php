@@ -1,7 +1,4 @@
 <?php
-// class name outside class
-$zm_settings = ZonemasterSettings::get_instance();
-
 /**
  * Set your special site settings here or use Advanced Custom Fields if you want to do it in WordPress frontend
  */
@@ -145,3 +142,5 @@ class ZonemasterSettings {
 
 	}
 }
+// class name outside class
+$zm_settings = ZonemasterSettings::get_instance();
