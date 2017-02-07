@@ -25,12 +25,18 @@
 	&.notice { @include progress-stacked($primary-color); }
 
 }
-	&.secondary .meter { @include progress-stacked($secondary-color); }
-	&.success .meter { @include progress-stacked($success-color); }
-	&.alert .meter { @include progress-stacked($alert-color); }
-	&.warning .meter { @include progress-stacked($warning-color); }
-	&.info .meter{ @include progress-stacked($primary-color); }
-	&.notice .meter{ @include progress-stacked($primary-color); }
+
+.secondary .meter { @include progress-stacked($secondary-color); }
+
+.success .meter { @include progress-stacked($success-color); }
+
+.alert .meter { @include progress-stacked($alert-color); }
+
+.warning .meter { @include progress-stacked($warning-color); }
+
+.info .meter{ @include progress-stacked($primary-color); }
+
+.notice .meter{ @include progress-stacked($primary-color); }
 
 .progress {
 	height: rem-calc(80);
