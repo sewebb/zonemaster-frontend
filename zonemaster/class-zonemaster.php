@@ -1,8 +1,4 @@
 <?php
-// class name outside class
-$zm = Zonemaster::get_instance();
-
-
 /**
  * Main class, a bit large..
  */
@@ -1256,3 +1252,5 @@ class Zonemaster extends ZonemasterSettings
     }
 } // Class Zonemaster
 
+// class name outside class
+$zm = Zonemaster::get_instance();
