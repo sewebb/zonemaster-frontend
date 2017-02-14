@@ -1,0 +1,37 @@
+# Projektspecifikt
+css
+js/app.*.js
+css/app.*.css
+env.js
+
+# Mac OS X stuff
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Apache
+.htaccess
+
+# WordPress
+*.log
+wp-config.php
+
+# Node
+node_modules
+
+# Sass Ignores - "Sassy CSS" http://sass-lang.com/
+*.sass-cache
+
+# Workspace files are user-specific
+*.sublime-workspace
+
+# Project files should be checked into the repository, unless a significant
+# proportion of contributors will probably not be using SublimeText
+*.sublime-project
+
+# SFTP Sublime plugin, user-specific
+sftp-config.json
