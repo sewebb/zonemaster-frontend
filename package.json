@@ -4,7 +4,7 @@
 	"author": "iis",
 	"homepage": "https://iis.se",
 	"engines": {
-		"node": ">= 0.10.0"
+		"node": ">= 5.0.0"
 	},
 	"devDependencies": {
 		"autoprefixer": "",
@@ -23,13 +23,10 @@
 		"grunt-postcss": "",
 		"grunt-rsync": "",
 		"grunt-sass": "",
-		"grunt-scss-lint": "",
+    	"grunt-scss-lint": "",
 		"grunt-wp-assets": "",
 		"matchdep": "",
 		"pixrem": "",
 		"grunt-retire": ""
-	},
-	"peerDependencies": {
-		"grunt-cli": ""
 	}
 }
