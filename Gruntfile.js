@@ -3,6 +3,10 @@ module.exports = function( grunt ) {
 
 	var username = process.env.USER || process.env.USERNAME;
 
+	// save sample-env.js as env.js and change your settings
+	var envSettings = require('./env.js');
+
+
 	grunt.initConfig({
 		clean: {
 			dist: [ 'css/*.css','js/*.min.js' ]
@@ -82,25 +86,29 @@ module.exports = function( grunt ) {
 				recursive: true,
 				deleteAll: false,
 				exclude: ['.git*', 'node_modules', 'wordpress-rules.xml', 'Gruntfile.js',
-					'package.json', '.DS_Store', 'README.md', 'config.rb', '.jshintrc'],
+					'package.json', '.DS_Store', 'README.md', 'config.rb', '.jshintrc', 'env.js', 'sample-env.js'],
 				args: ["-t", "-O", "-p", "--chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rw,Fg=rw,Fo=r"],
 				// Our own settings
-				basefolder: '/var/www/sites/',
-				themefolder: '/wp-content/themes/zonemaster-frontend',
+				basefolder: envSettings.basefolder,
+				themefolder: envSettings.themefolder,
+				sitename: {
+					stagesite: envSettings.stagesite,
+					prodsite: envSettings.prodsite,
+				},
 				hostservers: {
-					stageserver: 'externalweb.stage.example.com',
-					prodserver: 'externalweb.common.example.com'
+					stageserver: envSettings.stageserver,
+					prodserver: envSettings.prodserver,
 				}
 			},
 			stage: {
 				options: {
-					dest: '<%= rsync.options.basefolder %>stage.zonemaster.example.com<%= rsync.options.themefolder %>',
+					dest: '<%= rsync.options.basefolder %><%= rsync.options.sitename.stagesite %><%= rsync.options.themefolder %>',
 					host: '<%= rsync.options.hostservers.stageserver %>'
 				}
 			},
 			prod: {
 				options: {
-					dest: '<%= rsync.options.basefolder %>zonemaster.example.com<%= rsync.options.themefolder %>',
+					dest: '<%= rsync.options.basefolder %><%= rsync.options.sitename.prodsite %><%= rsync.options.themefolder %>',
 					host: '<%= rsync.options.hostservers.prodserver %>'
 				}
 			},
@@ -219,6 +227,16 @@ module.exports = function( grunt ) {
 		grunt.task.run( 'default' );
 		grunt.task.run( 'rsync:' + target );
 	});
+
+	grunt.registerTask( 'settings', 'test settings in env.js', function( setting ) {
+		grunt.log.writeln( 'basefolder: ' + envSettings.basefolder );
+		grunt.log.writeln( 'themefolder: ' + envSettings.themefolder );
+		grunt.log.writeln( 'stagesite: ' + envSettings.stagesite );
+		grunt.log.writeln( 'prodsite: ' + envSettings.prodsite );
+		grunt.log.writeln( 'stageserver: ' + envSettings.stageserver );
+		grunt.log.writeln( 'prodserver: ' + envSettings.prodserver );
+	});
+
 
 	grunt.registerTask('dev', [
 		'watch',

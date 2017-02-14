@@ -69,6 +69,8 @@ rsync: {
 ````
 In this section you will have to modify the code to suit your environment if you want to use rsync.
 
+Edit: For this to be smother you should make your enviroment-changes in env.js (use sample-env.js as a boilerplate -> save as env.js)
+
 **For example** - rsync from terminal to stage environment:
 ```ssh
 $ grunt deploy:stage
