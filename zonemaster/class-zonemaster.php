@@ -307,7 +307,7 @@ class Zonemaster extends ZonemasterSettings {
 			'id'      => $id,
 		);
 		$payload = json_encode( $send );
-_log( $payload );
+
 		// remove transients based on GUI options page ( Should only be used for debugging)
 		if ( 'yes' === $this->settings( 'temp_disable_transients' ) ) {
 			delete_transient( $locale_payload );
