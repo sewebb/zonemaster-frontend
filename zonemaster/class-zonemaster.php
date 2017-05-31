@@ -246,8 +246,8 @@ class Zonemaster extends ZonemasterSettings {
 	 * @return string or integer
 	 */
 	public function regexp_check( $value = '' ) {
-		$valid_url_regex = '/^[a-zA-Z0-9\-\.\_\:[:blank:]]+$/';
-		if ( ! preg_match( $valid_url_regex, $value ) ) {
+		$check_against = '/^[a-zA-Z0-9\-\.\_\:[:blank:]]+$/';
+		if ( ! preg_match( $check_against, $value ) ) {
 			$value = '';
 		}
 
