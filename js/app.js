@@ -2,6 +2,9 @@ if ( typeof $ === 'function' ) {
 	$( 'body' ).removeClass( 'no-js' );
 
 	$( document ).ready( function () {
+		// Fix problem with IE
+		$.ajaxSetup({ cache: false });
+		// Start API
 		$( document ).zonalizer( 'main' );
 
 		// Set up clipboard
