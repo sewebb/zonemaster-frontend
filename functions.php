@@ -29,7 +29,7 @@ function zm_theme_setup() {
 add_action( 'after_setup_theme', 'zm_theme_setup' );
 
 require_once 'menuparts/menu.php';
-
+require_once 'inc/idna_convert.class.php';
 require_once 'zonemaster/class-zonemaster-settings.php';
 require_once 'zonemaster/class-zonemaster.php';
 

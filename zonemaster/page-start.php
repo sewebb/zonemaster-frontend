@@ -176,14 +176,14 @@ if ( isset( $_POST['zone_tld'] ) && ( ( isset( $_POST['tld_zonemaster'] ) && wp_
 			// User (no-js ) has requested to get domain parent nameservers
 			// This removes previously entered data
 			if ( $get_data_from_parent_zone ) {
-				list( $nameservers_html, $digests_html ) = $zm->get_data_from_parent_zone( $zone_tld );
+				list( $nameservers_html, $digests_html ) = $zm->get_data_from_parent_zone( $verify_zone_tld );
 			}
 
 			// If NOt one of the submitbuttons NOT intended for starting test (no-js )
 			if ( ! $get_data_from_parent_zone && ! $add_no_js_ns_field && ! $del_no_js_ns_field && ! $check_ip_address && ! $add_no_js_digest_field && ! $del_no_js_digest_field ) {
 				$params  = array(
 								'client_id'       => 'IIS Zonemaster frontend',
-								'domain'          => $zone_tld,
+								'domain'          => $verify_zone_tld,
 								'profile'         => 'default_profile',
 								'client_version'  => '1',
 								'advanced'        => true,
@@ -440,7 +440,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 		<?php
 		// first submit to test engine
 		if ( $do_test_progress && '' == $requested_test_id ) {
-			$zm->polling_test_template( $testid, '', $zone_tld, $check_ip_v4, $check_ip_v6 );
+			$zm->polling_test_template( $testid, '', $verify_zone_tld, $check_ip_v4, $check_ip_v6 );
 		// could be an old test och a request to poll ongoing test (then no-js )
 		} elseif ( '' !== $requested_test_id ) {
 			$check_progress = $zm->test_progress( $requested_test_id );

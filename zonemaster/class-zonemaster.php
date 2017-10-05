@@ -81,13 +81,16 @@ class Zonemaster extends ZonemasterSettings {
 		if ( 'get_data_from_parent_zone' === $_REQUEST['action'] ) {
 			// returns '-1' to javascript if nonce not correct
 			if ( check_ajax_referer( $version, 'nonce' ) ) {
-				$zone_tld = $this->regexp_check( $_REQUEST['zone_tld'] );
+				$zone_tld = $this->verify_zone_tld( $_REQUEST['zone_tld'] );
+				if ( $zone_tld ) {
+					$zone_tld = $this->regexp_check( $zone_tld );
 
-				// $output = $this->get_data_from_parent_zone( $zone_tld );
-				list( $nameservers_html, $digests_html ) = $this->get_data_from_parent_zone( $zone_tld );
+					list( $nameservers_html, $digests_html ) = $this->get_data_from_parent_zone( $zone_tld );
 
-				echo '<div><div id="nameservers_html">' . $nameservers_html . '</div>';
-				echo '<div id="digests_html">' . $digests_html . '</div></div>';
+					echo '<div><div id="nameservers_html">' . $nameservers_html . '</div>';
+					echo '<div id="digests_html">' . $digests_html . '</div></div>';
+				}
+
 			}
 			exit();
 		}
@@ -155,27 +158,78 @@ class Zonemaster extends ZonemasterSettings {
 		// check with lowercase
 		$zone_tld = mb_strtolower( $zone_tld, 'UTF-8' );
 
-		if ( substr( $zone_tld, 0, 7) !== 'http://' && substr( $zone_tld, 0, 8) !== 'https://' ) {
+		if ( substr( $zone_tld, 0, 7 ) !== 'http://' && substr( $zone_tld, 0, 8 ) !== 'https://' ) {
 			$zone_tld = $zone_tld;
-		} elseif ( substr( $zone_tld, 0, 7) === 'http://' ) {
+		} elseif ( substr( $zone_tld, 0, 7 ) === 'http://' ) {
 			$zone_tld = str_replace( 'http://', '', $zone_tld );
-		} elseif ( substr( $zone_tld, 0, 8) === 'https://' ) {
+		} elseif ( substr( $zone_tld, 0, 8 ) === 'https://' ) {
 			$zone_tld = str_replace( 'https://', '', $zone_tld );
 		}
 		// No need to return "wrong tld" beacuse of ending "/"
-		if ( substr( $$zone_tld, -1) === '/' ) {
+		if ( substr( $$zone_tld, -1 ) === '/' ) {
 			$zone_tld = rtrim( $zone_tld, '/' );
 		}
 
 		// bad zone for example  www.dansk.dk?.se /#.se
-		$zone_tld = preg_replace( '/[?#].*/', '', $zone_tld );
+		$patterncheck = '/[?#].*/';
+		if ( preg_match( $patterncheck, $zone_tld ) ) {
+			return false;
+		}
 
+		// Convert idna ( räksmörgås.se ==> xn--rksmrgs-5wao1o.se )
+		$zone_tld = $this->convert_to_idna( $zone_tld );
+
+		// Check chars
 		$valid_url_regex = '/^[a-zA-Z0-9\.-]+$/';
 		if ( ! preg_match( $valid_url_regex, $zone_tld ) ) {
 			return false;
 		}
+		return $zone_tld;
+	}
+
+	/**
+	 * Convert to idna
+	 *
+	 * @param string $zone_tld Checked zone
+	 */
+	public function convert_to_idna( $zone_tld ) {
+
+		if ( empty( $zone_tld ) ) {
+			return false;
+		}
+
+		if ( ! mb_detect_encoding( $zone_tld, 'UTF-8', true ) ) {
+			// String should be UTF-8
+			$zone_tld = utf8_encode( $zone_tld );
+		}
+
+		$convert = new idna_convert();
+
+		// Translate IDN-domain to punycode
+		$zone_tld_converted = $convert->encode( $zone_tld );
+
+		$zone_tld           = $zone_tld_converted;
 
 		return $zone_tld;
+	}
+
+	/**
+	 * Label an idna domain
+	 *
+	 * @param string $zone_tld Checked zone
+	 */
+	public function label_idna_test( $tested_zone_tld ) {
+		// If it's not a idn-domain
+		if ( strpos( $tested_zone_tld, 'xn--' ) === false || empty( $tested_zone_tld ) ) {
+			return $tested_zone_tld;
+		}
+
+		$idna_convert = new idna_convert();
+		// Encode zone to its punycode presentation
+		$zone_tld_converted = $idna_convert->decode( $tested_zone_tld );
+
+		return $tested_zone_tld . ' (' . $zone_tld_converted . ')';
+
 	}
 
 
@@ -660,6 +714,9 @@ class Zonemaster extends ZonemasterSettings {
 		if ( $check_ip_v4 ) {
 			$ipv4_label = 'success';
 		}
+		// If zone tested is idna add the original raw text to label
+		$label_output = $this->label_idna_test( $zone_tld );
+
 		?>
 		<div id="js-div-report-status">
 			<div class="row align-center" >
@@ -679,7 +736,7 @@ class Zonemaster extends ZonemasterSettings {
 						if ( '' !== $zone_tld ) {
 						?>
 							<h3>
-								<?php _e( 'Currently checking', 'zm_text' ) ?>: <span id="js-fqdn"><?php echo $zone_tld; ?></span>
+								<?php _e( 'Currently checking', 'zm_text' ) ?>: <span id="js-fqdn"><?php echo $label_output; ?></span>
 							</h3>
 							<span class="<?php echo $ipv4_label; ?> label js-ipv4">ipv4</span>
 							<span class="<?php echo $ipv6_label; ?> label js-ipv6">ipv6</span>
@@ -813,6 +870,9 @@ class Zonemaster extends ZonemasterSettings {
 
 			if ( '' !== $fqdn && null !== $fqdn) {
 
+				// If zone tested is idna add the original raw text to label
+				$label_output = $this->label_idna_test( $fqdn );
+
 				// Button is only used for then single tests are shown in modal / reveal?>
 				<button class="close-button old-test-reveal" data-close aria-label="Close reveal" type="button">
 					<span aria-hidden="true">&times;</span>
@@ -822,7 +882,7 @@ class Zonemaster extends ZonemasterSettings {
 					<div class="div-tab-area <?php echo $div_tab_area_color; ?>">
 						<div class="row align-bottom">
 							<div class="column small-10 medium-7">
-								<p class="result-text-one"><?php echo $fqdn; ?></p>
+								<p class="result-text-one"><?php echo $label_output; ?></p>
 								<p class="result-text-two"><?php echo $result_header_text; ?></p>
 								<p class="result-text-three"><?php echo $creation_time; ?></p>
 
@@ -851,10 +911,10 @@ class Zonemaster extends ZonemasterSettings {
 										}
 									}
 
-									$ipv4 = isset( $frontend_params['ipv4'] ) && '1' === $frontend_params['ipv4'] ? 'IPv4' : '';
-									$ipv6 = isset( $frontend_params['ipv6'] ) && '1' === $frontend_params['ipv6'] ? 'IPv6' : '';
+									$ipv4 = isset( $frontend_params['ipv4'] ) && '1' == $frontend_params['ipv4'] ? 'IPv4' : '';
+									$ipv6 = isset( $frontend_params['ipv6'] ) && '1' == $frontend_params['ipv6'] ? 'IPv6' : '';
 
-									if ( ! empty( $ipv4) && ! empty( $ipv6) ) {
+									if ( ! empty( $ipv4 ) && ! empty( $ipv6 ) ) {
 										$and = ' ' . __( 'and', 'zm_text' ) . ' ';
 									}
 									echo '<ul><li>' . __( 'Checked with:', 'zm_text' ) . ' ' . $ipv4 . $and . $ipv6 . '</li>';
@@ -942,7 +1002,7 @@ class Zonemaster extends ZonemasterSettings {
 								?>
 									<li class="tabs-title white<?php echo $tab_earlier_tests_class; ?>">
 										<a href="/?resultid=<?php echo $testid; ?>&tab=tet#earlier_tests"<?php echo $tab_earlier_tests_aria; ?>>
-											<?php _e( 'Earlier tests of ', 'zm_text' ); ?> <?php echo $fqdn; ?>
+											<?php _e( 'Earlier tests of ', 'zm_text' ); ?> <?php echo $label_output; ?>
 										</a>
 									</li>
 								<?php
