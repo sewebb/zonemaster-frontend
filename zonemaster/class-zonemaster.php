@@ -1022,7 +1022,7 @@ class Zonemaster extends ZonemasterSettings {
 
 						foreach ( $testresult as $result ) {
 							$level   = $result['level'];
-							$message = $result['message'];
+							$message = sanitize_text_field( $result['message'] ) ;
 							// Add space after commas
 							$comma   = '/[,]/';
 							$message = preg_replace( $comma, ', ', $message );
