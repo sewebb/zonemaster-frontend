@@ -6,7 +6,7 @@
 						<?php
 						$zm      = Zonemaster::get_instance();
 						$version = $zm->get_zm_version();
-						echo esc_html( $version );
+						echo wp_kses_data( $version );
 						?>
 					</div>
 					<div class="columns shrink">
