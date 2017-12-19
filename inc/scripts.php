@@ -39,8 +39,8 @@ function zonemaster_scripts() {
 		'copy_press'       => __( 'Press', 'zm_text' ),
 		'copy_to'          => __( 'to', 'zm_text' ),
 		'copy'             => __( 'Copy', 'zm_text' ),
-		'polling_interval' => $zm->settings( 'polling_interval' ),
-		'debug'            => $zm->settings( 'debug' ),
+		'polling_interval' => absint( $zm->settings( 'polling_interval' ) ),
+		'debug'            => sanitize_text_field( $zm->settings( 'debug' ) ),
 		'current_language' => get_locale(),
 	);
 	wp_localize_script(

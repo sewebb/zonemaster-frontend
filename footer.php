@@ -4,9 +4,9 @@
 				<div class="row align-middle">
 					<div class="column">
 						<?php
-						$zm = Zonemaster::get_instance();
+						$zm      = Zonemaster::get_instance();
 						$version = $zm->get_zm_version();
-						echo $version;
+						echo esc_html( $version );
 						?>
 					</div>
 					<div class="columns shrink">

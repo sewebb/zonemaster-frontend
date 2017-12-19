@@ -43,6 +43,17 @@ class Zonemaster extends ZonemasterSettings {
 		// Version, langugage based, used as nonce
 		$version = $this->get_zm_version();
 
+		$request_action         = sanitize_text_field( $_REQUEST['action'] );
+		$request_index          = isset( $_REQUEST['index'] ) ? absint( $_REQUEST['index'] ) : 1;
+		$request_ns             = $this->regexp_check( $_REQUEST['ns'] );
+		$request_ip             = $this->regexp_check( $_REQUEST['ip'] );
+		$request_zone_tld       = $this->verify_zone_tld( $_REQUEST['zone_tld'] );
+		$request_id             = $this->regexp_check( $_REQUEST['id'] );
+		$request_oldtest_inline = isset( $_REQUEST['oldtest_inline'] ) ? $this->regexp_check( $_REQUEST['oldtest_inline'] ) : false;
+		$request_method         = isset( $_REQUEST['method'] ) ? sanitize_text_field( $_REQUEST['method'] ) : '';
+		$request_params         = isset( $_REQUEST['params'] ) ? sanitize_text_field( $_REQUEST['params'] ) : '';
+
+
 		// Check that backend is not offline
 		if ( strpos( $version, 'OFFLINE' ) !== false ) {
 			$GLOBALS['OFFLINE'] = $this->offline_text();
@@ -51,7 +62,7 @@ class Zonemaster extends ZonemasterSettings {
 		}
 
 		// returns html for digest fields
-		if ( 'get_digests_html' === $_REQUEST['action'] ) {
+		if ( 'get_digests_html' === $request_action ) {
 			// returns '-1' to javascript if nonce not correct
 			if ( check_ajax_referer( $version, 'nonce' ) ) {
 				$output = $this->digests_html( '0' );
@@ -63,12 +74,12 @@ class Zonemaster extends ZonemasterSettings {
 		}
 
 		// returns html for nameserver fields
-		if ( 'get_nameservers_html' === $_REQUEST['action'] ) {
+		if ( 'get_nameservers_html' === $request_action ) {
 			// returns '-1' to javascript if nonce not correct
 			if ( check_ajax_referer( $version, 'nonce' ) ) {
-				$key    = isset( $_REQUEST['index'] ) ? absint( $_REQUEST['index'] ) : 1;
-				$ns     = $this->regexp_check( $_REQUEST['ns'] );
-				$ip     = $this->regexp_check( $_REQUEST['ip'] );
+				$key    = $request_index;
+				$ns     = $request_ns;
+				$ip     = $request_ip;
 
 				$output = $this->nameservers_html( $key, $ns, $ip );
 
@@ -78,10 +89,10 @@ class Zonemaster extends ZonemasterSettings {
 		}
 
 		// returns html for parent zone
-		if ( 'get_data_from_parent_zone' === $_REQUEST['action'] ) {
+		if ( 'get_data_from_parent_zone' === $request_action ) {
 			// returns '-1' to javascript if nonce not correct
 			if ( check_ajax_referer( $version, 'nonce' ) ) {
-				$zone_tld = $this->verify_zone_tld( $_REQUEST['zone_tld'] );
+				$zone_tld = $request_zone_tld;
 				if ( $zone_tld ) {
 					$zone_tld = $this->regexp_check( $zone_tld );
 
@@ -90,18 +101,17 @@ class Zonemaster extends ZonemasterSettings {
 					echo '<div><div id="nameservers_html">' . $nameservers_html . '</div>';
 					echo '<div id="digests_html">' . $digests_html . '</div></div>';
 				}
-
 			}
 			exit();
 		}
 
 		// at the end of the test we return html to append to startpage with test result
 		// We also use this to fetch old tests inline
-		if ( 'get_single_test' === $_REQUEST['action'] ) {
+		if ( 'get_single_test' === $request_action ) {
 			// returns '-1' to javascript if nonce not correct
 			if ( check_ajax_referer( $version, 'nonce' ) ) {
-				$testid         = $this->regexp_check( $_REQUEST['id'] );
-				$oldtest_inline = isset( $_REQUEST['oldtest_inline'] ) ? $this->regexp_check( $_REQUEST['oldtest_inline'] ) : false;
+				$testid         = $request_id;
+				$oldtest_inline = $request_oldtest_inline;
 
 				echo $this->get_single_test( $testid, 'tbr', $oldtest_inline );
 			}
@@ -109,7 +119,7 @@ class Zonemaster extends ZonemasterSettings {
 		}
 
 		// Used for backend api proxy calls through javascript
-		if ( 'proxy' === $_REQUEST['action'] ) {
+		if ( 'proxy' === $request_action ) {
 			// returns '-1' to javascript if nonce not correct
 			if ( check_ajax_referer( $version, 'nonce' ) ) {
 				// Allowed backend api call via this function
@@ -119,14 +129,18 @@ class Zonemaster extends ZonemasterSettings {
 						'get_data_from_parent_zone',
 						);
 
-				$method = isset( $_REQUEST['method'] ) ? trim( $_REQUEST['method'] ) : exit;
-				$params = isset( $_REQUEST['params'] ) ? trim( $_REQUEST['params'] ) : exit;
+				if ( '' === $request_method || '' === $request_params ) {
+					exit;
+				}
+
+				$method = $request_method;
+				$params = $request_params;
 
 				if ( in_array( $method, $allow ) ) {
 					$defaults = array(
-								'method'           => $method,
+								'method'           => trim( $method ),
 								// 'create_transient' => $cache,
-								'params'           => $params,
+								'params'           => trim( $params ),
 							);
 
 					$request_curl = $this->verify_and_curl_request( $defaults );
@@ -219,6 +233,7 @@ class Zonemaster extends ZonemasterSettings {
 	 * @param string $zone_tld Checked zone
 	 */
 	public function label_idna_test( $tested_zone_tld ) {
+
 		// If it's not a idn-domain
 		if ( strpos( $tested_zone_tld, 'xn--' ) === false || empty( $tested_zone_tld ) ) {
 			return $tested_zone_tld;
@@ -278,10 +293,10 @@ class Zonemaster extends ZonemasterSettings {
 				);
 			$syntax            = $this->analyze_zone_tld( $validate_syntax );
 
-			if ( 'ok' === $syntax['result']['status'] ) {
+			if ( 'ok' === sanitize_text_field( $syntax['result']['status'] ) ) {
 				// if check params ok, do call
 				return $this->analyze_zone_tld( $sanitized_options );
-			} elseif ( 'nok' === $syntax['result']['status'] ) {
+			} elseif ( 'nok' === sanitize_text_field( $syntax['result']['status'] ) ) {
 				return $syntax;
 			}
 		} else {
@@ -315,7 +330,7 @@ class Zonemaster extends ZonemasterSettings {
 	 * @param  array $array [un-sanitized]
 	 * @return array         [sanitized]
 	 */
-	private function sanitize_array( &$array ) {
+	public function sanitize_array( &$array ) {
 
 		foreach ( $array as &$value ) {
 			if ( ! is_array( $value ) ) {
@@ -340,7 +355,7 @@ class Zonemaster extends ZonemasterSettings {
 	private function analyze_zone_tld( $options = array() ) {
 		$defaults = array(
 			'method'            => '',
-			'api_call'          => $this->settings( 'api_server' ) . $this->settings( 'api_start_url' ),
+			'api_call'          => sanitize_text_field( $this->settings( 'api_server' ) ) . sanitize_text_field( $this->settings( 'api_start_url' ) ),
 			'field_policy'      => '',
 			'field_ns'          => array(),
 			'field_ds'          => array(),
@@ -353,6 +368,9 @@ class Zonemaster extends ZonemasterSettings {
 		$options = array_merge( $defaults, $options );
 		extract( $options );
 
+		$params = $this->sanitize_array( $params );
+		$method = sanitize_text_field( $method );
+
 		$id   = date( 'YmdHis' ) . floor( microtime( true ) ); // something random
 		$send = array(
 			'jsonrpc' => '2.0',
@@ -363,7 +381,7 @@ class Zonemaster extends ZonemasterSettings {
 		$payload = json_encode( $send );
 
 		// remove transients based on GUI options page ( Should only be used for debugging)
-		if ( 'yes' === $this->settings( 'temp_disable_transients' ) ) {
+		if ( 'yes' === sanitize_text_field( $this->settings( 'temp_disable_transients' ) ) ) {
 			delete_transient( $locale_payload );
 			$create_transient = false;
 		}
@@ -442,13 +460,13 @@ class Zonemaster extends ZonemasterSettings {
 	public function nameservers_html( $key = '0', $ns = '', $ip = '' ) {
 		$html = '<div class="row js-ns-container">
 						<div class="small-6 columns">
-							<input type="text" name="field_ns[]" value="' . $ns . '" placeholder="NS" class="js-field-blur">
+							<input type="text" name="field_ns[]" value="' . esc_attr( $ns ) . '" placeholder="NS" class="js-field-blur">
 						</div>
 						<div class="small-6 columns">
 							<div class="input-group">
-								<input type="text" class="input-group-field js-field-ip" name="field_ip[]" value="' . $ip . '" placeholder="IP">
+								<input type="text" class="input-group-field js-field-ip" name="field_ip[]" value="' . esc_attr( $ip ) . '" placeholder="IP">
 								<div class="input-group-button">
-									<button type="submit" name="del_ns_field" value="' . $key . '" class="alert button js-remove-nameservers">X</button>
+									<button type="submit" name="del_ns_field" value="' . esc_attr( $key ) . '" class="alert button js-remove-nameservers">X</button>
 								</div>
 							</div>
 						</div>
@@ -469,7 +487,7 @@ class Zonemaster extends ZonemasterSettings {
 	 */
 	public function digests_html( $key = '0', $key_tag = '', $algorithm = '', $digest_type = '', $digest = '' ) {
 
-		switch ( $algorithm ) {
+		switch ( esc_attr( $algorithm ) ) {
 			case '3':
 				$three = 'selected';
 				break;
@@ -507,31 +525,31 @@ class Zonemaster extends ZonemasterSettings {
 
 		$html = '<div class="row js-digest-container">
 						<div class="small-6 medium-3 columns">
-							<input type="text" class="js-key-tag" name="field_key_tag[]" value="' . $key_tag . '" placeholder="Key tag">
+							<input type="text" class="js-key-tag" name="field_key_tag[]" value="' . esc_attr( $key_tag ) . '" placeholder="Key tag">
 						</div>
 						<div class="small-6 medium-3 columns">
 							<select name="field_algorithm[]" class="js-algorithm">
 								<option value=""></option>
-								<option value="3" ' . $three . '>' . $this->option_name( '3' ) . '</option>
-								<option value="5" ' . $five . '>' . $this->option_name( '5' ) . '</option>
-								<option value="6" ' . $six . '>' . $this->option_name( '6' ) . '</option>
-								<option value="7" ' . $seven . '>' . $this->option_name( '7' ) . '</option>
-								<option value="8" ' . $eight . '>' . $this->option_name( '8' ) . '</option>
-								<option value="9" ' . $nine . '>' . $this->option_name( '9' ) . '</option>
+								<option value="3" ' . $three . '>' . esc_html( $this->option_name( '3' ) ) . '</option>
+								<option value="5" ' . $five . '>' . esc_html( $this->option_name( '5' ) ) . '</option>
+								<option value="6" ' . $six . '>' . esc_html( $this->option_name( '6' ) ) . '</option>
+								<option value="7" ' . $seven . '>' . esc_html( $this->option_name( '7' ) ) . '</option>
+								<option value="8" ' . $eight . '>' . esc_html( $this->option_name( '8' ) ) . '</option>
+								<option value="9" ' . $nine . '>' . esc_html( $this->option_name( '9' ) ) . '</option>
 							</select>
 						</div>
 						<div class="small-6 medium-2 columns">
 							<select name="field_digest_type[]" class="js-digest-type">
 								<option value=""></option>
-								<option value="1" ' . $sha_1 . '>' . $this->option_name( '1', 'field_digest_type' ) . '</option>
-								<option value="2" ' . $sha_256 . '>' . $this->option_name( '2', 'field_digest_type' ) . '</option>
+								<option value="1" ' . $sha_1 . '>' . esc_html( $this->option_name( '1', 'field_digest_type' ) ) . '</option>
+								<option value="2" ' . $sha_256 . '>' . esc_html( $this->option_name( '2', 'field_digest_type' ) ) . '</option>
 							</select>
 						</div>
 						<div class="small-6 medium-4 columns">
 							<div class="input-group">
-								<input type="text" class="input-group-field js-digest" name="field_digest[]" value="' . $digest . '" placeholder="Digest">
+								<input type="text" class="input-group-field js-digest" name="field_digest[]" value="' . esc_attr( $digest ) . '" placeholder="Digest">
 								<div class="input-group-button">
-									<button type="submit" name="del_digest_field" value="' . $key . '" class="alert button js-remove-digests">X</button>
+									<button type="submit" name="del_digest_field" value="' . esc_attr( $key ) . '" class="alert button js-remove-digests">X</button>
 								</div>
 							</div>
 						</div>
@@ -602,8 +620,8 @@ class Zonemaster extends ZonemasterSettings {
 		// API-call to get parent nameservers - ad ds data if any is available
 		$parent_addresses = $this->verify_and_curl_request( array( 'method' => 'get_data_from_parent_zone', 'params' => $zone_tld, 'create_transient' => true, 'transient_seconds' => $this->settings( 'transient_parent_zone' ) ) );
 
-		$parent_nameservers = $parent_addresses['result']['ns_list'];
-		$parent_digests     = $parent_addresses['result']['ds_list'];
+		$parent_nameservers = $this->sanitize_array( $parent_addresses['result']['ns_list'] );
+		$parent_digests     = $this->sanitize_array( $parent_addresses['result']['ds_list'] );
 
 		// create filled nameserver fields
 		foreach ( $parent_nameservers as $parent_nameserver ) {
@@ -628,8 +646,8 @@ class Zonemaster extends ZonemasterSettings {
 	 * @return string                  Simple html
 	 */
 	public function ip_checkboxes( $id = '1', $is_ipv4_checked = 'checked', $is_ipv6_checked = 'checked' ) {
-		$html = '<span>' . __( 'Option - check domain with ', 'zm_text' ) . '</span>:&nbsp;<input class="js-check-ipv4" id="check_ip_v4_' . $id . '" name="check_ip_v4" type="checkbox" ' . $is_ipv4_checked . ' value="1"><label for="check_ip_v4_' . $id . '">IPv4 </label>
-				<input class="js-check-ipv6" id="check_ip_v6_' . $id . '" name="check_ip_v6" type="checkbox" ' . $is_ipv6_checked . ' value="1"><label for="check_ip_v6_' . $id . '">IPv6 </label>';
+		$html = '<span>' . __( 'Option - check domain with ', 'zm_text' ) . '</span>:&nbsp;<input class="js-check-ipv4" id="check_ip_v4_' . $id . '" name="check_ip_v4" type="checkbox" ' . esc_attr( $is_ipv4_checked ) . ' value="1"><label for="check_ip_v4_' . esc_attr( $id ) . '">IPv4 </label>
+				<input class="js-check-ipv6" id="check_ip_v6_' . esc_attr( $id ) . '" name="check_ip_v6" type="checkbox" ' . esc_attr( $is_ipv6_checked ) . ' value="1"><label for="check_ip_v6_' . esc_attr( $id ) . '">IPv6 </label>';
 		return $html;
 	}
 
@@ -643,15 +661,15 @@ class Zonemaster extends ZonemasterSettings {
 	public function get_zm_version() {
 
 		$api_version = $this->analyze_zone_tld( array( 'method' => 'version_info', 'params' => 'version_info', 'create_transient' => true, 'transient_seconds' => 60 ) );
-		$zm_backend  = $api_version['result']['zonemaster_backend'];
-		$zm_engine   = $api_version['result']['zonemaster_engine'];
+		$zm_backend  = sanitize_text_field( $api_version['result']['zonemaster_backend'] );
+		$zm_engine   = sanitize_text_field( $api_version['result']['zonemaster_engine'] );
 
 
 		// if we want the footer text and api is online
 		if ( ! empty( $zm_engine ) ) {
 			// We think it´s not nescessary to show user ip
 			// $text    = __( 'IIS presents', 'zm_text' ) . ' ' . __( 'Zonemaster', 'zm_text' ) . ' ' .' backend v' . $zm_backend . ' ' . __( 'with', 'zm_text' ) . ' ' . __( 'Zonemaster engine', 'zm_text' ) . ' ' . $zm_engine . ' ' . __( 'to IP ', 'zm_text' ) . $_SERVER['REMOTE_ADDR'];
-			$text    = __( 'IIS presents', 'zm_text' ) . ' ' . __( 'Zonemaster', 'zm_text' ) . ' ' .' backend v' . $zm_backend . ' ' . __( 'with', 'zm_text' ) . ' ' . __( 'Zonemaster engine', 'zm_text' ) . ' ' . $zm_engine;
+			$text    = __( 'IIS presents', 'zm_text' ) . ' ' . __( 'Zonemaster', 'zm_text' ) . ' ' .' backend v' . esc_html( $zm_backend ) . ' ' . __( 'with', 'zm_text' ) . ' ' . __( 'Zonemaster engine', 'zm_text' ) . ' ' . esc_html( $zm_engine );
 		} else {
 			$text    = $this->offline_text();
 		}
@@ -674,13 +692,12 @@ class Zonemaster extends ZonemasterSettings {
 	 * [get_ns_ips description]
 	 *
 	 * @param  [type] $ns [description]
-	 * @param  string $ip [description]
 	 * @return [type]     [description]
 	 */
-	public function get_ns_ips( $ns, $ip = '' ) {
+	public function get_ns_ips( $ns ) {
 
 		if ( '' !== $ns ) {
-			$addresses = $this->analyze_zone_tld( array( 'method' => 'get_ns_ips', 'params' => $ns, 'create_transient' => true, 'transient_seconds' => $this->settings( 'transient_ip_nameserver' ) ) );
+			$addresses = $this->analyze_zone_tld( array( 'method' => 'get_ns_ips', 'params' => esc_attr( $ns ), 'create_transient' => true, 'transient_seconds' => sanitize_text_field( $this->settings( 'transient_ip_nameserver' ) ) ) );
 			// _log( $addresses );
 			return $addresses['result'];
 		}
@@ -694,7 +711,7 @@ class Zonemaster extends ZonemasterSettings {
 	 * @return [type]         [description]
 	 */
 	public function test_progress( $testid ) {
-		$progress = $this->analyze_zone_tld( array( 'method' => 'test_progress', 'params' => $testid ) );
+		$progress = $this->analyze_zone_tld( array( 'method' => 'test_progress', 'params' => esc_attr( $testid ) ) );
 		return $progress['result'];
 	}
 
@@ -717,6 +734,8 @@ class Zonemaster extends ZonemasterSettings {
 		// If zone tested is idna add the original raw text to label
 		$label_output = $this->label_idna_test( $zone_tld );
 
+		$server_name  = sanitize_text_field( $_SERVER['SERVER_NAME'] );
+
 		?>
 		<div id="js-div-report-status">
 			<div class="row align-center" >
@@ -724,7 +743,7 @@ class Zonemaster extends ZonemasterSettings {
 
 					<code class="show-if-no-js fade-in"><?php _e( 'In a short while your test will be ready at ', 'zm_text' ) ?>
 						<a class="stat" href="/?resultid=<?php echo $testid; ?>">
-							<?php echo $_SERVER['SERVER_NAME']; ?>/?resultid=<?php echo $testid; ?>
+							<?php echo $server_name; ?>/?resultid=<?php echo esc_attr( $testid ); ?>
 						</a>
 						<br>
 						<?php _e( 'Click the link to refresh the status of your test.', 'zm_text' ) ?>
@@ -736,10 +755,10 @@ class Zonemaster extends ZonemasterSettings {
 						if ( '' !== $zone_tld ) {
 						?>
 							<h3>
-								<?php _e( 'Currently checking', 'zm_text' ) ?>: <span id="js-fqdn"><?php echo $label_output; ?></span>
+								<?php _e( 'Currently checking', 'zm_text' ) ?>: <span id="js-fqdn"><?php echo esc_html( $label_output ); ?></span>
 							</h3>
-							<span class="<?php echo $ipv4_label; ?> label js-ipv4">ipv4</span>
-							<span class="<?php echo $ipv6_label; ?> label js-ipv6">ipv6</span>
+							<span class="<?php echo esc_attr( $ipv4_label ); ?> label js-ipv4">ipv4</span>
+							<span class="<?php echo esc_attr( $ipv6_label ); ?> label js-ipv6">ipv6</span>
 						<?php
 						}
 						?>
@@ -749,9 +768,9 @@ class Zonemaster extends ZonemasterSettings {
 						<br>
 						<a href="/" class="expanded primary button js-cancel hide-if-no-js"><?php _e( 'Cancel test mode', 'zm_text' ); ?></a>
 						<br>
-						<div class="secondary progress progress-waiting" role="progressbar" tabindex="0" aria-valuenow="<?php echo $current_progress; ?>" aria-valuemin="0" aria-valuetext="<?php echo $current_progress; ?> percent" aria-valuemax="100">
-							<div class="progress-meter" style="width: <?php echo $current_progress; ?>%">
-								<p class="progress-meter-text"><?php echo $current_progress; ?>%</p>
+						<div class="secondary progress progress-waiting" role="progressbar" tabindex="0" aria-valuenow="<?php echo esc_attr( $current_progress ); ?>" aria-valuemin="0" aria-valuetext="<?php echo $current_progress; ?> percent" aria-valuemax="100">
+							<div class="progress-meter" style="width: <?php echo esc_attr( $current_progress ); ?>%">
+								<p class="progress-meter-text"><?php echo esc_attr( $current_progress ); ?>%</p>
 							</div>
 						</div>
 
@@ -773,7 +792,7 @@ class Zonemaster extends ZonemasterSettings {
 	 */
 	public function get_single_test( $testid, $tab = 'tbr', $oldtest_inline = false ) {
 
-		if (function_exists( 'pll_current_language' ) ) {
+		if ( function_exists( 'pll_current_language' ) ) {
 			$selected_lang = pll_current_language();
 		} else {
 			$selected_lang = 'en';
@@ -781,14 +800,14 @@ class Zonemaster extends ZonemasterSettings {
 
 		$params           = array(
 								'language' => $selected_lang,
-								'id'       => $testid,
+								'id'       => esc_attr( $testid ),
 								);
 
 		if ( $oldtest_inline ) {
 			$get_test_results = array(
 								'method'            => 'get_test_results',
 								'create_transient'  => true,
-								'transient_seconds' => $this->settings( 'transient_old_test' ),
+								'transient_seconds' => sanitize_text_field( $this->settings( 'transient_old_test' ) ),
 								'params'            => $params,
 							);
 		} else {
@@ -799,7 +818,6 @@ class Zonemaster extends ZonemasterSettings {
 							);
 		}
 
-
 		$testresults          = $this->verify_and_curl_request( $get_test_results );
 
 		// Very simple error checking
@@ -807,8 +825,8 @@ class Zonemaster extends ZonemasterSettings {
 			_log( '$testresults[error] - could be a problem with many test at the same time?' );
 		} else {
 			$testresult      = $testresults['result']['results'];
-			$frontend_params = $testresults['result']['params'];
-			$fqdn            = $frontend_params['domain'];
+			$frontend_params = $this->sanitize_array( $testresults['result']['params'] );
+			$fqdn            = sanitize_text_field( $frontend_params['domain'] );
 
 			$get_history_params  = array(
 									'offset'          => 0,
@@ -826,8 +844,8 @@ class Zonemaster extends ZonemasterSettings {
 
 			foreach ( $status['result'] as $key => $result ) {
 				if ( $result['id'] === $testid ) {
-					$creation_time  = $result['creation_time'];
-					$overall_result = $result['overall_result'];
+					$creation_time  = sanitize_text_field( $result['creation_time'] );
+					$overall_result = sanitize_text_field( $result['overall_result'] );
 				}
 
 				switch ( $overall_result ) {
@@ -882,9 +900,9 @@ class Zonemaster extends ZonemasterSettings {
 					<div class="div-tab-area <?php echo $div_tab_area_color; ?>">
 						<div class="row align-bottom">
 							<div class="column small-10 medium-7">
-								<p class="result-text-one"><?php echo $label_output; ?></p>
-								<p class="result-text-two"><?php echo $result_header_text; ?></p>
-								<p class="result-text-three"><?php echo $creation_time; ?></p>
+								<p class="result-text-one"><?php echo esc_html( $label_output ); ?></p>
+								<p class="result-text-two"><?php echo esc_html( $result_header_text ); ?></p>
+								<p class="result-text-three"><?php echo esc_html( $creation_time ); ?></p>
 
 
 								<div class="result-text-three">
@@ -896,18 +914,25 @@ class Zonemaster extends ZonemasterSettings {
 									if ( ! empty( $is_test_undelegated ) ) {
 										$ns_ip = '<div class="row small-font"><div class="column small-6 medium-12 large-6"><label class="label ' . $div_tab_area_color . '">Nameserver</label></div><div class="column small-6 medium-12 large-6"><label class="label ' . $div_tab_area_color . '">IP-address</label></div>';
 										foreach ( $frontend_params['nameservers'] as $value ) {
-											$ns_ip .= '<div class="column small-6 medium-12 large-6">' . $value['ns'] . '</div>
-														<div class="column small-6 medium-12 large-6">' . $value['ip'] . '</div>';
+											$ns = sanitize_text_field( $value['ns'] );
+											$ip = sanitize_text_field( $value['ip'] );
+											$ns_ip .= '<div class="column small-6 medium-12 large-6">' . esc_html( $ns ) . '</div>
+														<div class="column small-6 medium-12 large-6">' . esc_html( $ip ) . '</div>';
 										}
 										$ns_ip .= '</div>';
 									}
 
 									if ( ! empty( $has_test_digests ) ) {
 										foreach ( $frontend_params['ds_info'] as $value ) {
-											$digests .= '<div class="row small-font"><div class="column shrink"><label class="label ' . $div_tab_area_color . '">Keytag</label>' . $value['keytag'] . '</div>
-														<div class="column shrink"><label class="label ' . $div_tab_area_color . '">Digtype</label>' . $this->option_name( $value['digtype'], 'field_digest_type' ) . '</div>
-														<div class="column shrink"><label class="label ' . $div_tab_area_color . '">Algorithm</label>' . $this->option_name( $value['algorithm'], 'field_algorithm' ) . '</div>
-														<div class="column shrink"><label class="label ' . $div_tab_area_color . '">Digest</label>' . $value['digest'] . '</div></div>';
+											$keytag    = sanitize_text_field( $value['keytag'] );
+											$digtype   = sanitize_text_field( $value['digtype'] );
+											$algorithm = sanitize_text_field( $value['algorithm'] );
+											$digest    = sanitize_text_field( $value['digest'] );
+
+											$digests .= '<div class="row small-font"><div class="column shrink"><label class="label ' . $div_tab_area_color . '">Keytag</label>' . esc_html( $keytag ) . '</div>
+														<div class="column shrink"><label class="label ' . $div_tab_area_color . '">Digtype</label>' . esc_html( $this->option_name( $digtype, 'field_digest_type' ) ) . '</div>
+														<div class="column shrink"><label class="label ' . $div_tab_area_color . '">Algorithm</label>' . esc_html( $this->option_name( $algorithm, 'field_algorithm' ) ) . '</div>
+														<div class="column shrink"><label class="label ' . $div_tab_area_color . '">Digest</label>' . esc_html( $digest ) . '</div></div>';
 										}
 									}
 
@@ -931,7 +956,7 @@ class Zonemaster extends ZonemasterSettings {
 									<?php _e( 'Link to this result is:', 'zm_text' ) ?>
 									<br>
 									<a href="/?resultid=<?php echo $testid; ?>">
-										<?php echo $_SERVER['SERVER_NAME']; ?>/?resultid=<?php echo $testid; ?>
+										<?php echo $_SERVER['SERVER_NAME']; ?>/?resultid=<?php echo esc_attr( $testid ); ?>
 									</a>
 
 									<?php
@@ -939,7 +964,7 @@ class Zonemaster extends ZonemasterSettings {
 									$protocol = ( ! empty( $_SERVER['HTTPS'] ) && 'off' !== $_SERVER['HTTPS'] || 443 == $_SERVER['SERVER_PORT'] ) ? 'https://' : 'http://';?>
 									<span class="hide-if-no-js">
 										&nbsp;|&nbsp;
-										<span class="copy-link" data-clipboard-text="<?php echo $protocol; ?><?php echo $_SERVER['SERVER_NAME']; ?>/?resultid=<?php echo $testid; ?>">
+										<span class="copy-link" data-clipboard-text="<?php echo esc_attr( $protocol ); ?><?php echo esc_attr( $_SERVER['SERVER_NAME'] ); ?>/?resultid=<?php echo esc_attr( $testid ); ?>">
 											<?php _e( 'Copy', 'zm_text' ); ?>
 										</span>
 									</span>
@@ -949,8 +974,8 @@ class Zonemaster extends ZonemasterSettings {
 							<div class="column hide-for-small-only medium-5">
 								<?php
 								$img = '<svg id="streetlights" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540.5 360">
-										<defs><style>.cls-1{opacity:0.1;}.cls-2-' . $testid . '{fill:#575756;} .red-' . $testid . '{fill:#' . $red_fill . ';} .orange-' . $testid . '{fill:#' . $orange_fill . ';} .green-' . $testid . '{fill:#' . $green_fill . ';}</style></defs>
-										<title>Zonemaster lights</title><polygon class="cls-1" points="310 143.33 166.67 0 0 307.68 52.32 360 540.5 360 310 143.33"/><rect width="166.67" height="307.68"/><path class="cls-2-' . $testid . ' red-' . $testid . '" d="M83.33,103.18a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-' . $testid . ' orange-' . $testid . '" d="M83.33,194.34a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-' . $testid . ' green-' . $testid . '" d="M83.33,285.5A40.5,40.5,0,1,0,42.83,245a40.5,40.5,0,0,0,40.5,40.5"/></svg>';
+										<defs><style>.cls-1{opacity:0.1;}.cls-2-' . esc_attr( $testid ) . '{fill:#575756;} .red-' . esc_attr( $testid ) . '{fill:#' . $red_fill . ';} .orange-' . esc_attr( $testid ) . '{fill:#' . $orange_fill . ';} .green-' . esc_attr( $testid ) . '{fill:#' . $green_fill . ';}</style></defs>
+										<title>Zonemaster lights</title><polygon class="cls-1" points="310 143.33 166.67 0 0 307.68 52.32 360 540.5 360 310 143.33"/><rect width="166.67" height="307.68"/><path class="cls-2-' . esc_attr( $testid ) . ' red-' . esc_attr( $testid ) . '" d="M83.33,103.18a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-' . esc_attr( $testid ) . ' orange-' . esc_attr( $testid ) . '" d="M83.33,194.34a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-' . esc_attr( $testid ) . ' green-' . esc_attr( $testid ) . '" d="M83.33,285.5A40.5,40.5,0,1,0,42.83,245a40.5,40.5,0,0,0,40.5,40.5"/></svg>';
 								// if ( ! $oldtest_inline ) {
 								?>
 									<div class="stoplights-img">
@@ -1021,8 +1046,9 @@ class Zonemaster extends ZonemasterSettings {
 							$module_group = '';
 
 						foreach ( $testresult as $result ) {
-							$level   = $result['level'];
-							$message = sanitize_text_field( $result['message'] ) ;
+							$level   = sanitize_text_field( $result['level'] );
+							$message = sanitize_text_field( $result['message'] );
+
 							// Add space after commas
 							$comma   = '/[,]/';
 							$message = preg_replace( $comma, ', ', $message );
@@ -1032,8 +1058,8 @@ class Zonemaster extends ZonemasterSettings {
 
 							// Group results that arrive in order
 							if ( $module_group !== $result['module'] ) {
-								$module_group = $result['module'];
-								$tablerow    .= '<tr><th colspan="3" class="text-left" id="' . $oldtest_id . '_' . $module_group . '">' . $module_group . '</th></tr>';
+								$module_group = sanitize_text_field( $result['module'] );
+								$tablerow    .= '<tr><th colspan="3" class="text-left" id="' . esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) . '">' . esc_html( $module_group ) . '</th></tr>';
 
 								// Start fresh for new module-group
 								unset( $module_group_array );
@@ -1043,75 +1069,75 @@ class Zonemaster extends ZonemasterSettings {
 							switch ( $level ) {
 								case 'CRITICAL':
 									$levelclass                    = 'alert callout';
-									$tablerow                     .= '<tr class="' . $levelclass . '">
-																			<td class="break-word">'. $message . '</td>
+									$tablerow                     .= '<tr class="' . esc_attr( $levelclass ) . '">
+																			<td class="break-word">' . esc_html( $message ) . '</td>
 																			<td><span class="alert badge">&nbsp;</span></td>
 																			<td>' . __( 'Critical error!', 'zm_text' ) . '</td>
 																		</tr>';
 
-									$module_group_array[]          = $level;
+									$module_group_array[]          = esc_attr( $level );
 									$button_array[ $module_group ] = $module_group_array;
 
 									break;
 
 								case 'ERROR':
 									$levelclass                    = 'alert callout';
-									$tablerow                     .= '<tr class="' . $levelclass . '">
-																			<td class="break-word">'. $message . '</td>
+									$tablerow                     .= '<tr class="' . esc_attr( $levelclass ) . '">
+																			<td class="break-word">' . esc_html( $message ) . '</td>
 																			<td><span class="alert badge">&nbsp;</span></td>
 																			<td>' . __( 'Error!', 'zm_text' ) . '</td>
 																		</tr>';
 
-									$module_group_array[]          = $level;
-									$module_group_array[]          = array( 'id' => $oldtest_id . '_' . $module_group );
+									$module_group_array[]          = esc_attr( $level );
+									$module_group_array[]          = array( 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) );
 									$button_array[ $module_group ] = $module_group_array;
 
 									break;
 
 								case 'WARNING':
 									$levelclass                    = 'warning callout';
-									$tablerow                     .= '<tr class="' . $levelclass . '">
-																			<td class="break-word">'. $message . '</td>
+									$tablerow                     .= '<tr class="' . esc_attr( $levelclass ) . '">
+																			<td class="break-word">' . esc_html( $message ) . '</td>
 																			<td><span class="warning badge">&nbsp;</span></td>
 																			<td>' . __( 'Warning!', 'zm_text' ) . '</td>
 																		</tr>';
 
-									$module_group_array[]          = $level;
-									$module_group_array[]          = array( 'id' => $oldtest_id . '_' . $module_group );
+									$module_group_array[]          = esc_attr( $level );
+									$module_group_array[]          = array( 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) );
 									$button_array[ $module_group ] = $module_group_array;
 
 									break;
 
 								case 'NOTICE':
 									$levelclass                    = 'primary callout';
-									$tablerow                     .= '<tr class="' . $levelclass . '">
-																			<td class="break-word">'. $message . '</td>
+									$tablerow                     .= '<tr class="' . esc_attr( $levelclass ) . '">
+																			<td class="break-word">' . esc_html( $message ) . '</td>
 																			<td><span class="success badge">&nbsp;</span></td>
 																			<td>' . __( 'OK', 'zm_text' ) . '</td>
 																		</tr>';
 
-									$module_group_array[]          = $level;
-									$module_group_array[]          = array( 'id' => $oldtest_id . '_' . $module_group );
+									$module_group_array[]          = esc_attr( $level );
+									$module_group_array[]          = array( 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) );
 									$button_array[ $module_group ] = $module_group_array;
 
 									break;
 
 								case 'INFO':
 									$tablerow                     .= '<tr>
-																			<td class="break-word">'. $message . '</td>
+																			<td class="break-word">' . esc_html( $message ) . '</td>
 																			<td><span class="success badge">&nbsp;</span></td>
 																			<td>' . __( 'OK', 'zm_text' ) . '</td>
 																		</tr>';
 
-									$module_group_array[]          = $level;
-									$module_group_array[]          = array( 'id' => $oldtest_id . '_' . $module_group );
+									$module_group_array[]          = esc_attr( $level );
+									$module_group_array[]          = array( 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) );
 									$button_array[ $module_group ] = $module_group_array;
 
 									break;
 
 								default:
 									$tablerow                     .= '<tr>
-																			<td class="break-word">' . $message . '</td>
+																			<td class="break-word">' . esc_html( $message ) . '</td>
 																			<td></td>
 																			<td></td>
 																		</tr>';
@@ -1139,30 +1165,30 @@ class Zonemaster extends ZonemasterSettings {
 								}
 
 								?>
-								<div class="js-stick" <?php echo $sticky_container;?> >
-									<div data-options="stickyOn: small" data-anchor="sticky-table" class="<?php echo $sticky_class; ?>" <?php echo $sticky_data; ?>>
+								<div class="js-stick" <?php echo esc_attr( $sticky_container );?> >
+									<div data-options="stickyOn: small" data-anchor="sticky-table" class="<?php echo esc_attr( $sticky_class ); ?>" <?php echo esc_attr( $sticky_data ); ?>>
 									<?php
 									foreach ( $button_array as $button_text => $btn_array ) {
 										$badge_counts = array_count_values( $btn_array );
 
 										if ( in_array( 'CRITICAL', $btn_array ) || in_array( 'ERROR', $btn_array ) ) {
-											$alert_counts = $badge_counts['CRITICAL'] + $badge_counts['ERROR'] + $badge_counts['WARNING'];
+											$alert_counts = absint( $badge_counts['CRITICAL'] + $badge_counts['ERROR'] + $badge_counts['WARNING'] );
 
-											echo '<span class="button-with-badge"><a class="button small alert ' . $js_scroll . '" href="#' . $btn_array[1]['id'] . '">' . $button_text . '</a><span class="badge alert top-right">' . $alert_counts . '</span></span>';
+											echo '<span class="button-with-badge"><a class="button small alert ' . esc_attr( $js_scroll ) . '" href="#' . $btn_array[1]['id'] . '">' . esc_html( $button_text ) . '</a><span class="badge alert top-right">' . esc_html( $alert_counts ) . '</span></span>';
 										} elseif ( in_array( 'WARNING', $btn_array ) ) {
-											$warning_counts = $badge_counts['WARNING'];
+											$warning_counts = absint( $badge_counts['WARNING'] );
 
-											echo '<span class="button-with-badge"><a class="button small warning ' . $js_scroll . '" href="#' . $btn_array[1]['id'] . '">' . $button_text . '</a><span class="badge warning top-right">' . $warning_counts . '</span></span>';
+											echo '<span class="button-with-badge"><a class="button small warning ' . esc_attr( $js_scroll ) . '" href="#' . $btn_array[1]['id'] . '">' . esc_html( $button_text ) . '</a><span class="badge warning top-right">' . esc_html( $warning_counts ) . '</span></span>';
 										} else {
-											$notice_counts = $badge_counts['NOTICE'];
+											$notice_counts = absint( $badge_counts['NOTICE'] );
 
 											if ( $notice_counts > 0 ) {
-												$notice_badge = '<span class="badge primary top-right">' . $notice_counts . '</span>';
+												$notice_badge = '<span class="badge primary top-right">' . esc_html( $notice_counts ) . '</span>';
 											} else {
 												$notice_badge = '';
 											}
 
-											echo '<span class="button-with-badge"><a class="button small success ' . $js_scroll . '" href="#' . $btn_array[1]['id'] . '">' . $button_text . '</a>' . $notice_badge . '</span>';
+											echo '<span class="button-with-badge"><a class="button small success ' . esc_attr( $js_scroll ) . '" href="#' . esc_attr( $btn_array[1]['id'] ) . '">' . esc_html( $button_text ) . '</a>' . $notice_badge . '</span>';
 										}
 									}
 										echo $up_button;
@@ -1196,17 +1222,18 @@ class Zonemaster extends ZonemasterSettings {
 										<tbody>
 								<?php
 								foreach ( $status['result'] as $result ) {
-									$id             = $result['id'];
-									$creation_time  = $result['creation_time'];
-									$overall_result = $result['overall_result'];
+
+									$id             = sanitize_text_field( $result['id'] );
+									$creation_time  = sanitize_text_field( $result['creation_time'] );
+									$overall_result = sanitize_text_field( $result['overall_result'] );
 
 									if ( $id === $testid ) {
-										$testlink = $creation_time . ' <em>' . __( '( This is current test.)', 'zm_text' ) . '</em>';
+										$testlink = esc_html( $creation_time ) . ' <em>' . __( '( This is current test.)', 'zm_text' ) . '</em>';
 									} else {
-										$testlink = '<a href="/?resultid=' . $id . '" class="js-expand-testresult" data-testid="' . $id . '">' . $creation_time . '</a>';
+										$testlink = '<a href="/?resultid=' . esc_attr( $id ) . '" class="js-expand-testresult" data-testid="' . esc_attr( $id ) . '">' . esc_html( $creation_time ) . '</a>';
 									}
 
-									$reveal_modal .= '<div id="reveal_' . $id . '" data-v-offset="50" class="large reveal ';
+									$reveal_modal .= '<div id="reveal_' . esc_attr( $id ) . '" data-v-offset="50" class="large reveal ';
 
 									switch ( $overall_result ) {
 										case 'warning':
@@ -1276,7 +1303,7 @@ class Zonemaster extends ZonemasterSettings {
 					<div class="div-tab-area footer <?php echo $div_tab_area_color; ?>">
 						<div class="row">
 							<div class="column">
-								<?php echo $testresult[0]['message'] ; // this should be engine version with any luck...?>
+								<?php echo esc_html( $testresult[0]['message'] ) ; // this should be engine version with any luck...?>
 							</div>
 							<div class="column align-self-center">
 
@@ -1294,17 +1321,6 @@ class Zonemaster extends ZonemasterSettings {
 		} // else print results
 	} // end function get_single_test
 
-	/**
-	 * Initiate the progress bar
-	 * @param  string  $progress_class color to start with
-	 * @param  integer $progress_width How far is the test
-	 * @return string
-	 */
-	private function progress_meter( $progress_class = 'success', $progress_width = 100 ) {
-
-		$meter = '<span class="meter ' . $progress_class . '" style="width: ' . $progress_width . '%"></span>';
-		return $meter;
-	}
 } // Class Zonemaster
 
 // class name outside class

@@ -21,9 +21,10 @@ $tab_pre_delegated_aria     = '';
 $tab_domain_check_aria      = '';
 $requested_test_id          = '';
 
+$request_tab = isset( $_REQUEST['tab'] ) ? sanitize_text_field( $_REQUEST['tab'] ) : '';
 // no-js params
-if ( isset( $_REQUEST['tab'] ) ) {
-	switch ( $_REQUEST['tab'] ) {
+if ( '' !== $request_tab ) {
+	switch ( $request_tab ) {
 		case 'tpd':
 			$pre_delegated_domain_check = true;
 			break;
@@ -47,11 +48,13 @@ if ( isset( $_REQUEST['tab'] ) ) {
 }
 
 // if we should show an old test
-$requested_test_id = isset( $_REQUEST['resultid'] ) ? $zm->regexp_check( $_REQUEST['resultid'] ) : '';
+$requested_test_id   = isset( $_REQUEST['resultid'] ) ? $zm->regexp_check( $_REQUEST['resultid'] ) : '';
+$post_zone_tld       = isset( $_POST['zone_tld'] ) ? sanitize_text_field( $_POST['zone_tld'] ) : '';
+$post_tld_zonemaster = isset( $_POST['tld_zonemaster'] ) ? sanitize_text_field( $_POST['tld_zonemaster'] ) : '';
 
 // Check that post data is comming from the form before moving on
-if ( isset( $_POST['zone_tld'] ) && ( ( isset( $_POST['tld_zonemaster'] ) && wp_verify_nonce( $_POST['tld_zonemaster'], 'check_tld_zone' ) ) ) ) {
-	$zone_tld    = trim( $_POST['zone_tld'] );
+if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce( $post_tld_zonemaster, 'check_tld_zone' ) ) ) ) {
+	$zone_tld    = trim( $post_zone_tld );
 
 	// We only want to start if there is a zone_tld
 	if ( '' !== $zone_tld ) {
@@ -95,12 +98,18 @@ if ( isset( $_POST['zone_tld'] ) && ( ( isset( $_POST['tld_zonemaster'] ) && wp_
 			$add_no_js_digest_field    = isset( $_POST['add_digest_field'] ) ? true : false;
 			$del_no_js_digest_field    = isset( $_POST['del_digest_field'] ) ? true : false;
 
+			$post_field_ns     = isset( $_POST['field_ns'] ) ? $zm->sanitize_array( $_POST['field_ns'] ) : array();
+			$post_del_ns_field = isset( $_POST['del_ns_field'] ) ? sanitize_text_field( $_POST['del_ns_field'] ) : '';
+
+			$post_field_key_tag    = isset( $_POST['field_key_tag'] ) ? $zm->sanitize_array( $_POST['field_key_tag'] ) : array();
+			$post_del_digest_field = isset( $_POST['del_digest_field'] ) ? sanitize_text_field( $_POST['del_digest_field'] ) : '';
+
 			$key = -1;
-			if ( isset( $_POST['field_ns'] ) ) {
-				foreach ( $_POST['field_ns'] as $key => $ns_field ) {
+			if ( ! empty( $post_field_ns ) ) {
+				foreach ( $post_field_ns as $key => $ns_field ) {
 					$ns_field = $zm->regexp_check( $ns_field );
 
-					if ( ( $del_no_js_ns_field && $key == $_POST['del_ns_field'] ) || ( '' === $ns_field ) ) {
+					if ( ( $del_no_js_ns_field && $key == $post_del_ns_field ) || ( '' === $ns_field ) ) {
 					} else {
 						$ip_field = $zm->regexp_check( $_POST['field_ip'][ $key ] );
 						// Frontend, lighter check if valid IP-address
@@ -139,11 +148,11 @@ if ( isset( $_POST['zone_tld'] ) && ( ( isset( $_POST['tld_zonemaster'] ) && wp_
 			}
 
 			$ds_key = -1;
-			if ( isset( $_POST['field_key_tag'] ) ) {
-				foreach ( $_POST['field_key_tag'] as $ds_key => $key_tag_field ) {
+			if ( ! empty( $post_field_key_tag ) ) {
+				foreach ( $post_field_key_tag as $ds_key => $key_tag_field ) {
 					$key_tag_field = $zm->regexp_check( $key_tag_field );
 
-					if ( ( $del_no_js_digest_field && $ds_key == $_POST['del_digest_field'] ) || ( '' === $key_tag_field ) ) {
+					if ( ( $del_no_js_digest_field && $ds_key == $post_del_digest_field ) || ( '' === $key_tag_field ) ) {
 					} else {
 						$key_tag_field     = $zm->regexp_check( $_POST['field_key_tag'][ $ds_key ] );
 						$algorithm_field   = $zm->regexp_check( $_POST['field_algorithm'][ $ds_key ] );
@@ -192,9 +201,10 @@ if ( isset( $_POST['zone_tld'] ) && ( ( isset( $_POST['tld_zonemaster'] ) && wp_
 								'nameservers'     => $nameservers_array,
 								'ds_info'         => $ds_digest_pairs_array,
 								);
+				$params  = $zm->sanitize_array( $params );
 
-				$response   = $zm->verify_and_curl_request( array( 'method' => 'start_domain_test', 'params' => $params, 'create_transient' => true, 'transient_seconds' => $zm->settings( 'transient_start_test' ) ) );
-
+				$response   = $zm->verify_and_curl_request( array( 'method' => 'start_domain_test', 'params' => $params, 'create_transient' => true, 'transient_seconds' => sanitize_text_field( $zm->settings( 'transient_start_test' ) ) ) );
+_log( $response );
 				$error_in_response = false;
 				// If something went wrong
 				if ( ! $response ) {
@@ -205,10 +215,10 @@ if ( isset( $_POST['zone_tld'] ) && ( ( isset( $_POST['tld_zonemaster'] ) && wp_
 						$err_message = isset( $response['result']['message'] ) ? $response['result']['message'] : '';
 						$error_in_response = true;
 
-						echo '<div class="row"><div class="small-12 columns" id="errorurl"><p class="callout warning fade-in">' . __( 'Checking is not possible.', 'zm_text' ) . ' ' . __( 'API backend reports an error.', 'zm_text' ) . '<br>' . $err_message . '</p></div></div>';
+						echo '<div class="row"><div class="small-12 columns" id="errorurl"><p class="callout warning fade-in">' . __( 'Checking is not possible.', 'zm_text' ) . ' ' . __( 'API backend reports an error.', 'zm_text' ) . '<br>' . esc_html ( $err_message ) . '</p></div></div>';
 					} else {
 						// Hurray, we probably got an id back to continue on with checking test progress
-						$testid           = $response['result'];
+						$testid           = sanitize_text_field( $response['result'] );
 						$do_test_progress = true;
 					}
 				}
@@ -216,7 +226,7 @@ if ( isset( $_POST['zone_tld'] ) && ( ( isset( $_POST['tld_zonemaster'] ) && wp_
 				// If we actually got an answer (duh, see above )
 				if ( $response && ! $error_in_response ) {
 					// Return basic form stuff to use if client has javascript acitivated
-					echo '<div class="hide"><div id="apianswer">' . $testid . '</div><div id="checkedurl">' . $zone_tld . '</div><div id="usedipv6">' . $check_ip_v6 . '</div><div id="usedipv4">' . $check_ip_v4 . '</div></div>';
+					echo '<div class="hide"><div id="apianswer">' . esc_html( $testid ) . '</div><div id="checkedurl">' . esc_html( $zone_tld ) . '</div><div id="usedipv6">' . esc_html( $check_ip_v6 ) . '</div><div id="usedipv4">' . esc_html( $check_ip_v4 ) . '</div></div>';
 				}
 			} // end if we have used no-js to add or remove stuff
 		} // end verify zone
@@ -250,13 +260,13 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 	<div class="columns">
 		<ul class="tabs" data-tabs id="test-input-tabs">
 			<li class="tabs-title<?php echo $tab_domain_check_class; ?>">
-				<a href="/?tab=tdc#domain_check"<?php echo $tab_domain_check_aria; ?>><?php _e( 'Domain check', 'zm_text' ); ?></a>
+				<a href="/?tab=tdc#domain_check"<?php echo esc_attr( $tab_domain_check_aria ); ?>><?php _e( 'Domain check', 'zm_text' ); ?></a>
 			</li>
 			<li class="tabs-title<?php echo $tab_pre_delegated_class; ?>">
-				<a href="/?tab=tpd#pre_delegated"<?php echo $tab_pre_delegated_aria; ?>><?php _e( 'Pre-delegated domain check', 'zm_text' ); ?></a>
+				<a href="/?tab=tpd#pre_delegated"<?php echo esc_attr( $tab_pre_delegated_aria ); ?>><?php _e( 'Pre-delegated domain check', 'zm_text' ); ?></a>
 			</li>
 			<li class="tabs-title<?php echo $tab_test_progress_class; ?>" id="test-result-tab">
-				<a href="/?resultid=<?php echo $requested_test_id; ?>&tab=ttp#test_progress" class="js-tab-test-progress"<?php echo $tab_test_progress_aria; ?>><?php _e( 'Test result', 'zm_text' ); ?></a>
+				<a href="/?resultid=<?php echo $requested_test_id; ?>&tab=ttp#test_progress" class="js-tab-test-progress"<?php echo esc_attr( $tab_test_progress_aria ); ?>><?php _e( 'Test result', 'zm_text' ); ?></a>
 			</li>
 		</ul>
 	</div>
@@ -282,7 +292,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 				</div>
 
 				<div class="input-group large">
-					<input type="text" class="input-group-field" name="zone_tld" id="zone_tld_domain_check" placeholder="<?php _e( 'Input zone.tld', 'zm_text' ); ?>" required value="<?php echo $zone_tld; ?>">
+					<input type="text" class="input-group-field" name="zone_tld" id="zone_tld_domain_check" placeholder="<?php _e( 'Input zone.tld', 'zm_text' ); ?>" required value="<?php echo esc_attr( $zone_tld ); ?>">
 					<div class="input-group-button">
 						<input type="submit" class="button secondary submit-zone" id="submit_zone_domain_check" value="<?php _e( 'Test Now', 'zm_text' ); ?>">
 					</div>
@@ -296,7 +306,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 
 	</div>
 
-	<div class="tabs-panel<?php echo $tab_pre_delegated_class; ?> full-width primary" id="pre_delegated">
+	<div class="tabs-panel<?php echo esc_attr( $tab_pre_delegated_class ); ?> full-width primary" id="pre_delegated">
 
 		<div class="row align-center">
 
@@ -312,7 +322,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 				<p class="text-center js-pre-zone-required"><?php _e( 'Input zone.tld', 'zm_text' ); ?></p>
 
 				<div class="input-group large">
-					<input type="text" name="zone_tld" id="zone_tld_pre_delegated" placeholder="zone.tld" required value="<?php echo $zone_tld; ?>">
+					<input type="text" name="zone_tld" id="zone_tld_pre_delegated" placeholder="zone.tld" required value="<?php echo esc_attr( $zone_tld ); ?>">
 				</div>
 
 				<?php
@@ -411,9 +421,9 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 					echo '<div class="callout show-if-no-js js-append-to-what-is-predelegated">';
 
 					foreach ( $what_is_pre_delegated_domain_check as $faq_text ) {
-						$lang = $faq_text['language'];
+						$lang = sanitize_text_field( $faq_text['language'] );
 						if ( $selected_lang === $lang ) {
-							$faq_page = $faq_text['page_name'];
+							$faq_page = absint( $faq_text['page_name'] );
 						}
 					}
 					// This header will also be used as link if it exists
@@ -436,7 +446,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 		</div>
 	</div>
 
-	<div class="tabs-panel full-width primary<?php echo $tab_test_progress_class; ?>" id="test_progress">
+	<div class="tabs-panel full-width primary<?php echo esc_attr( $tab_test_progress_class ); ?>" id="test_progress">
 		<?php
 		// first submit to test engine
 		if ( $do_test_progress && '' == $requested_test_id ) {
@@ -483,7 +493,7 @@ if ( have_posts() ) {
 				$green_fill  = '34b233';
 
 				$img_all_lights = '<svg id="all_streetlights" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540.5 360">
-						<defs><style>.cls-1{opacity:0.1;}.cls-2-all{fill:#575756;} .red-all{fill:#' . $red_fill . ';} .orange-all{fill:#' . $orange_fill . ';} .green-all{fill:#' . $green_fill . ';}</style></defs>
+						<defs><style>.cls-1{opacity:0.1;}.cls-2-all{fill:#575756;} .red-all{fill:#' . esc_attr( $red_fill ) . ';} .orange-all{fill:#' . esc_attr( $orange_fill ) . ';} .green-all{fill:#' . esc_attr( $green_fill ) . ';}</style></defs>
 						<title>Zonemaster all lights</title><polygon class="cls-1" points="310 143.33 166.67 0 0 307.68 52.32 360 540.5 360 310 143.33"/><rect width="166.67" height="307.68"/><path class="cls-2-all red-all" d="M83.33,103.18a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-all orange-all" d="M83.33,194.34a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-all green-all" d="M83.33,285.5A40.5,40.5,0,1,0,42.83,245a40.5,40.5,0,0,0,40.5,40.5"/></svg>';
 				?>
 				<figure class="all-stoplights-img">
