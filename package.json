@@ -23,7 +23,7 @@
 		"grunt-postcss": "",
 		"grunt-rsync": "",
 		"grunt-sass": "",
-    	"grunt-scss-lint": "",
+		"grunt-scss-lint": "",
 		"grunt-wp-assets": "",
 		"matchdep": "",
 		"pixrem": "",

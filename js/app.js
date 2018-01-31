@@ -111,6 +111,17 @@ if ( typeof $ === 'function' ) {
 
 		});
 
+		/**
+		 * Re-calculate sticky elements on tab change.
+		 *
+		 * If a sticky elements is inside a hidden container on load
+		 * it will not have correct dimensions when it's displayed.
+		 * This fixes that.
+		 */
+		$(document).on('change.zf.tabs', function () {
+			$('[data-sticky]').foundation('_calc', true);
+		});
+
 	});
 }
 
@@ -122,5 +133,3 @@ menuButton.addEventListener( 'click', function ( e ) {
 	menuButton.classList.toggle( 'is-active' );
 	e.preventDefault();
 });
-
-
