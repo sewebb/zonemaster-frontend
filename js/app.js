@@ -119,7 +119,9 @@ if ( typeof $ === 'function' ) {
 		 * This fixes that.
 		 */
 		$(document).on('change.zf.tabs', function () {
-			$('[data-sticky]').foundation('_calc', true);
+			if ($('[data-sticky]').length) {
+				$('[data-sticky]').foundation('_calc', true);
+			}
 		});
 
 	});
