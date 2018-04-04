@@ -6,10 +6,12 @@ module.exports = function( grunt ) {
 	// save sample-env.js as env.js and change your settings
 	var envSettings = require('./env.js');
 
+	grunt.loadNpmTasks('grunt-browserify');
+
 
 	grunt.initConfig({
 		clean: {
-			dist: [ 'css/*.css','js/*.min.js' ]
+			dist: [ 'css/*.css','js/*.min.js', 'js/bundle.js' ]
 		},
 		cssmin: {
 			target: {
@@ -148,48 +150,28 @@ module.exports = function( grunt ) {
 			},
 			js: {
 				files: [ 'js/app.js', 'js/api.js', 'Gruntfile.js' ],
-				tasks: [ 'uglify', 'version' ],
+				tasks: [ 'browserify', 'uglify', 'version' ],
 				options: {
 					spawn: false
 				}
+			}
+		},
+		browserify: {
+			pkg: grunt.file.readJSON('package.json'),
+			options: {
+				transform: [['babelify', {presets: ['babel-preset-es2015']}]]
+			},
+			main: {
+				src: 'js/app.js',
+				dest: 'js/bundle.js'
 			}
 		},
 		uglify: {
 			dist: {
 				files: {
 					'js/app.min.js': [
-						'node_modules/foundation-sites/js/foundation.core.js', // MUST USE
-						'node_modules/foundation-sites/js/foundation.util.mediaQuery.js', // MUST USE
-						// 'node_modules/foundation-sites/js/foundation.abide.js',
-						// 'node_modules/foundation-sites/js/foundation.accordion.js',
-						'node_modules/foundation-sites/js/foundation.accordionMenu.js',
-						'node_modules/foundation-sites/js/foundation.drilldown.js',
-						'node_modules/foundation-sites/js/foundation.dropdown.js',
-						'node_modules/foundation-sites/js/foundation.dropdownMenu.js',
-						// 'node_modules/foundation-sites/js/foundation.equalizer.js',
-						// 'node_modules/foundation-sites/js/foundation.interchange.js',
-						// 'node_modules/foundation-sites/js/foundation.magellan.js',
-						// 'node_modules/foundation-sites/js/foundation.offcanvas.js',
-						// 'node_modules/foundation-sites/js/foundation.orbit.js',
-						'node_modules/foundation-sites/js/foundation.responsiveMenu.js', //
-						'node_modules/foundation-sites/js/foundation.responsiveToggle.js', //
-						'node_modules/foundation-sites/js/foundation.reveal.js',
-						// 'node_modules/foundation-sites/js/foundation.slider.js',
-						'node_modules/foundation-sites/js/foundation.sticky.js',
-						'node_modules/foundation-sites/js/foundation.tabs.js',
-						'node_modules/foundation-sites/js/foundation.toggler.js',
-						'node_modules/foundation-sites/js/foundation.util.box.js',
-						'node_modules/foundation-sites/js/foundation.util.keyboard.js',
-						'node_modules/foundation-sites/js/foundation.util.motion.js',
-						'node_modules/foundation-sites/js/foundation.util.nest.js',
-						'node_modules/foundation-sites/js/foundation.util.timerAndImageLoader.js',
-						'node_modules/foundation-sites/js/foundation.util.touch.js',
-						'node_modules/foundation-sites/js/foundation.util.triggers.js',
-
 						'js/clipboard.js',
-
-						'js/api.js',
-						'js/app.js'
+						'js/bundle.js'
 					]
 				}
 			}

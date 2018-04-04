@@ -8,8 +8,12 @@
 	},
 	"devDependencies": {
 		"autoprefixer": "",
-		"foundation-sites": "~6.1.1",
+		"babel-core": "^6.26.0",
+		"babel-preset-es2015": "^6.24.1",
+		"babelify": "^8.0.0",
+		"foundation-sites": "^6.4.3",
 		"grunt": "",
+		"grunt-browserify": "^5.2.0",
 		"grunt-contrib-clean": "",
 		"grunt-contrib-cssmin": "",
 		"grunt-contrib-jshint": "",
@@ -21,12 +25,15 @@
 		"grunt-jsvalidate": "",
 		"grunt-phpcs": "",
 		"grunt-postcss": "",
+		"grunt-retire": "",
 		"grunt-rsync": "",
 		"grunt-sass": "",
 		"grunt-scss-lint": "",
 		"grunt-wp-assets": "",
 		"matchdep": "",
-		"pixrem": "",
-		"grunt-retire": ""
+		"pixrem": ""
+	},
+	"dependencies": {
+		"jquery": "^3.3.1"
 	}
 }
