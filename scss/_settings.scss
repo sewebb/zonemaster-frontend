@@ -89,7 +89,7 @@ $global-weight-bold: bold;
 $global-radius: 0;
 $global-text-direction: ltr;
 
-$foundation-colors: (
+$foundation-palette: (
   primary: $primary-color,
   secondary: $secondary-color,
   alert: $alert-color,
@@ -97,6 +97,20 @@ $foundation-colors: (
   warning: $warning-color,
   success: $success-color,
   );
+
+// TODO: Migrate to color-pick-contrast
+@function foreground($color, $yes: $black, $no: $white, $threshold: 60%) {
+    @if $color == transparent {
+      $color: $body-background;
+    }
+    @if (lightness($color) > $threshold) {
+      @return $yes;
+    }
+    @else {
+      @return $no;
+    }
+}
+
 // 2. Breakpoints
 // --------------
 
@@ -240,6 +254,8 @@ $accordionmenu-arrow-color: $primary-color;
 
 $badge-background: $primary-color;
 $badge-color: foreground($badge-background);
+$badge-color-alt: foreground($badge-background);
+$badge-palette: $foundation-palette;
 $badge-padding: 0.3em;
 $badge-minwidth: 2.1em;
 $badge-font-size: 0.6rem;
@@ -388,6 +404,7 @@ $input-radius: $global-radius;
 $label-background: $primary-color;
 $label-color: foreground($label-background);
 $label-font-size: 0.8rem;
+$label-palette: $foundation-palette;
 $label-padding: 0.33333rem 0.5rem;
 $label-radius: $global-radius;
 
@@ -534,7 +551,7 @@ $tab-item-padding: 1.25rem 1.25rem;
 $tab-expand-max: 6;
 $tab-content-background: transparent;//$primary-color;
 $tab-content-border: $primary-color;
-$tab-content-color: foreground($tab-background, $primary-color);
+$tab-content-color: $black;
 $tab-content-padding: $gutter 0 0;
 
 // 32. Thumbnail
@@ -579,5 +596,3 @@ $topbar-padding: 0.5rem;
 $topbar-background: transparent;
 $topbar-title-spacing: 1rem;
 $topbar-input-width: 200px;
-
-

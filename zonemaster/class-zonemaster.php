@@ -1166,7 +1166,7 @@ class Zonemaster extends ZonemasterSettings {
 
 								?>
 								<div class="js-stick" <?php echo esc_attr( $sticky_container );?> >
-									<div data-options="stickyOn: small" data-anchor="sticky-table" class="<?php echo esc_attr( $sticky_class ); ?>" <?php echo esc_attr( $sticky_data ); ?>>
+									<div data-options="stickyOn: small" data-top-anchor="basic_result" class="<?php echo esc_attr( $sticky_class ); ?>" <?php echo esc_attr( $sticky_data ); ?>>
 									<?php
 									foreach ( $button_array as $button_text => $btn_array ) {
 										$badge_counts = array_count_values( $btn_array );

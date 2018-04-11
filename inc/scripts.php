@@ -10,12 +10,10 @@
  */
 function zonemaster_scripts() {
 	wp_enqueue_style( 'open-sans', '//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700' );
-	wp_enqueue_style( 'app-css', get_template_directory_uri() . '/css/app.18adb798.min.css', array(), null, 'all' );
+	wp_enqueue_style( 'app-css', get_template_directory_uri() . '/css/app.d75045c9.min.css', array(), null, 'all' );
 
 	wp_deregister_script( 'jquery' );
-	wp_register_script( 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js', false, null, true );
-	wp_enqueue_script( 'jquery' );
-	wp_enqueue_script( 'app-js', get_template_directory_uri() . '/js/app.dec45e35.min.js', array( 'jquery' ), null, true );
+	wp_enqueue_script( 'app-js', get_template_directory_uri() . '/js/app.908a391e.min.js', [], null, true );
 
 	$zm = Zonemaster::get_instance();
 	// if ( function_exists( 'pll_current_language' ) ) {
