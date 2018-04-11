@@ -1,7 +1,4 @@
-// TODO: Check if it's really necessary to expose jQuery
-const $ = require('jquery');
-
-window.jQuery = $;
+import $ from 'jquery';
 
 import {
     Foundation,
@@ -148,7 +145,7 @@ if ( typeof $ === 'function' ) {
 		 */
 		$(document).on('change.zf.tabs', function () {
 			if ($('[data-sticky]').length) {
-				$('[data-sticky]').foundation('_calc', true, $(window).scrollTop());
+				$('[data-sticky]').foundation('_calc', true);
 			}
 		});
 

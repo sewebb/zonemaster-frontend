@@ -588,29 +588,30 @@ _jquery2.default.fn.zonalizer = function (page) {
 },{"jquery":38}],2:[function(require,module,exports){
 'use strict';
 
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
 var _foundationSites = require('foundation-sites');
 
 require('./api');
 
-// TODO: Check if it's really necessary to expose jQuery
-var $ = require('jquery');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-window.jQuery = $;
+if (typeof _jquery2.default === 'function') {
+	(0, _jquery2.default)('body').removeClass('no-js');
 
-if (typeof $ === 'function') {
-	$('body').removeClass('no-js');
-
-	$(document).ready(function () {
+	(0, _jquery2.default)(document).ready(function () {
 		// Fix problem with IE
-		$.ajaxSetup({ cache: false });
+		_jquery2.default.ajaxSetup({ cache: false });
 		// Start API
-		$(document).zonalizer('main');
+		(0, _jquery2.default)(document).zonalizer('main');
 
 		// Set up clipboard
 		var clipboard = new Clipboard('.copy-link');
 
 		clipboard.on('success', function (e) {
-			var span = $(e.trigger);
+			var span = (0, _jquery2.default)(e.trigger);
 			span.addClass('fade-in fast reverse');
 			span.text(zmDefs.copy_done);
 
@@ -618,7 +619,7 @@ if (typeof $ === 'function') {
 		});
 
 		clipboard.on('error', function (e) {
-			var span = $(e.trigger);
+			var span = (0, _jquery2.default)(e.trigger);
 			span.addClass('fade-in fast reverse');
 			span.text(fallbackMessage(e.action));
 		});
@@ -637,12 +638,12 @@ if (typeof $ === 'function') {
 			return actionMsg;
 		}
 
-		var topLink = $('.top_link');
+		var topLink = (0, _jquery2.default)('.top_link');
 		var showTopLink = 500;
 		topLink.hide();
 
-		$(window).scroll(function () {
-			var y = $(window).scrollTop();
+		(0, _jquery2.default)(window).scroll(function () {
+			var y = (0, _jquery2.default)(window).scrollTop();
 			if (y > showTopLink) {
 				topLink.fadeIn('slow');
 			} else {
@@ -652,30 +653,30 @@ if (typeof $ === 'function') {
 
 		topLink.click(function (e) {
 			e.preventDefault();
-			$('html,body').animate({ scrollTop: 0 }, 'slow');
+			(0, _jquery2.default)('html,body').animate({ scrollTop: 0 }, 'slow');
 		});
 
 		// Correct colors on "normal" tabs
-		$('#test-input-tabs').on('change.zf.tabs', function () {
-			$('.tabs-panel.full-width ').removeClass('success ');
-			$('.tabs-panel.full-width ').removeClass('alert ');
-			$('.tabs-panel.full-width ').removeClass('warning ');
-			if ($('#test-result-tab').hasClass('is-active')) {
-				$('.start-page-wp-content').addClass('hide');
+		(0, _jquery2.default)('#test-input-tabs').on('change.zf.tabs', function () {
+			(0, _jquery2.default)('.tabs-panel.full-width ').removeClass('success ');
+			(0, _jquery2.default)('.tabs-panel.full-width ').removeClass('alert ');
+			(0, _jquery2.default)('.tabs-panel.full-width ').removeClass('warning ');
+			if ((0, _jquery2.default)('#test-result-tab').hasClass('is-active')) {
+				(0, _jquery2.default)('.start-page-wp-content').addClass('hide');
 			} else {
-				$('.start-page-wp-content').removeClass('hide');
+				(0, _jquery2.default)('.start-page-wp-content').removeClass('hide');
 			}
 		});
 
 		// Set input focus
-		$('#zone_tld_domain_check').focus();
+		(0, _jquery2.default)('#zone_tld_domain_check').focus();
 
 		// Get faq-text from no-js area in page-start.php
-		var pre_faq = $('.js-append-to-what-is-predelegated').html(),
-		    header_pre_faq = $('#header-pre-faq').text();
+		var pre_faq = (0, _jquery2.default)('.js-append-to-what-is-predelegated').html(),
+		    header_pre_faq = (0, _jquery2.default)('#header-pre-faq').text();
 
-		$('.js-header-pre-faq').text(header_pre_faq);
-		$('#what-is-predelegated').append(pre_faq);
+		(0, _jquery2.default)('.js-header-pre-faq').text(header_pre_faq);
+		(0, _jquery2.default)('#what-is-predelegated').append(pre_faq);
 
 		// set langlink in meny if possible
 		function getParameterByName(name, url) {
@@ -689,18 +690,18 @@ if (typeof $ === 'function') {
 		}
 
 		// help resultpage to translate
-		$('.lang-item a').each(function () {
+		(0, _jquery2.default)('.lang-item a').each(function () {
 
-			var langurl = $(this).attr('href'),
+			var langurl = (0, _jquery2.default)(this).attr('href'),
 			    id = getParameterByName('resultid'),
 			    tab = getParameterByName('tab');
 
 			if (langurl !== undefined && null !== id && null !== tab) {
-				$(this).attr('href', langurl + '?resultid=' + id + '&tab=' + tab);
+				(0, _jquery2.default)(this).attr('href', langurl + '?resultid=' + id + '&tab=' + tab);
 			} else if (langurl !== undefined && null !== tab) {
-				$(this).attr('href', langurl + '?tab=' + tab);
+				(0, _jquery2.default)(this).attr('href', langurl + '?tab=' + tab);
 			} else if (langurl !== undefined && null !== id) {
-				$(this).attr('href', langurl + '?resultid=' + id);
+				(0, _jquery2.default)(this).attr('href', langurl + '?resultid=' + id);
 			}
 		});
 
@@ -711,15 +712,15 @@ if (typeof $ === 'function') {
    * it will not have correct dimensions when it's displayed.
    * This fixes that.
    */
-		$(document).on('change.zf.tabs', function () {
-			if ($('[data-sticky]').length) {
-				$('[data-sticky]').foundation('_calc', true, $(window).scrollTop());
+		(0, _jquery2.default)(document).on('change.zf.tabs', function () {
+			if ((0, _jquery2.default)('[data-sticky]').length) {
+				(0, _jquery2.default)('[data-sticky]').foundation('_calc', true);
 			}
 		});
 	});
 }
 
-$(document).foundation();
+(0, _jquery2.default)(document).foundation();
 
 // Animera hamburgar-menyn
 var menuButton = document.getElementById('title-bar-mobile-menu');
