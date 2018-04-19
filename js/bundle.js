@@ -392,7 +392,7 @@ var zonalizer = {
 
 								if (data != '-1') {
 									// when we get our data, evaluate
-									dataResult = parseInt(data.result);
+									var dataResult = parseInt(data.result);
 
 									if (dataResult <= 99) {
 
@@ -470,7 +470,7 @@ var zonalizer = {
 						var temp,
 						    starttest = true;
 						//check status
-						urltocheck = '/?action=proxy&method=test_progress&params=' + id + '&nonce=' + proxynonce;
+						var urltocheck = '/?action=proxy&method=test_progress&params=' + id + '&nonce=' + proxynonce;
 						var interval = null;
 						interval = setInterval(function () {
 							waitandgetresults(urltocheck);

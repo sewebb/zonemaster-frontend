@@ -387,7 +387,7 @@ var zonalizer = {
 							var temp,
 								starttest = true;
 							//check status
-							urltocheck = '/?action=proxy&method=test_progress&params=' + id + '&nonce=' + proxynonce;
+							var urltocheck = '/?action=proxy&method=test_progress&params=' + id + '&nonce=' + proxynonce;
 							function checkstatus(urltocheck,callback){
 								starttest = false;
 								temp = $.getJSON(urltocheck, function (data) {
@@ -414,7 +414,7 @@ var zonalizer = {
 
 									if ( data != '-1' ) {
 										// when we get our data, evaluate
-										dataResult = parseInt(data.result);
+										var dataResult = parseInt(data.result);
 
 										if ( dataResult <= 99 ) {
 
