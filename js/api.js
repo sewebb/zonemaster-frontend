@@ -1,5 +1,12 @@
 import $ from 'jquery';
 
+/**
+ * A common problem in this file is (or rather was)
+ * the use of undeclared variables. No time for refactoring
+ * so just declaring myprogress here.
+ */
+var myprogress; // TODO: improve by storing it inside the zonalizer object
+
 var zonalizer = {
 
 	page: {
