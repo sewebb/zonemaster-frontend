@@ -1,6 +1,7 @@
 # Projektspecifikt
 css
 js/app.*.js
+js/bundle.js
 css/app.*.css
 env.js
 
