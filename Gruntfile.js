@@ -186,6 +186,7 @@ module.exports = function( grunt ) {
 		'sass',
 		'postcss',
 		'cssmin',
+		'browserify',
 		'uglify',
 		'version'
 	]);
