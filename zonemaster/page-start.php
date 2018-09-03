@@ -17,9 +17,14 @@ $nameservers_array          = array();
 $ds_digest_pairs_array      = array();
 $pre_delegated_domain_check = false;
 $do_test_progress           = false;
+$tab_test_progress_aria     = '';
 $tab_pre_delegated_aria     = '';
+$tab_pre_delegated_class    = '';
 $tab_domain_check_aria      = '';
+$tab_domain_check_class     = '';
 $requested_test_id          = '';
+$get_single_test_tab        = '';
+$zone_tld                   = '';
 
 $request_tab = isset( $_REQUEST['tab'] ) ? sanitize_text_field( $_REQUEST['tab'] ) : '';
 // no-js params
@@ -54,7 +59,7 @@ $post_tld_zonemaster = isset( $_POST['tld_zonemaster'] ) ? sanitize_text_field( 
 
 // Check that post data is comming from the form before moving on
 if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce( $post_tld_zonemaster, 'check_tld_zone' ) ) ) ) {
-	$zone_tld    = trim( $post_zone_tld );
+	$zone_tld = trim( $post_zone_tld );
 
 	// We only want to start if there is a zone_tld
 	if ( '' !== $zone_tld ) {
@@ -64,29 +69,30 @@ if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce
 
 		// Return error message if we don't like the posted data - verify_zone_tld will be false
 		if ( ! $verify_zone_tld ) {
-			echo '<div class="row"><div class="small-12 medium-8 columns" id="errorurl"><p class="callout warning fade-in fast">'. __( 'Sorry, we can´t test this.', 'zm_text' ) .'</p></div></div>';
+			echo '<div class="row"><div class="small-12 medium-8 columns" id="errorurl"><p class="callout warning fade-in fast">' . __( "Sorry, we can't test this.", 'zm_text' ) . '</p></div></div>';
 		} else {
 			$check_ip_v4 = $zm->regexp_check( $_POST['check_ip_v4'] );
 			$check_ip_v6 = $zm->regexp_check( $_POST['check_ip_v6'] );
 
 			if ( '1' === $check_ip_v4 ) {
 				$is_ipv4_checked = 'checked';
-				$check_ip_v4     = 1;
+				$check_ip_v4     = true;
 			} else {
 				$is_ipv4_checked = '';
-				$check_ip_v4     = 0;
+				$check_ip_v4     = false;
 			}
 
 			if ( '1' === $check_ip_v6 ) {
 				$is_ipv6_checked = 'checked';
-				$check_ip_v6     = 1;
+				$check_ip_v6     = true;
 			} else {
 				$is_ipv6_checked = '';
-				$check_ip_v6     = 0;
+				$check_ip_v6     = false;
 			}
 			// Make sure we test at least one ip-version if both checkboxes has been unchecked (no-js )
 			if ( 0 === $check_ip_v4 + $check_ip_v6 ) {
-				$check_ip_v4 = 1;
+				$check_ip_v4     = true;
+				$check_ip_v6     = false;
 				$is_ipv4_checked = 'checked';
 			}
 
@@ -109,8 +115,7 @@ if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce
 				foreach ( $post_field_ns as $key => $ns_field ) {
 					$ns_field = $zm->regexp_check( $ns_field );
 
-					if ( ( $del_no_js_ns_field && $key == $post_del_ns_field ) || ( '' === $ns_field ) ) {
-					} else {
+					if ( ! ( $del_no_js_ns_field && $key == $post_del_ns_field ) && ( '' !== $ns_field ) ) {
 						$ip_field = $zm->regexp_check( $_POST['field_ip'][ $key ] );
 						// Frontend, lighter check if valid IP-address
 						if ( '' !== trim( $ip_field ) ) {
@@ -132,13 +137,19 @@ if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce
 								// do html for fields
 								$nameservers_html .= $zm->nameservers_html( $key, $ns_field, $ip_address );
 								// prepare array for test engine
-								$nameservers_array[] = array( 'ns' => $ns_field, 'ip' => $ip_address );
+								$nameservers_array[] = [
+									'ns' => $ns_field,
+									'ip' => $ip_address,
+								];
 							}
 						} else {
 							// do html for fields
 							$nameservers_html .= $zm->nameservers_html( $key, $ns_field, $ip_field );
 							// prepare array for test engine
-							$nameservers_array[] = array( 'ns' => $ns_field, 'ip' => $ip_field );
+							$nameservers_array[] = [
+								'ns' => $ns_field,
+								'ip' => $ip_field,
+							];
 						}
 
 						// Correct tab, no-js
@@ -152,8 +163,7 @@ if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce
 				foreach ( $post_field_key_tag as $ds_key => $key_tag_field ) {
 					$key_tag_field = $zm->regexp_check( $key_tag_field );
 
-					if ( ( $del_no_js_digest_field && $ds_key == $post_del_digest_field ) || ( '' === $key_tag_field ) ) {
-					} else {
+					if ( ! ( $del_no_js_digest_field && $ds_key == $post_del_digest_field ) && ( '' !== $key_tag_field ) ) {
 						$key_tag_field     = $zm->regexp_check( $_POST['field_key_tag'][ $ds_key ] );
 						$algorithm_field   = $zm->regexp_check( $_POST['field_algorithm'][ $ds_key ] );
 						$digest_type_field = $zm->regexp_check( $_POST['field_digest_type'][ $ds_key ] );
@@ -162,7 +172,12 @@ if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce
 						// do html for fields
 						$digests_html .= $zm->digests_html( $ds_key, $key_tag_field, $algorithm_field, $digest_type_field, $digest_field );
 						// prepare array for test engine
-						$ds_digest_pairs_array[] = array( 'keytag' => $key_tag_field, 'algorithm' => $algorithm_field, 'digtype' => $digest_type_field, 'digest' => $digest_field );
+						$ds_digest_pairs_array[] = [
+							'keytag'    => intval( $key_tag_field ),
+							'algorithm' => intval( $algorithm_field ),
+							'digtype'   => intval( $digest_type_field ),
+							'digest'    => $digest_field,
+						];
 
 						// Correct tab
 						$pre_delegated_domain_check = true;
@@ -172,13 +187,13 @@ if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce
 
 			// User (no-js ) request a new empty set of nameserver fields
 			if ( $add_no_js_ns_field ) {
-				$key = $key + 1;
+				$key++;
 				$nameservers_html .= $zm->nameservers_html( $key );
 			}
 
 			// User (no-js ) request a new empty set of digest fields
 			if ( $add_no_js_digest_field ) {
-				$ds_key = $ds_key + 1;
+				$ds_key++;
 				$digests_html .= $zm->digests_html( $ds_key );
 			}
 
@@ -190,32 +205,51 @@ if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce
 
 			// If NOt one of the submitbuttons NOT intended for starting test (no-js )
 			if ( ! $get_data_from_parent_zone && ! $add_no_js_ns_field && ! $del_no_js_ns_field && ! $check_ip_address && ! $add_no_js_digest_field && ! $del_no_js_digest_field ) {
-				$params  = array(
-								'client_id'       => 'IIS Zonemaster frontend',
-								'domain'          => $verify_zone_tld,
-								'profile'         => 'default_profile',
-								'client_version'  => '1',
-								'advanced'        => true,
-								'ipv6'            => $check_ip_v6,
-								'ipv4'            => $check_ip_v4,
-								'nameservers'     => $nameservers_array,
-								'ds_info'         => $ds_digest_pairs_array,
-								);
-				$params  = $zm->sanitize_array( $params );
+				$params = [
+					'client_id'      => 'IIS Zonemaster frontend',
+					'domain'         => $verify_zone_tld,
+					'profile'        => 'default_profile',
+					'client_version' => '1',
+					'advanced'       => true,
+					'ipv6'           => $check_ip_v6,
+					'ipv4'           => $check_ip_v4,
+					'nameservers'    => $nameservers_array,
+					'ds_info'        => $ds_digest_pairs_array,
+				];
+				$params = $zm->sanitize_array( $params );
 
-				$response   = $zm->verify_and_curl_request( array( 'method' => 'start_domain_test', 'params' => $params, 'create_transient' => true, 'transient_seconds' => sanitize_text_field( $zm->settings( 'transient_start_test' ) ) ) );
-_log( $response );
+				if ( empty( $params['nameservers'] ) ) {
+					unset( $params['nameservers'] );
+				}
+				if ( empty( $params['ds_info'] ) ) {
+					unset( $params['ds_info'] );
+				}
+				if ( empty( $params['ipv6'] ) ) {
+					unset( $params['ipv6'] );
+				}
+				if ( empty( $params['ipv4'] ) ) {
+					unset( $params['ipv4'] );
+				}
+				$response = $zm->verify_and_curl_request(
+					[
+						'method'            => 'start_domain_test',
+						'params'            => $params,
+						'create_transient'  => true,
+						'transient_seconds' => sanitize_text_field( $zm->settings( 'transient_start_test' ) ),
+					]
+				);
+
 				$error_in_response = false;
 				// If something went wrong
 				if ( ! $response ) {
 					echo '<div class="row"><div class="small-12 medium-6 columns" id="errorurl"><p class="callout warning fade-in">' . __( 'Sorry, we can´t test right now, API seems to be offline.', 'zm_text' ) . '</p></div></div>';
 				} else {
 					// Backend answers with 200 ok even if there is an error. Check for it
-					if ( isset( $response['error'] ) || ( isset( $response['result']['status'] )  && 'nok' === $response['result']['status'] ) ) {
-						$err_message = isset( $response['result']['message'] ) ? $response['result']['message'] : '';
+					if ( isset( $response['error'] ) || ( isset( $response['result']['status'] ) && 'nok' === $response['result']['status'] ) ) {
+						$err_message       = isset( $response['result']['message'] ) ? $response['result']['message'] : '';
 						$error_in_response = true;
 
-						echo '<div class="row"><div class="small-12 columns" id="errorurl"><p class="callout warning fade-in">' . __( 'Checking is not possible.', 'zm_text' ) . ' ' . __( 'API backend reports an error.', 'zm_text' ) . '<br>' . esc_html ( $err_message ) . '</p></div></div>';
+						echo '<div class="row"><div class="small-12 columns" id="errorurl"><p class="callout warning fade-in">' . __( 'Checking is not possible.', 'zm_text' ) . ' ' . __( 'API backend reports an error.', 'zm_text' ) . '<br>' . esc_html( $err_message ) . '</p></div></div>';
 					} else {
 						// Hurray, we probably got an id back to continue on with checking test progress
 						$testid           = sanitize_text_field( $response['result'] );
@@ -235,7 +269,7 @@ _log( $response );
 
 // *** Tab active helper, mostly for then no-js
 // we are commensing test or looking at an old test
-$hide_startpage_content  = '';
+$hide_startpage_content = '';
 if ( $do_test_progress || '' !== $requested_test_id ) {
 	$tab_test_progress_class = ' is-active';
 	$tab_test_progress_aria  = ' aria-selected="true"';
@@ -246,7 +280,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 
 	$tab_test_progress_class = ' hide';
 } else {
-// just "normal"/first tab
+	// just "normal"/first tab
 	$tab_domain_check_class = ' is-active';
 	$tab_domain_check_aria  = ' aria-selected="true"';
 
@@ -428,7 +462,12 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 					}
 					// This header will also be used as link if it exists
 					echo '<h1 id="header-pre-faq">' . __( 'What is pre-delegated domain check?', 'zm_text' ) . '</h1>';
-					$include = get_pages( array( 'include' => $faq_page, 'post_type' => 'page' ) );
+					$include = get_pages(
+						[
+							'include'   => $faq_page,
+							'post_type' => 'page',
+						]
+					);
 					// Content will also be copied to javascript modal
 					$content = apply_filters( 'the_content', $include[0]->post_content );
 					echo $content . '</div>';
@@ -442,7 +481,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 			<?php // javascript will fill this div from above div "js-append-to-what-is-predelegated" ?>
 			<button class="close-button" data-close aria-label="Close modal" type="button">
 				<span aria-hidden="true">&times;</span>
-			 </button>
+			</button>
 		</div>
 	</div>
 
@@ -451,7 +490,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 		// first submit to test engine
 		if ( $do_test_progress && '' == $requested_test_id ) {
 			$zm->polling_test_template( $testid, '', $verify_zone_tld, $check_ip_v4, $check_ip_v6 );
-		// could be an old test och a request to poll ongoing test (then no-js )
+			// could be an old test och a request to poll ongoing test (then no-js )
 		} elseif ( '' !== $requested_test_id ) {
 			$check_progress = $zm->test_progress( $requested_test_id );
 
@@ -467,10 +506,10 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 		}
 		?>
 		<div class="progress-area" id="progressarea">
-			<?php // progress is loaded here if js is present  ?>
+			<?php // progress is loaded here if js is present ?>
 		</div>
 		<div class="js-hide results-area" id="resultsarea">
-		<?php // html (results ) from /browse/[id] are shown here if javascript is active  ?>
+		<?php // html (results ) from /browse/[id] are shown here if javascript is active ?>
 		</div>
 	</div>
 

@@ -4,6 +4,11 @@
  */
 class Zonemaster extends ZonemasterSettings {
 
+	/**
+	 * The Zonemaster object instance
+	 *
+	 * @var object
+	 */
 	private static $instance;
 
 	/**
@@ -14,7 +19,7 @@ class Zonemaster extends ZonemasterSettings {
 	private function __construct() {
 		// Hook ajax request on init, avoid slow admin_ajax
 		if ( ! is_admin() ) {
-			add_action( 'init', array( $this, 'ajax_get_functions' ) );
+			add_action( 'init', [ $this, 'ajax_get_functions' ] );
 		}
 	}
 
@@ -43,16 +48,16 @@ class Zonemaster extends ZonemasterSettings {
 		// Version, langugage based, used as nonce
 		$version = $this->get_zm_version();
 
-		$request_action         = sanitize_text_field( $_REQUEST['action'] );
+		$request_action         = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : '';
+		error_log('action: ' . $request_action);
 		$request_index          = isset( $_REQUEST['index'] ) ? absint( $_REQUEST['index'] ) : 1;
-		$request_ns             = $this->regexp_check( $_REQUEST['ns'] );
-		$request_ip             = $this->regexp_check( $_REQUEST['ip'] );
-		$request_zone_tld       = $this->verify_zone_tld( $_REQUEST['zone_tld'] );
-		$request_id             = $this->regexp_check( $_REQUEST['id'] );
+		$request_ns             = isset( $_REQUEST['ns'] ) ? $this->regexp_check( $_REQUEST['ns'] ) : '';
+		$request_ip             = isset( $_REQUEST['ip'] ) ? $this->regexp_check( $_REQUEST['ip'] ) : '';
+		$request_zone_tld       = isset( $_REQUEST['zone_tld'] ) ? $this->verify_zone_tld( $_REQUEST['zone_tld'] ) : '';
+		$request_id             = isset( $_REQUEST['id'] ) ? $this->regexp_check( $_REQUEST['id'] ) : '';
 		$request_oldtest_inline = isset( $_REQUEST['oldtest_inline'] ) ? $this->regexp_check( $_REQUEST['oldtest_inline'] ) : false;
 		$request_method         = isset( $_REQUEST['method'] ) ? sanitize_text_field( $_REQUEST['method'] ) : '';
 		$request_params         = isset( $_REQUEST['params'] ) ? sanitize_text_field( $_REQUEST['params'] ) : '';
-
 
 		// Check that backend is not offline
 		if ( strpos( $version, 'OFFLINE' ) !== false ) {
@@ -67,7 +72,7 @@ class Zonemaster extends ZonemasterSettings {
 			if ( check_ajax_referer( $version, 'nonce' ) ) {
 				$output = $this->digests_html( '0' );
 
-				echo json_encode( $output );
+				echo wp_json_encode( $output );
 			}
 
 			exit();
@@ -77,13 +82,13 @@ class Zonemaster extends ZonemasterSettings {
 		if ( 'get_nameservers_html' === $request_action ) {
 			// returns '-1' to javascript if nonce not correct
 			if ( check_ajax_referer( $version, 'nonce' ) ) {
-				$key    = $request_index;
-				$ns     = $request_ns;
-				$ip     = $request_ip;
+				$key = $request_index;
+				$ns  = $request_ns;
+				$ip  = $request_ip;
 
 				$output = $this->nameservers_html( $key, $ns, $ip );
 
-				echo json_encode( $output );
+				echo wp_json_encode( $output );
 			}
 			exit();
 		}
@@ -123,11 +128,11 @@ class Zonemaster extends ZonemasterSettings {
 			// returns '-1' to javascript if nonce not correct
 			if ( check_ajax_referer( $version, 'nonce' ) ) {
 				// Allowed backend api call via this function
-				$allow = array(
-						'get_ns_ips',
-						'test_progress',
-						'get_data_from_parent_zone',
-						);
+				$allow = [
+					'get_ns_ips',
+					'test_progress',
+					'get_data_from_parent_zone',
+				];
 
 				if ( '' === $request_method || '' === $request_params ) {
 					exit;
@@ -136,12 +141,11 @@ class Zonemaster extends ZonemasterSettings {
 				$method = $request_method;
 				$params = $request_params;
 
-				if ( in_array( $method, $allow ) ) {
-					$defaults = array(
-								'method'           => trim( $method ),
-								// 'create_transient' => $cache,
-								'params'           => trim( $params ),
-							);
+				if ( in_array( $method, $allow, true ) ) {
+					$defaults = [
+						'method' => trim( $method ),
+						'params' => trim( $params ),
+					];
 
 					$request_curl = $this->verify_and_curl_request( $defaults );
 
@@ -151,7 +155,7 @@ class Zonemaster extends ZonemasterSettings {
 						header( 'Content-type: application/' . ( $is_xhr ? 'json' : 'x-javascript' ) );
 
 						// Generate JSON string
-						$json = json_encode( $request_curl );
+						$json = wp_json_encode( $request_curl );
 						print $json;
 					}
 				}
@@ -180,7 +184,7 @@ class Zonemaster extends ZonemasterSettings {
 			$zone_tld = str_replace( 'https://', '', $zone_tld );
 		}
 		// No need to return "wrong tld" beacuse of ending "/"
-		if ( substr( $$zone_tld, -1 ) === '/' ) {
+		if ( substr( $zone_tld, -1 ) === '/' ) {
 			$zone_tld = rtrim( $zone_tld, '/' );
 		}
 
@@ -221,7 +225,6 @@ class Zonemaster extends ZonemasterSettings {
 
 		// Translate IDN-domain to punycode
 		$zone_tld_converted = $convert->encode( $zone_tld );
-
 		$zone_tld           = $zone_tld_converted;
 
 		return $zone_tld;
@@ -230,7 +233,7 @@ class Zonemaster extends ZonemasterSettings {
 	/**
 	 * Label an idna domain
 	 *
-	 * @param string $zone_tld Checked zone
+	 * @param string $tested_zone_tld Checked zone
 	 */
 	public function label_idna_test( $tested_zone_tld ) {
 
@@ -251,18 +254,18 @@ class Zonemaster extends ZonemasterSettings {
 	/**
 	 * Verify incoming data that will be sent to backend
 	 *
-	 * @param  array   $options  method = using it talk to backend / $create_transient = if we should pass this along / params post data to backend
+	 * @param  array $options  method = using it talk to backend / $create_transient = if we should pass this along / params post data to backend
 	 * @return bool
 	 */
-	public function verify_and_curl_request( $options = array() ) {
+	public function verify_and_curl_request( $options = [] ) {
 
-		$defaults = array(
+		$defaults = [
 			'method'            => '',
 			'create_transient'  => false,
 			'transient_seconds' => 0,
-			'params'            => array(),
-		);
-		$options = array_merge( $defaults, $options );
+			'params'            => [],
+		];
+		$options  = array_merge( $defaults, $options );
 		extract( $options );
 
 		// sanitize data from text field and params
@@ -270,28 +273,27 @@ class Zonemaster extends ZonemasterSettings {
 		$method            = $this->regexp_check( $method );
 		$transient_seconds = absint( $transient_seconds );
 
-
 		if ( ! $params ) {
 			_log( 'Params is empty' );
 			return false;
 		}
 
-		$sanitized_options = array(
-					'method'            => $method,
-					'create_transient'  => $create_transient,
-					'params'            => $params,
-					'transient_seconds' => $transient_seconds,
-				);
+		$sanitized_options = [
+			'method'            => $method,
+			'create_transient'  => $create_transient,
+			'params'            => $params,
+			'transient_seconds' => $transient_seconds,
+		];
 
 		// validate_syntax on method "start_domain_test"
-		if ( 'start_domain_test' === $method ) {
-			$validate_syntax   = array(
-					'method'            => 'validate_syntax',
-					'create_transient'  => true,
-					'params'            => $params,
-					'transient_seconds' => 60,
-				);
-			$syntax            = $this->analyze_zone_tld( $validate_syntax );
+		if ( false && 'start_domain_test' === $method ) { // validate_syntax is deprecated, so we block the call
+			$validate_syntax = [
+				'method'            => 'validate_syntax',
+				'create_transient'  => true,
+				'params'            => $params,
+				'transient_seconds' => 60,
+			];
+			$syntax          = $this->analyze_zone_tld( $validate_syntax );
 
 			if ( 'ok' === sanitize_text_field( $syntax['result']['status'] ) ) {
 				// if check params ok, do call
@@ -323,26 +325,27 @@ class Zonemaster extends ZonemasterSettings {
 		return $value;
 	}
 
-
 	/**
-	 * Sanitize the input then its in an array
+	 * Sanitize the input when it's an array
 	 *
 	 * @param  array $array [un-sanitized]
 	 * @return array         [sanitized]
 	 */
 	public function sanitize_array( &$array ) {
 
-		foreach ( $array as &$value ) {
-			if ( ! is_array( $value ) ) {
-				$value = $this->regexp_check( $value );
+		if ( is_array( $array ) ) {
+			foreach ( $array as &$value ) {
+				if ( ! is_array( $value ) ) {
+					$value = $this->regexp_check( $value );
 
-			} else {
-				// go inside this function again
-				$this->sanitize_array( $value );
+				} else {
+					// go inside this function again
+					$this->sanitize_array( $value );
+				}
 			}
 		}
 
-			return $array;
+		return $array;
 	}
 
 
@@ -352,45 +355,44 @@ class Zonemaster extends ZonemasterSettings {
 	 * @param array $options Merges with default settings
 	 * @return string
 	 */
-	private function analyze_zone_tld( $options = array() ) {
-		$defaults = array(
+	private function analyze_zone_tld( $options = [] ) {
+		$defaults = [
 			'method'            => '',
 			'api_call'          => sanitize_text_field( $this->settings( 'api_server' ) ) . sanitize_text_field( $this->settings( 'api_start_url' ) ),
 			'field_policy'      => '',
-			'field_ns'          => array(),
-			'field_ds'          => array(),
-			'field_meta_data'   => array(),
-			'params'            => array(),
+			'field_ns'          => [],
+			'field_ds'          => [],
+			'field_meta_data'   => [],
+			'params'            => [],
 			'timeout'           => 10,
 			'create_transient'  => false,
 			'transient_seconds' => 10,
-		);
-		$options = array_merge( $defaults, $options );
+		];
+		$options  = array_merge( $defaults, $options );
 		extract( $options );
 
-		$params = $this->sanitize_array( $params );
-		$method = sanitize_text_field( $method );
+		$locale_payload = 'dummy_payload_transient_name';
+		$params         = $this->sanitize_array( $params );
+		$method         = sanitize_text_field( $method );
 
 		$id   = date( 'YmdHis' ) . floor( microtime( true ) ); // something random
-		$send = array(
+		$send = [
 			'jsonrpc' => '2.0',
 			'method'  => $method,
-			'params'  => $params,
 			'id'      => $id,
-		);
-		$payload = json_encode( $send );
-
-		// remove transients based on GUI options page ( Should only be used for debugging)
-		if ( 'yes' === sanitize_text_field( $this->settings( 'temp_disable_transients' ) ) ) {
-			delete_transient( $locale_payload );
-			$create_transient = false;
+		];
+		if ( ! empty( $params ) ) {
+			$send['params'] = $params;
 		}
 
-		// If transients are requested
+		$payload = wp_json_encode( $send );
+
+		// Set transient name
 		if ( $create_transient ) {
-			$currentlang    = get_locale();
+			$currentlang = get_locale();
+
 			// Current lang so not to risk mixup (eg version info / proxy nonce )
-			$locale_payload = $currentlang . json_encode( $params ) . $method;
+			$locale_payload = $currentlang . wp_json_encode( $params ) . $method;
 
 			// Max 40 chars in transient name
 			if ( strlen( $locale_payload ) > 40 ) {
@@ -399,23 +401,30 @@ class Zonemaster extends ZonemasterSettings {
 			}
 		}
 
+		// Remove transients based on GUI options page ( Should only be used for debugging)
+		if ( 'yes' === sanitize_text_field( $this->settings( 'temp_disable_transients' ) ) ) {
+			delete_transient( $locale_payload );
+			$create_transient = false;
+		}
+
 		// If there is no transient cache available  - go fetch
 		if ( false === ( $json = get_transient( $locale_payload ) ) ) {
-			$response = wp_remote_post( $api_call, array(
+			$response = wp_remote_post( $api_call, [
 				'method'      => 'POST',
 				'timeout'     => $timeout,
 				'redirection' => 5,
 				'httpversion' => '1.0',
 				'blocking'    => true,
-				'headers'     => array(),
+				'headers'     => [],
 				'body'        => $payload,
-				'cookies'     => array(),
-			) );
-
+				'cookies'     => [],
+			] );
+_log($payload);
+_log($response);
 			if ( is_wp_error( $response ) ) {
 				$error_message = $response->get_error_message();
 
-			   // Empty transient if an error
+				// Empty transient if an error
 				if ( $create_transient ) {
 					delete_transient( $locale_payload );
 				}
@@ -427,13 +436,11 @@ class Zonemaster extends ZonemasterSettings {
 				if ( 200 === $response['response']['code'] ) {
 					$json = json_decode( $response['body'], true );
 
-
 					// if call requests a transient
 					if ( $create_transient ) {
 						$transient_seconds = absint( $transient_seconds );
 						set_transient( $locale_payload, $json, $transient_seconds );
 					}
-// _log( $method . '´s first chance for cache ', $transient_seconds . ' seconds', $locale_payload, $json);
 					return $json;
 				} else {
 					// Empty transient if an error
@@ -444,7 +451,6 @@ class Zonemaster extends ZonemasterSettings {
 			}
 		}
 		// we can get the cached version
-// _log( $method . ' cached for ', $transient_seconds . ' seconds', $locale_payload, $json);
 		return $json;
 	}
 
@@ -486,6 +492,15 @@ class Zonemaster extends ZonemasterSettings {
 	 * @return string              [description]
 	 */
 	public function digests_html( $key = '0', $key_tag = '', $algorithm = '', $digest_type = '', $digest = '' ) {
+
+		$three   = '';
+		$five    = '';
+		$six     = '';
+		$seven   = '';
+		$eight   = '';
+		$nine    = '';
+		$sha_1   = '';
+		$sha_256 = '';
 
 		switch ( esc_attr( $algorithm ) ) {
 			case '3':
@@ -560,8 +575,8 @@ class Zonemaster extends ZonemasterSettings {
 	/**
 	 * We have use for the option names in at least two places
 	 *
-	 * @param  string $field         Which field to return option name for
 	 * @param  string $option_number What name to return, based on number as a string
+	 * @param  string $field         Which field to return option name for
 	 * @return string
 	 */
 	private function option_name( $option_number, $field = 'field_algorithm' ) {
@@ -607,7 +622,7 @@ class Zonemaster extends ZonemasterSettings {
 	}
 
 	/**
-	 * request fields to be prefilled based on domain namne
+	 * Request fields to be prefilled based on domain namne
 	 *
 	 * @param  string $zone_tld domain name
 	 * @return array            We use the array as a list to print html
@@ -618,23 +633,30 @@ class Zonemaster extends ZonemasterSettings {
 		$digests_html     = '';
 		$key              = -1;
 		// API-call to get parent nameservers - ad ds data if any is available
-		$parent_addresses = $this->verify_and_curl_request( array( 'method' => 'get_data_from_parent_zone', 'params' => $zone_tld, 'create_transient' => true, 'transient_seconds' => $this->settings( 'transient_parent_zone' ) ) );
+		$parent_addresses = $this->verify_and_curl_request(
+			[
+				'method'            => 'get_data_from_parent_zone',
+				'params'            => $zone_tld,
+				'create_transient'  => true,
+				'transient_seconds' => $this->settings( 'transient_parent_zone' ),
+			]
+		);
 
 		$parent_nameservers = $this->sanitize_array( $parent_addresses['result']['ns_list'] );
 		$parent_digests     = $this->sanitize_array( $parent_addresses['result']['ds_list'] );
 
 		// create filled nameserver fields
 		foreach ( $parent_nameservers as $parent_nameserver ) {
-			$key = $key + 1;
+			$key++;
 			$nameservers_html .= $this->nameservers_html( $key, $parent_nameserver['ns'], $parent_nameserver['ip'] );
 		}
 
 		// create filled digest fields
 		foreach ( $parent_digests as $parent_digest ) {
-			$key = $key + 1;
+			$key++;
 			$digests_html .= $this->digests_html( $key, $parent_digest['keytag'], $parent_digest['algorithm'], $parent_digest['digtype'], $parent_digest['digest'] );
 		}
-		return array( $nameservers_html, $digests_html );
+		return [ $nameservers_html, $digests_html ];
 	}
 
 	/**
@@ -655,23 +677,28 @@ class Zonemaster extends ZonemasterSettings {
 	/**
 	 * Version info for printing in footer and individual tests
 	 *
-	 * @param string $output Variable to determine what should be returned
 	 * @return string
 	 */
 	public function get_zm_version() {
 
-		$api_version = $this->analyze_zone_tld( array( 'method' => 'version_info', 'params' => 'version_info', 'create_transient' => true, 'transient_seconds' => 60 ) );
+		$api_version = $this->analyze_zone_tld(
+			[
+				'method'            => 'version_info',
+				'params'            => [],
+				'create_transient'  => true,
+				'transient_seconds' => 60,
+			]
+		);
 		$zm_backend  = sanitize_text_field( $api_version['result']['zonemaster_backend'] );
 		$zm_engine   = sanitize_text_field( $api_version['result']['zonemaster_engine'] );
-
 
 		// if we want the footer text and api is online
 		if ( ! empty( $zm_engine ) ) {
 			// We think it´s not nescessary to show user ip
 			// $text    = __( 'IIS presents', 'zm_text' ) . ' ' . __( 'Zonemaster', 'zm_text' ) . ' ' .' backend v' . $zm_backend . ' ' . __( 'with', 'zm_text' ) . ' ' . __( 'Zonemaster engine', 'zm_text' ) . ' ' . $zm_engine . ' ' . __( 'to IP ', 'zm_text' ) . $_SERVER['REMOTE_ADDR'];
-			$text    = __( 'IIS presents', 'zm_text' ) . ' ' . __( 'Zonemaster', 'zm_text' ) . ' ' .' backend v' . esc_html( $zm_backend ) . ' ' . __( 'with', 'zm_text' ) . ' ' . __( 'Zonemaster engine', 'zm_text' ) . ' ' . esc_html( $zm_engine );
+			$text = __( 'IIS presents', 'zm_text' ) . ' ' . __( 'Zonemaster', 'zm_text' ) . '  backend v' . esc_html( $zm_backend ) . ' ' . __( 'with', 'zm_text' ) . ' ' . __( 'Zonemaster engine', 'zm_text' ) . ' ' . esc_html( $zm_engine );
 		} else {
-			$text    = $this->offline_text();
+			$text = $this->offline_text();
 		}
 
 		return $text;
@@ -697,8 +724,14 @@ class Zonemaster extends ZonemasterSettings {
 	public function get_ns_ips( $ns ) {
 
 		if ( '' !== $ns ) {
-			$addresses = $this->analyze_zone_tld( array( 'method' => 'get_ns_ips', 'params' => esc_attr( $ns ), 'create_transient' => true, 'transient_seconds' => sanitize_text_field( $this->settings( 'transient_ip_nameserver' ) ) ) );
-			// _log( $addresses );
+			$addresses = $this->analyze_zone_tld(
+				[
+					'method'            => 'get_ns_ips',
+					'params'            => esc_attr( $ns ),
+					'create_transient'  => true,
+					'transient_seconds' => sanitize_text_field( $this->settings( 'transient_ip_nameserver' ) ),
+				]
+			);
 			return $addresses['result'];
 		}
 		return false;
@@ -711,7 +744,12 @@ class Zonemaster extends ZonemasterSettings {
 	 * @return [type]         [description]
 	 */
 	public function test_progress( $testid ) {
-		$progress = $this->analyze_zone_tld( array( 'method' => 'test_progress', 'params' => esc_attr( $testid ) ) );
+		$progress = $this->analyze_zone_tld(
+			[
+				'method' => 'test_progress',
+				'params' => [ 'test_id' => esc_attr( $testid ) ],
+			]
+		);
 		return $progress['result'];
 	}
 
@@ -719,9 +757,13 @@ class Zonemaster extends ZonemasterSettings {
 	 * Template for then we show results on start page
 	 *
 	 * @param  string $testid [description]
+	 * @param  string $current_progress [description]
+	 * @param  string $zone_tld [description]
+	 * @param  string $check_ip_v4 [description]
+	 * @param  string $check_ip_v6 [description]
 	 * @return void
 	 */
-	public function polling_test_template( $testid, $current_progress = 1, $zone_tld = '', $check_ip_v4 = 1, $check_ip_v6 = 1) {
+	public function polling_test_template( $testid, $current_progress = 1, $zone_tld = '', $check_ip_v4 = 1, $check_ip_v6 = 1 ) {
 
 		$ipv4_label = 'alert';
 		$ipv6_label = 'alert';
@@ -733,7 +775,6 @@ class Zonemaster extends ZonemasterSettings {
 		}
 		// If zone tested is idna add the original raw text to label
 		$label_output = $this->label_idna_test( $zone_tld );
-
 		$server_name  = sanitize_text_field( $_SERVER['SERVER_NAME'] );
 
 		?>
@@ -741,12 +782,12 @@ class Zonemaster extends ZonemasterSettings {
 			<div class="row align-center" >
 				<div class="small-12 medium-11 large-10 xlarge-8 xxlarge-7 column columns">
 
-					<code class="show-if-no-js fade-in"><?php _e( 'In a short while your test will be ready at ', 'zm_text' ) ?>
+					<code class="show-if-no-js fade-in"><?php _e( 'In a short while your test will be ready at ', 'zm_text' ); ?>
 						<a class="stat" href="/?resultid=<?php echo $testid; ?>">
 							<?php echo $server_name; ?>/?resultid=<?php echo esc_attr( $testid ); ?>
 						</a>
 						<br>
-						<?php _e( 'Click the link to refresh the status of your test.', 'zm_text' ) ?>
+						<?php _e( 'Click the link to refresh the status of your test.', 'zm_text' ); ?>
 					</code>
 
 					<div class="js-report-status polling-area fade-in fast" >
@@ -755,7 +796,7 @@ class Zonemaster extends ZonemasterSettings {
 						if ( '' !== $zone_tld ) {
 						?>
 							<h3>
-								<?php _e( 'Currently checking', 'zm_text' ) ?>: <span id="js-fqdn"><?php echo esc_html( $label_output ); ?></span>
+								<?php _e( 'Currently checking', 'zm_text' ); ?>: <span id="js-fqdn"><?php echo esc_html( $label_output ); ?></span>
 							</h3>
 							<span class="<?php echo esc_attr( $ipv4_label ); ?> label js-ipv4">ipv4</span>
 							<span class="<?php echo esc_attr( $ipv6_label ); ?> label js-ipv6">ipv6</span>
@@ -798,27 +839,27 @@ class Zonemaster extends ZonemasterSettings {
 			$selected_lang = 'en';
 		}
 
-		$params           = array(
-								'language' => $selected_lang,
-								'id'       => esc_attr( $testid ),
-								);
+		$params = [
+			'language' => $selected_lang,
+			'id'       => esc_attr( $testid ),
+		];
 
 		if ( $oldtest_inline ) {
-			$get_test_results = array(
-								'method'            => 'get_test_results',
-								'create_transient'  => true,
-								'transient_seconds' => sanitize_text_field( $this->settings( 'transient_old_test' ) ),
-								'params'            => $params,
-							);
+			$get_test_results = [
+				'method'            => 'get_test_results',
+				'create_transient'  => true,
+				'transient_seconds' => sanitize_text_field( $this->settings( 'transient_old_test' ) ),
+				'params'            => $params,
+			];
 		} else {
-			$get_test_results = array(
-								'method'           => 'get_test_results',
-								'create_transient' => false,
-								'params'           => $params,
-							);
+			$get_test_results = [
+				'method'           => 'get_test_results',
+				'create_transient' => false,
+				'params'           => $params,
+			];
 		}
 
-		$testresults          = $this->verify_and_curl_request( $get_test_results );
+		$testresults = $this->verify_and_curl_request( $get_test_results );
 
 		// Very simple error checking
 		if ( isset( $testresults['error'] ) ) {
@@ -828,21 +869,36 @@ class Zonemaster extends ZonemasterSettings {
 			$frontend_params = $this->sanitize_array( $testresults['result']['params'] );
 			$fqdn            = sanitize_text_field( $frontend_params['domain'] );
 
-			$get_history_params  = array(
-									'offset'          => 0,
-									'limit'           => 200,
-									'frontend_params' => $frontend_params,
-									);
+			// Mask for frontend_params (define which keys to include)
+			$frontend_intersect = [
+				'domain'    => '',
+				'client_id' => '',
+				'profile'   => '',
+			];
+			$get_history_params = [
+				'offset'          => 0,
+				'limit'           => 200,
+				'frontend_params' => array_intersect_key( $frontend_params, $frontend_intersect ),
+			];
 
 			// Next: Check to see if the site has been checked recently,
-			$status = $this->verify_and_curl_request( array( 'method' => 'get_test_history', 'params' => $get_history_params, 'create_transient' => false ) );
+			$status = $this->verify_and_curl_request(
+				[
+					'method'           => 'get_test_history',
+					'params'           => $get_history_params,
+					'create_transient' => false,
+				]
+			);
 
 			// colors for traffic light, gray if nothing to show
 			$red_fill    = '575756';
 			$orange_fill = '575756';
 			$green_fill  = '575756';
+			error_log('$status result');
+			_log($status['result']);
 
 			foreach ( $status['result'] as $key => $result ) {
+				_log('testid='.$testid . ' result id = ' . $result['id']);
 				if ( $result['id'] === $testid ) {
 					$creation_time  = sanitize_text_field( $result['creation_time'] );
 					$overall_result = sanitize_text_field( $result['overall_result'] );
@@ -852,31 +908,31 @@ class Zonemaster extends ZonemasterSettings {
 					case 'warning':
 						$result_header_text = __( 'Contains warnings!', 'zm_text' );
 						$div_tab_area_color = 'warning';
-						$orange_fill = 'ff7900';
+						$orange_fill        = 'ff7900';
 						break;
 
 					case 'error':
 						$result_header_text = __( 'Contains errors!', 'zm_text' );
 						$div_tab_area_color = 'alert';
-						$red_fill    = 'e00034';
+						$red_fill           = 'e00034';
 						break;
 
 					case 'critical':
 						$result_header_text = __( 'Contains critical errors!', 'zm_text' );
 						$div_tab_area_color = 'alert';
-						$red_fill    = 'e00034';
+						$red_fill           = 'e00034';
 						break;
 
 					case 'INFO':
 						$result_header_text = __( 'All is well!', 'zm_text' );
 						$div_tab_area_color = 'success';
-						$green_fill  = '34b233';
+						$green_fill         = '34b233';
 						break;
 
 					case 'notice':
 						$result_header_text = __( 'All is well!', 'zm_text' );
 						$div_tab_area_color = 'success';
-						$green_fill  = '34b233';
+						$green_fill         = '34b233';
 						break;
 
 					default:
@@ -886,7 +942,7 @@ class Zonemaster extends ZonemasterSettings {
 				}
 			}
 
-			if ( '' !== $fqdn && null !== $fqdn) {
+			if ( '' !== $fqdn && null !== $fqdn ) {
 
 				// If zone tested is idna add the original raw text to label
 				$label_output = $this->label_idna_test( $fqdn );
@@ -908,21 +964,21 @@ class Zonemaster extends ZonemasterSettings {
 								<div class="result-text-three">
 									<?php
 									// check what kind of test this is and label it
-									$is_test_undelegated = array_filter( $frontend_params['nameservers'] );
-									$has_test_digests    = array_filter( $frontend_params['ds_info'] );
+									$is_test_undelegated = isset( $frontend_params['nameservers'] ) && is_array( $frontend_params['nameservers'] );
+									$has_test_digests    = isset( $frontend_params['nameservers'] ) && is_array( $frontend_params['ds_info'] );
 
-									if ( ! empty( $is_test_undelegated ) ) {
+									if ( $is_test_undelegated ) {
 										$ns_ip = '<div class="row small-font"><div class="column small-6 medium-12 large-6"><label class="label ' . $div_tab_area_color . '">Nameserver</label></div><div class="column small-6 medium-12 large-6"><label class="label ' . $div_tab_area_color . '">IP-address</label></div>';
 										foreach ( $frontend_params['nameservers'] as $value ) {
-											$ns = sanitize_text_field( $value['ns'] );
-											$ip = sanitize_text_field( $value['ip'] );
+											$ns     = sanitize_text_field( $value['ns'] );
+											$ip     = sanitize_text_field( $value['ip'] );
 											$ns_ip .= '<div class="column small-6 medium-12 large-6">' . esc_html( $ns ) . '</div>
 														<div class="column small-6 medium-12 large-6">' . esc_html( $ip ) . '</div>';
 										}
 										$ns_ip .= '</div>';
 									}
 
-									if ( ! empty( $has_test_digests ) ) {
+									if ( $has_test_digests ) {
 										foreach ( $frontend_params['ds_info'] as $value ) {
 											$keytag    = sanitize_text_field( $value['keytag'] );
 											$digtype   = sanitize_text_field( $value['digtype'] );
@@ -936,8 +992,9 @@ class Zonemaster extends ZonemasterSettings {
 										}
 									}
 
-									$ipv4 = isset( $frontend_params['ipv4'] ) && '1' == $frontend_params['ipv4'] ? 'IPv4' : '';
-									$ipv6 = isset( $frontend_params['ipv6'] ) && '1' == $frontend_params['ipv6'] ? 'IPv6' : '';
+									$ipv4 = isset( $frontend_params['ipv4'] ) && true == $frontend_params['ipv4'] ? 'IPv4' : '';
+									$ipv6 = isset( $frontend_params['ipv6'] ) && true == $frontend_params['ipv6'] ? 'IPv6' : '';
+									$and  = '';
 
 									if ( ! empty( $ipv4 ) && ! empty( $ipv6 ) ) {
 										$and = ' ' . __( 'and', 'zm_text' ) . ' ';
@@ -953,7 +1010,7 @@ class Zonemaster extends ZonemasterSettings {
 									?>
 								</div>
 								<p class="result-text-three">
-									<?php _e( 'Link to this result is:', 'zm_text' ) ?>
+									<?php _e( 'Link to this result is:', 'zm_text' ); ?>
 									<br>
 									<a href="/?resultid=<?php echo $testid; ?>">
 										<?php echo $_SERVER['SERVER_NAME']; ?>/?resultid=<?php echo esc_attr( $testid ); ?>
@@ -976,30 +1033,29 @@ class Zonemaster extends ZonemasterSettings {
 								$img = '<svg id="streetlights" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540.5 360">
 										<defs><style>.cls-1{opacity:0.1;}.cls-2-' . esc_attr( $testid ) . '{fill:#575756;} .red-' . esc_attr( $testid ) . '{fill:#' . $red_fill . ';} .orange-' . esc_attr( $testid ) . '{fill:#' . $orange_fill . ';} .green-' . esc_attr( $testid ) . '{fill:#' . $green_fill . ';}</style></defs>
 										<title>Zonemaster lights</title><polygon class="cls-1" points="310 143.33 166.67 0 0 307.68 52.32 360 540.5 360 310 143.33"/><rect width="166.67" height="307.68"/><path class="cls-2-' . esc_attr( $testid ) . ' red-' . esc_attr( $testid ) . '" d="M83.33,103.18a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-' . esc_attr( $testid ) . ' orange-' . esc_attr( $testid ) . '" d="M83.33,194.34a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-' . esc_attr( $testid ) . ' green-' . esc_attr( $testid ) . '" d="M83.33,285.5A40.5,40.5,0,1,0,42.83,245a40.5,40.5,0,0,0,40.5,40.5"/></svg>';
-								// if ( ! $oldtest_inline ) {
 								?>
 									<div class="stoplights-img">
 										<?php echo $img;
 										?>
 
 									</div>
-								<?php
-								// }?>
 
 							</div>
 						</div>
 
 						<?php
 						// Tab active helper then no-js
-						switch ( $tab) {
+						switch ( $tab ) {
 							case 'tet':
 								$tab_earlier_tests_class = ' is-active';
 								$tab_earlier_tests_aria  = ' aria-selected="true"';
 								break;
 
 							default:
-								$tab_basic_result_class = ' is-active';
-								$tab_basic_result_aria  = ' aria-selected="true"';
+								$tab_basic_result_class  = ' is-active';
+								$tab_basic_result_aria   = ' aria-selected="true"';
+								$tab_earlier_tests_class = ' ';
+								$tab_earlier_tests_aria  = ' ';
 								break;
 						}
 
@@ -1013,10 +1069,10 @@ class Zonemaster extends ZonemasterSettings {
 						?>
 						<div class="row">
 
-							<ul class="tabs white column" data-tabs id="result-tabs<?php echo $oldtest_id;?>">
+							<ul class="tabs white column" data-tabs id="result-tabs<?php echo $oldtest_id; ?>">
 
 								<li class="tabs-title white<?php echo $tab_basic_result_class; ?>">
-									<a href="/?resultid=<?php echo $testid; ?>&tab=tbr#basic_result<?php echo $oldtest_id;?>"<?php echo $tab_basic_result_aria; ?>>
+									<a href="/?resultid=<?php echo $testid; ?>&tab=tbr#basic_result<?php echo $oldtest_id; ?>"<?php echo $tab_basic_result_aria; ?>>
 										<?php _e( 'Result', 'zm_text' ); ?>
 									</a>
 								</li>
@@ -1038,12 +1094,13 @@ class Zonemaster extends ZonemasterSettings {
 					</div>
 					<div class="row">
 						<?php // identify tabs content so what foundation can ( try ) activate them correctly in js ?>
-						<div class="tabs-content white column" data-tabs-content="result-tabs<?php echo $oldtest_id;?>">
+						<div class="tabs-content white column" data-tabs-content="result-tabs<?php echo $oldtest_id; ?>">
 
-							<div class="tabs-panel<?php echo $tab_basic_result_class; ?>" id="basic_result<?php echo $oldtest_id;?>" >
+							<div class="tabs-panel<?php echo $tab_basic_result_class; ?>" id="basic_result<?php echo $oldtest_id; ?>" >
 
 						<?php
-							$module_group = '';
+						$module_group = '';
+						$tablerow     = '';
 
 						foreach ( $testresult as $result ) {
 							$level   = sanitize_text_field( $result['level'] );
@@ -1065,11 +1122,10 @@ class Zonemaster extends ZonemasterSettings {
 								unset( $module_group_array );
 							}
 
-
 							switch ( $level ) {
 								case 'CRITICAL':
-									$levelclass                    = 'alert callout';
-									$tablerow                     .= '<tr class="' . esc_attr( $levelclass ) . '">
+									$levelclass = 'alert callout';
+									$tablerow  .= '<tr class="' . esc_attr( $levelclass ) . '">
 																			<td class="break-word">' . esc_html( $message ) . '</td>
 																			<td><span class="alert badge">&nbsp;</span></td>
 																			<td>' . __( 'Critical error!', 'zm_text' ) . '</td>
@@ -1081,15 +1137,15 @@ class Zonemaster extends ZonemasterSettings {
 									break;
 
 								case 'ERROR':
-									$levelclass                    = 'alert callout';
-									$tablerow                     .= '<tr class="' . esc_attr( $levelclass ) . '">
+									$levelclass = 'alert callout';
+									$tablerow  .= '<tr class="' . esc_attr( $levelclass ) . '">
 																			<td class="break-word">' . esc_html( $message ) . '</td>
 																			<td><span class="alert badge">&nbsp;</span></td>
 																			<td>' . __( 'Error!', 'zm_text' ) . '</td>
 																		</tr>';
 
 									$module_group_array[]          = esc_attr( $level );
-									$module_group_array[]          = array( 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) );
+									$module_group_array[]          = [ 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) ];
 									$button_array[ $module_group ] = $module_group_array;
 
 									break;
@@ -1101,9 +1157,8 @@ class Zonemaster extends ZonemasterSettings {
 																			<td><span class="warning badge">&nbsp;</span></td>
 																			<td>' . __( 'Warning!', 'zm_text' ) . '</td>
 																		</tr>';
-
 									$module_group_array[]          = esc_attr( $level );
-									$module_group_array[]          = array( 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) );
+									$module_group_array[]          = [ 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) ];
 									$button_array[ $module_group ] = $module_group_array;
 
 									break;
@@ -1115,9 +1170,8 @@ class Zonemaster extends ZonemasterSettings {
 																			<td><span class="success badge">&nbsp;</span></td>
 																			<td>' . __( 'OK', 'zm_text' ) . '</td>
 																		</tr>';
-
 									$module_group_array[]          = esc_attr( $level );
-									$module_group_array[]          = array( 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) );
+									$module_group_array[]          = [ 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) ];
 									$button_array[ $module_group ] = $module_group_array;
 
 									break;
@@ -1128,19 +1182,18 @@ class Zonemaster extends ZonemasterSettings {
 																			<td><span class="success badge">&nbsp;</span></td>
 																			<td>' . __( 'OK', 'zm_text' ) . '</td>
 																		</tr>';
-
 									$module_group_array[]          = esc_attr( $level );
-									$module_group_array[]          = array( 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) );
+									$module_group_array[]          = [ 'id' => esc_attr( $oldtest_id ) . '_' . esc_attr( $module_group ) ];
 									$button_array[ $module_group ] = $module_group_array;
 
 									break;
 
 								default:
-									$tablerow                     .= '<tr>
-																			<td class="break-word">' . esc_html( $message ) . '</td>
-																			<td></td>
-																			<td></td>
-																		</tr>';
+									$tablerow .= '<tr>
+													<td class="break-word">' . esc_html( $message ) . '</td>
+													<td></td>
+													<td></td>
+												</tr>';
 									break;
 							}
 						}
@@ -1165,32 +1218,42 @@ class Zonemaster extends ZonemasterSettings {
 								}
 
 								?>
-								<div class="js-stick" <?php echo esc_attr( $sticky_container );?> >
+								<div class="js-stick" <?php echo esc_attr( $sticky_container ); ?> >
 									<div data-options="stickyOn: small" data-top-anchor="basic_result" class="<?php echo esc_attr( $sticky_class ); ?>" <?php echo esc_attr( $sticky_data ); ?>>
-									<?php
-									foreach ( $button_array as $button_text => $btn_array ) {
-										$badge_counts = array_count_values( $btn_array );
-
-										if ( in_array( 'CRITICAL', $btn_array ) || in_array( 'ERROR', $btn_array ) ) {
-											$alert_counts = absint( $badge_counts['CRITICAL'] + $badge_counts['ERROR'] + $badge_counts['WARNING'] );
-
-											echo '<span class="button-with-badge"><a class="button small alert ' . esc_attr( $js_scroll ) . '" href="#' . $btn_array[1]['id'] . '">' . esc_html( $button_text ) . '</a><span class="badge alert top-right">' . esc_html( $alert_counts ) . '</span></span>';
-										} elseif ( in_array( 'WARNING', $btn_array ) ) {
-											$warning_counts = absint( $badge_counts['WARNING'] );
-
-											echo '<span class="button-with-badge"><a class="button small warning ' . esc_attr( $js_scroll ) . '" href="#' . $btn_array[1]['id'] . '">' . esc_html( $button_text ) . '</a><span class="badge warning top-right">' . esc_html( $warning_counts ) . '</span></span>';
-										} else {
-											$notice_counts = absint( $badge_counts['NOTICE'] );
-
-											if ( $notice_counts > 0 ) {
-												$notice_badge = '<span class="badge primary top-right">' . esc_html( $notice_counts ) . '</span>';
-											} else {
-												$notice_badge = '';
+										<?php
+										foreach ( $button_array as $button_text => $btn_array ) {
+											$badge_counts = [
+												'CRITICAL' => 0,
+												'ERROR'    => 0,
+												'WARNING'  => 0,
+												'NOTICE'   => 0,
+												'INFO'     => 0,
+											];
+											foreach ( $btn_array as $btn_index => $btn_value ) {
+												if ( ! is_array( $btn_value ) ) {
+													$badge_counts[ $btn_value ]++;
+												}
 											}
+											if ( in_array( 'CRITICAL', $btn_array, true ) || in_array( 'ERROR', $btn_array, true ) ) {
+												$alert_counts = absint( $badge_counts['CRITICAL'] + $badge_counts['ERROR'] + $badge_counts['WARNING'] );
 
-											echo '<span class="button-with-badge"><a class="button small success ' . esc_attr( $js_scroll ) . '" href="#' . esc_attr( $btn_array[1]['id'] ) . '">' . esc_html( $button_text ) . '</a>' . $notice_badge . '</span>';
+												echo '<span class="button-with-badge"><a class="button small alert ' . esc_attr( $js_scroll ) . '" href="#' . $btn_array[1]['id'] . '">' . esc_html( $button_text ) . '</a><span class="badge alert top-right">' . esc_html( $alert_counts ) . '</span></span>';
+											} elseif ( in_array( 'WARNING', $btn_array, true ) ) {
+												$warning_counts = absint( $badge_counts['WARNING'] );
+
+												echo '<span class="button-with-badge"><a class="button small warning ' . esc_attr( $js_scroll ) . '" href="#' . $btn_array[1]['id'] . '">' . esc_html( $button_text ) . '</a><span class="badge warning top-right">' . esc_html( $warning_counts ) . '</span></span>';
+											} else {
+												$notice_counts = absint( $badge_counts['NOTICE'] );
+
+												if ( $notice_counts > 0 ) {
+													$notice_badge = '<span class="badge primary top-right">' . esc_html( $notice_counts ) . '</span>';
+												} else {
+													$notice_badge = '';
+												}
+
+												echo '<span class="button-with-badge"><a class="button small success ' . esc_attr( $js_scroll ) . '" href="#' . esc_attr( $btn_array[1]['id'] ) . '">' . esc_html( $button_text ) . '</a>' . $notice_badge . '</span>';
+											}
 										}
-									}
 										echo $up_button;
 										?>
 									</div>
@@ -1204,19 +1267,20 @@ class Zonemaster extends ZonemasterSettings {
 
 
 
-							</div><?php // end basic tab panel
+							</div>
+							<?php // end basic tab panel
 
 							// if the test is not shown inline in tab "Earlier tests" (with javascript click)
 							if ( ! $oldtest_inline ) {
-							?>
+								$reveal_modal = ''; ?>
 								<div class="tabs-panel<?php echo $tab_earlier_tests_class; ?>" id="earlier_tests">
 
 									<table>
 										<thead>
 											<tr>
-												<th><?php _e( 'Creation time', 'zm_text' ) ?></th>
+												<th><?php _e( 'Creation time', 'zm_text' ); ?></th>
 												<th></th>
-												<th><?php _e( 'Overall result', 'zm_text' ) ?></th>
+												<th><?php _e( 'Overall result', 'zm_text' ); ?></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -1289,13 +1353,14 @@ class Zonemaster extends ZonemasterSettings {
 														<td>' . __( 'Sorry, we could not determ test results', 'zm_text' ) . '</td>
 													</tr>';
 											break;
-									} // switch
-								} // foreeach
+									} // end switch
+								} // end foreeach
 									?>
 										</tbody>
 									</table>
 									<?php echo $reveal_modal; ?>
-								</div><?php // end earlier test tab panel
+								</div>
+								<?php
 							} // end oldtest_inline
 							?>
 						</div><?php // tabs-content ?>
@@ -1303,7 +1368,9 @@ class Zonemaster extends ZonemasterSettings {
 					<div class="div-tab-area footer <?php echo $div_tab_area_color; ?>">
 						<div class="row">
 							<div class="column">
-								<?php echo esc_html( $testresult[0]['message'] ) ; // this should be engine version with any luck...?>
+								<?php
+								// this should be engine version with any luck
+								echo esc_html( $testresult[0]['message'] ); ?>
 							</div>
 							<div class="column align-self-center">
 

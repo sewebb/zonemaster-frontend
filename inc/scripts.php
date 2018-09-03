@@ -13,7 +13,7 @@ function zonemaster_scripts() {
 	wp_enqueue_style( 'app-css', get_template_directory_uri() . '/css/app.2bd92d8f.min.css', array(), null, 'all' );
 
 	wp_deregister_script( 'jquery' );
-	wp_enqueue_script( 'app-js', get_template_directory_uri() . '/js/app.ea102384.min.js', array(), null, true );
+	wp_enqueue_script( 'app-js', get_template_directory_uri() . '/js/app.2d8fa0d7.min.js', array(), null, true );
 
 	$zm = Zonemaster::get_instance();
 	// if ( function_exists( 'pll_current_language' ) ) {

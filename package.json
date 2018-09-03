@@ -26,14 +26,15 @@
 		"grunt-postcss": "",
 		"grunt-retire": "",
 		"grunt-rsync": "",
-		"grunt-sass": "",
+		"grunt-sass": "2.1.0",
 		"grunt-scss-lint": "",
 		"grunt-wp-assets": "",
 		"matchdep": "",
 		"pixrem": ""
 	},
 	"dependencies": {
+		"foundation-sites": "^6.4.3",
 		"jquery": "^3.3.1",
-		"foundation-sites": "^6.4.3"
+		"node-sass": "^4.9.3"
 	}
 }

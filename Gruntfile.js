@@ -89,7 +89,7 @@ module.exports = function( grunt ) {
 				deleteAll: false,
 				exclude: ['.git*', 'node_modules', 'wordpress-rules.xml', 'Gruntfile.js',
 					'package.json', '.DS_Store', 'README.md', 'config.rb', '.jshintrc', 'env.js', 'sample-env.js'],
-				args: ["-t", "-O", "-p", "--chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rw,Fg=rw,Fo=r"],
+				args: ["-t", "-O", "-v"],
 				// Our own settings
 				basefolder: envSettings.basefolder,
 				themefolder: envSettings.themefolder,
