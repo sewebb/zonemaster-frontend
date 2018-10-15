@@ -49,7 +49,6 @@ class Zonemaster extends ZonemasterSettings {
 		$version = $this->get_zm_version();
 
 		$request_action         = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : '';
-		error_log('action: ' . $request_action);
 		$request_index          = isset( $_REQUEST['index'] ) ? absint( $_REQUEST['index'] ) : 1;
 		$request_ns             = isset( $_REQUEST['ns'] ) ? $this->regexp_check( $_REQUEST['ns'] ) : '';
 		$request_ip             = isset( $_REQUEST['ip'] ) ? $this->regexp_check( $_REQUEST['ip'] ) : '';
@@ -285,6 +284,8 @@ class Zonemaster extends ZonemasterSettings {
 			'transient_seconds' => $transient_seconds,
 		];
 
+
+
 		// validate_syntax on method "start_domain_test"
 		if ( false && 'start_domain_test' === $method ) { // validate_syntax is deprecated, so we block the call
 			$validate_syntax = [
@@ -419,8 +420,7 @@ class Zonemaster extends ZonemasterSettings {
 				'body'        => $payload,
 				'cookies'     => [],
 			] );
-_log($payload);
-_log($response);
+
 			if ( is_wp_error( $response ) ) {
 				$error_message = $response->get_error_message();
 
@@ -880,6 +880,10 @@ _log($response);
 				'limit'           => 200,
 				'frontend_params' => array_intersect_key( $frontend_params, $frontend_intersect ),
 			];
+			if ( isset( $get_history_params['frontend_params']['nameservers']) && is_array($get_history_params['frontend_params']['nameservers'] ) ) {
+				unset ($get_history_params['frontend_params']['nameservers'] );
+			}
+			$get_history_params['filter'] = 'all';
 
 			// Next: Check to see if the site has been checked recently,
 			$status = $this->verify_and_curl_request(
@@ -894,11 +898,9 @@ _log($response);
 			$red_fill    = '575756';
 			$orange_fill = '575756';
 			$green_fill  = '575756';
-			error_log('$status result');
-			_log($status['result']);
+			$div_tab_area_color = '';
 
 			foreach ( $status['result'] as $key => $result ) {
-				_log('testid='.$testid . ' result id = ' . $result['id']);
 				if ( $result['id'] === $testid ) {
 					$creation_time  = sanitize_text_field( $result['creation_time'] );
 					$overall_result = sanitize_text_field( $result['overall_result'] );
