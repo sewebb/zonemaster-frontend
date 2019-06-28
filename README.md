@@ -84,4 +84,3 @@ This will build your files and move them to your server
    [Foundation]: <http://foundation.zurb.com/>
    [Polylang]:<https://wordpress.org/plugins/polylang/>
    [ACF pro]: <https://www.advancedcustomfields.com/pro/>
-

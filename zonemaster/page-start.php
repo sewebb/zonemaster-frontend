@@ -290,9 +290,9 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 // All tabs get a "double" link, q-string for no-js and hash for foundation tabs to work
 ?>
 <?php // Top most tabs and navigation meny from WP ?>
-<div class="row">
+<div class="row align-center align-middle">
 	<div class="columns">
-		<ul class="tabs" data-tabs id="test-input-tabs">
+		<ul class="tabs white" data-tabs id="test-input-tabs">
 			<li class="tabs-title<?php echo $tab_domain_check_class; ?>">
 				<a href="/?tab=tdc#domain_check"<?php echo esc_attr( $tab_domain_check_aria ); ?>><?php _e( 'Domain check', 'zm_text' ); ?></a>
 			</li>
@@ -305,7 +305,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 		</ul>
 	</div>
 	<?php // WP-menu ?>
-	<div class="columns shrink align-self-bottom">
+	<div class="columns shrink">
 		<?php get_template_part( 'menuparts/nav', 'title-bar' ); ?>
 	</div>
 </div>
@@ -328,7 +328,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 				<div class="input-group large">
 					<input type="text" class="input-group-field" name="zone_tld" id="zone_tld_domain_check" placeholder="<?php _e( 'Input zone.tld', 'zm_text' ); ?>" required value="<?php echo esc_attr( $zone_tld ); ?>">
 					<div class="input-group-button">
-						<input type="submit" class="button secondary submit-zone" id="submit_zone_domain_check" value="<?php _e( 'Test Now', 'zm_text' ); ?>">
+						<input type="submit" class="button submit-zone" id="submit_zone_domain_check" value="<?php _e( 'Test Now', 'zm_text' ); ?>">
 					</div>
 					<?php
 					// check that form is posted from here
@@ -521,23 +521,25 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 if ( have_posts() ) {
 	while ( have_posts() ) :
 		the_post(); ?>
-		<div class="row start-page-wp-content align-bottom<?php echo $hide_startpage_content; ?>">
-			<div class="small-12 medium-7 column">
-				<?php the_content(); ?>
-			</div>
-			<div class="column hide-for-small-only medium-5 ">
-				<?php
-				$orange_fill = 'ff7900';
-				$red_fill    = 'e00034';
-				$green_fill  = '34b233';
+		<div class="page-wrapper">
+			<div class="row start-page-wp-content align-bottom<?php echo $hide_startpage_content; ?>">
+				<div class="small-12 medium-7 column">
+					<?php the_content(); ?>
+				</div>
+				<div class="column hide-for-small-only medium-5 ">
+					<?php
+					$orange_fill = 'ff7900';
+					$red_fill    = 'e00034';
+					$green_fill  = '34b233';
 
-				$img_all_lights = '<svg id="all_streetlights" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540.5 360">
-						<defs><style>.cls-1{opacity:0.1;}.cls-2-all{fill:#575756;} .red-all{fill:#' . esc_attr( $red_fill ) . ';} .orange-all{fill:#' . esc_attr( $orange_fill ) . ';} .green-all{fill:#' . esc_attr( $green_fill ) . ';}</style></defs>
-						<title>Zonemaster all lights</title><polygon class="cls-1" points="310 143.33 166.67 0 0 307.68 52.32 360 540.5 360 310 143.33"/><rect width="166.67" height="307.68"/><path class="cls-2-all red-all" d="M83.33,103.18a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-all orange-all" d="M83.33,194.34a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-all green-all" d="M83.33,285.5A40.5,40.5,0,1,0,42.83,245a40.5,40.5,0,0,0,40.5,40.5"/></svg>';
-				?>
-				<figure class="all-stoplights-img">
-					<?php echo $img_all_lights; ?>
-				</figure>
+					$img_all_lights = '<svg id="all_streetlights" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540.5 360">
+							<defs><style>.cls-1{opacity:0.1;}.cls-2-all{fill:#575756;} .red-all{fill:#' . esc_attr( $red_fill ) . ';} .orange-all{fill:#' . esc_attr( $orange_fill ) . ';} .green-all{fill:#' . esc_attr( $green_fill ) . ';}</style></defs>
+							<title>Zonemaster all lights</title><polygon class="cls-1" points="310 143.33 166.67 0 0 307.68 52.32 360 540.5 360 310 143.33"/><rect width="166.67" height="307.68"/><path class="cls-2-all red-all" d="M83.33,103.18a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-all orange-all" d="M83.33,194.34a40.5,40.5,0,1,0-40.5-40.5,40.5,40.5,0,0,0,40.5,40.5"/><path class="cls-2-all green-all" d="M83.33,285.5A40.5,40.5,0,1,0,42.83,245a40.5,40.5,0,0,0,40.5,40.5"/></svg>';
+					?>
+					<figure class="all-stoplights-img">
+						<?php echo $img_all_lights; ?>
+					</figure>
+				</div>
 			</div>
 		</div>
 	<?php

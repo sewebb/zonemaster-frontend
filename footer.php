@@ -20,7 +20,13 @@
 
 				</div>
 			</footer>
-		<?php wp_footer(); ?>
+		<?php
+			if ( class_exists( 'Iis_Footer' ) ) :
+				do_action( 'iis_footer' );
+			endif;
+
+			wp_footer();
+		?>
 
 	</body>
 </html>

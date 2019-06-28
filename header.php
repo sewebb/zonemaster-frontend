@@ -23,7 +23,7 @@
 
 				if ( $site_logo ) {
 					echo '<div class="shrink columns">';
-					echo '<img class="hero-logo" src="' . esc_url( $site_logo ) . '">';
+					echo '<a href="/"><img class="hero-logo" src="' . esc_url( $site_logo ) . '"></a>';
 					echo '</div>';
 				}
 				?>
@@ -56,9 +56,9 @@
 				// Not on frontpage, menu is among tabs there
 			if ( ! is_front_page() ) {
 				?>
-				<div class="row">
+				<div class="row align-center align-middle">
 				<div class="columns">
-				<ul class="tabs" id="test-input-tabs">
+				<ul class="tabs white" id="test-input-tabs">
 					<li class="tabs-title">
 						<a href="/?tab=tdc"><?php _e( 'Domain check', 'zm_text' ); ?></a>
 					</li>
@@ -68,7 +68,7 @@
 				</ul>
 				</div>
 				<?php // WP-menu ?>
-				<div class="columns shrink align-self-bottom">
+				<div class="columns shrink">
 				<?php get_template_part( 'menuparts/nav', 'title-bar' ); ?>
 				</div>
 				</div>
