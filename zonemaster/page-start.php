@@ -434,7 +434,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 
 				<div class="large row align-center">
 					<div class="columns medium-6">
-						<input type="submit" class="button expanded secondary submit-zone" id="submit_zone_pre_delegated" value="<?php _e( 'Test Now', 'zm_text' ); ?>">
+						<input type="submit" class="button expanded submit-zone" id="submit_zone_pre_delegated" value="<?php _e( 'Test Now', 'zm_text' ); ?>">
 					</div>
 				</div>
 
