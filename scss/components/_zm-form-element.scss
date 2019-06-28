@@ -22,6 +22,12 @@
 		text-decoration: underline;
 	}
 
+	&.success,
+	&.alert,
+	&.warning {
+		color: $white;
+	}
+
 }
 
 
