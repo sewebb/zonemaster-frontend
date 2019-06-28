@@ -402,7 +402,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 				</div>
 
 				<div>
-					<button type="submit" name="add_ns_field" class="small expanded primary button js-add-nameserver-button">
+					<button type="submit" name="add_ns_field" class="small expanded button js-add-nameserver-button">
 						<?php _e( '+ Add more nameservers', 'zm_text' ); ?>
 					</button>
 				</div>
@@ -421,7 +421,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 				</div>
 
 				<div>
-					<button type="submit" name="add_digest_field" class="small expanded primary button js-digest-button">
+					<button type="submit" name="add_digest_field" class="small expanded button js-digest-button">
 						<?php _e( '+ Add row for digest', 'zm_text' ); ?>
 					</button>
 				</div>
