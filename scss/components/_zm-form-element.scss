@@ -26,6 +26,11 @@
 	&.alert,
 	&.warning {
 		color: $white;
+
+		&:hover,
+		&:focus {
+			color: $white;
+		}
 	}
 
 }
