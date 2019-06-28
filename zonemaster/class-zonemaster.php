@@ -807,7 +807,7 @@ class Zonemaster extends ZonemasterSettings {
 						<span class="js-policy"></span>
 						<div class="js-message-area"></div>
 						<br>
-						<a href="/" class="expanded primary button js-cancel hide-if-no-js"><?php _e( 'Cancel test mode', 'zm_text' ); ?></a>
+						<a href="/" class="expanded button js-cancel hide-if-no-js"><?php _e( 'Cancel test mode', 'zm_text' ); ?></a>
 						<br>
 						<div class="secondary progress progress-waiting" role="progressbar" tabindex="0" aria-valuenow="<?php echo esc_attr( $current_progress ); ?>" aria-valuemin="0" aria-valuetext="<?php echo $current_progress; ?> percent" aria-valuemax="100">
 							<div class="progress-meter" style="width: <?php echo esc_attr( $current_progress ); ?>%">
