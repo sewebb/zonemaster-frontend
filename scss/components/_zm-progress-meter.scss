@@ -43,7 +43,7 @@
 	border: rem-calc(2) solid $white;
 	background-color: transparent;
 
-	.progress-meter {
+	.progress-meter.secondary {
 		transition:width 0.7s ease;
 		background-color: $color-ocean;
 	}
@@ -54,7 +54,7 @@
 	}
 
 	&.progress-waiting .progress-meter {
-		background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+		background-image: linear-gradient(45deg, $color-ocean 25%, transparent 25%, transparent 50%, $color-ocean 50%, $color-ocean 75%, transparent 75%, transparent);
 		z-index: 1;
 		background-size: 80px 80px;
 		animation: progress-bar-stripes 2s linear infinite;
