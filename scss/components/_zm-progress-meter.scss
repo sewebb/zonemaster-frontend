@@ -43,9 +43,9 @@
 	border: rem-calc(2) solid $white;
 	background-color: transparent;
 
-	.progress-meter.secondary {
+	&.secondary .progress-meter {
 		transition:width 0.7s ease;
-		background-color: $color-ocean;
+		background-color: $color-ocean-light;
 	}
 
 	.progress-meter-text {
