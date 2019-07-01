@@ -17,7 +17,7 @@
 .meter {
 	@include progress-meter;
 	-transition:width 0.7s ease;
-	&.secondary { @include progress-stacked($secondary-color); }
+	&.secondary { @include progress-stacked($color-ocean); }
 	&.success { @include progress-stacked($success-color); }
 	&.alert { @include progress-stacked($alert-color); }
 	&.warning { @include progress-stacked($warning-color); }
