@@ -45,10 +45,11 @@
 
 	.progress-meter {
 		transition:width 0.7s ease;
+		background-color: $color-ocean;
 	}
 
 	.progress-meter-text {
-		color: $primary-color;
+		color: $white;
 		font-size: 100%;
 	}
 
