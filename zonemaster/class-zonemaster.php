@@ -57,7 +57,8 @@ class Zonemaster extends ZonemasterSettings {
 		$request_oldtest_inline = isset( $_REQUEST['oldtest_inline'] ) ? $this->regexp_check( $_REQUEST['oldtest_inline'] ) : false;
 		$request_method         = isset( $_REQUEST['method'] ) ? sanitize_text_field( $_REQUEST['method'] ) : '';
 		$request_params         = isset( $_REQUEST['params'] ) ? sanitize_text_field( $_REQUEST['params'] ) : '';
-
+		$request_test_id        = isset( $_REQUEST['test_id'] ) ? sanitize_text_field( $_REQUEST['test_id'] ) : '';
+		
 		// Check that backend is not offline
 		if ( strpos( $version, 'OFFLINE' ) !== false ) {
 			$GLOBALS['OFFLINE'] = $this->offline_text();
@@ -128,16 +129,42 @@ class Zonemaster extends ZonemasterSettings {
 			if ( check_ajax_referer( $version, 'nonce' ) ) {
 				// Allowed backend api call via this function
 				$allow = [
-					'get_ns_ips',
 					'test_progress',
 					'get_data_from_parent_zone',
 				];
 
-				if ( '' === $request_method || '' === $request_params ) {
+				if ( '' === $request_method) {
 					exit;
 				}
 
 				$method = $request_method;
+
+				// if method is 'test_progress' - create a request that matches ZM backend 4.0.1 format
+				if ( $method == 'test_progress' ) {
+					$test_id = $request_test_id;
+					$defaults = [
+						'method' => trim( $method ),
+						'params' => ['test_id' => trim( $test_id ) ],
+					];
+
+					$request_curl = $this->verify_and_curl_request( $defaults );
+
+					if ( $request_curl ) {
+						// Generate appropriate content-type header.
+						$is_xhr = isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) == 'xmlhttprequest';
+						header( 'Content-type: application/' . ( $is_xhr ? 'json' : 'x-javascript' ) );
+
+						// Generate JSON string
+						$json = wp_json_encode( $request_curl );
+						print $json;
+					}
+					exit();
+				}
+
+				if ( '' === $request_params ) {
+					exit;
+				}
+
 				$params = $request_params;
 
 				if ( in_array( $method, $allow, true ) ) {
@@ -636,7 +663,7 @@ class Zonemaster extends ZonemasterSettings {
 		$parent_addresses = $this->verify_and_curl_request(
 			[
 				'method'            => 'get_data_from_parent_zone',
-				'params'            => $zone_tld,
+				'params'            => [ 'domain'=> $zone_tld ],
 				'create_transient'  => true,
 				'transient_seconds' => $this->settings( 'transient_parent_zone' ),
 			]
@@ -713,28 +740,6 @@ class Zonemaster extends ZonemasterSettings {
 
 		$html = '<span class="label alert"><strong>OFFLINE</strong></span> ' . __( 'Sorry, API is currently offline. Try again in a while.', 'zm_text' );
 		return $html;
-	}
-
-	/**
-	 * [get_ns_ips description]
-	 *
-	 * @param  [type] $ns [description]
-	 * @return [type]     [description]
-	 */
-	public function get_ns_ips( $ns ) {
-
-		if ( '' !== $ns ) {
-			$addresses = $this->analyze_zone_tld(
-				[
-					'method'            => 'get_ns_ips',
-					'params'            => esc_attr( $ns ),
-					'create_transient'  => true,
-					'transient_seconds' => sanitize_text_field( $this->settings( 'transient_ip_nameserver' ) ),
-				]
-			);
-			return $addresses['result'];
-		}
-		return false;
 	}
 
 	/**
@@ -872,8 +877,6 @@ class Zonemaster extends ZonemasterSettings {
 			// Mask for frontend_params (define which keys to include)
 			$frontend_intersect = [
 				'domain'    => '',
-				'client_id' => '',
-				'profile'   => '',
 			];
 			$get_history_params = [
 				'offset'          => 0,

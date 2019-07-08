@@ -127,30 +127,13 @@ if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce
 							}
 						}
 
-						// if user requested us to find the IP-address
-						if ( '' === $ip_field || $check_ip_address ) {
-							// Call API and get ip
-							$addresses = $zm->get_ns_ips( $ns_field );
-							// we get both ipv4 & ipv6 if nameserver has both
-							foreach ( $addresses as $address ) {
-								$ip_address = $address[ $ns_field ];
-								// do html for fields
-								$nameservers_html .= $zm->nameservers_html( $key, $ns_field, $ip_address );
-								// prepare array for test engine
-								$nameservers_array[] = [
-									'ns' => $ns_field,
-									'ip' => $ip_address,
-								];
-							}
-						} else {
-							// do html for fields
-							$nameservers_html .= $zm->nameservers_html( $key, $ns_field, $ip_field );
-							// prepare array for test engine
-							$nameservers_array[] = [
-								'ns' => $ns_field,
-								'ip' => $ip_field,
-							];
-						}
+						// do html for fields
+						$nameservers_html .= $zm->nameservers_html( $key, $ns_field, $ip_field );
+						// prepare array for test engine
+						$nameservers_array[] = [
+							'ns' => $ns_field,
+							'ip' => $ip_field,
+						];
 
 						// Correct tab, no-js
 						$pre_delegated_domain_check = true;
@@ -208,9 +191,8 @@ if ( '' !== $post_zone_tld && ( ( '' !== $post_tld_zonemaster && wp_verify_nonce
 				$params = [
 					'client_id'      => 'IIS Zonemaster frontend',
 					'domain'         => $verify_zone_tld,
-					'profile'        => 'default_profile',
+					'profile'        => 'default',
 					'client_version' => '1',
-					'advanced'       => true,
 					'ipv6'           => $check_ip_v6,
 					'ipv4'           => $check_ip_v4,
 					'nameservers'    => $nameservers_array,
@@ -386,19 +368,6 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 						echo $zm->nameservers_html( '0' );
 					}
 					?>
-				</div>
-
-				<div class="row align-right">
-
-					<div class="columns small-6 text-right show-if-no-js">
-						<button type="submit" name="check_ip_address" class="tiny expanded button success">
-							<?php _e( 'Get IP-address', 'zm_text' ); ?>
-						</button>
-						<small>
-							<?php _e( 'Leave ip-field empty if you want us to fetch the IP-address then you start the test', 'zm_text' ); ?>
-						</small>
-					</div>
-
 				</div>
 
 				<div>
