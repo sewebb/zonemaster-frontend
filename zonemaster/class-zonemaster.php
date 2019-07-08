@@ -752,7 +752,7 @@ class Zonemaster extends ZonemasterSettings {
 		$progress = $this->analyze_zone_tld(
 			[
 				'method' => 'test_progress',
-				'params' => [ 'test_id' => trim( $testid ) ],
+				'params' => [ 'test_id' => esc_attr( $testid ) ],
 			]
 		);
 		return $progress['result'];
