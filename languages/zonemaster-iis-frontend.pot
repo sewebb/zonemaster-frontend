@@ -97,7 +97,7 @@ msgid "Option - check domain with "
 msgstr ""
 
 #: zonemaster/class-zonemaster.php:616
-msgid "IIS presents"
+msgid "The Swedish Internet Foundation presents"
 msgstr ""
 
 #: zonemaster/class-zonemaster.php:616 zonemaster/class-zonemaster.php:897

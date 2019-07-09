@@ -723,7 +723,7 @@ class Zonemaster extends ZonemasterSettings {
 		if ( ! empty( $zm_engine ) ) {
 			// We think it´s not nescessary to show user ip
 			// $text    = __( 'IIS presents', 'zm_text' ) . ' ' . __( 'Zonemaster', 'zm_text' ) . ' ' .' backend v' . $zm_backend . ' ' . __( 'with', 'zm_text' ) . ' ' . __( 'Zonemaster engine', 'zm_text' ) . ' ' . $zm_engine . ' ' . __( 'to IP ', 'zm_text' ) . $_SERVER['REMOTE_ADDR'];
-			$text = __( 'IIS presents', 'zm_text' ) . ' ' . __( 'Zonemaster', 'zm_text' ) . '  backend v' . esc_html( $zm_backend ) . ' ' . __( 'with', 'zm_text' ) . ' ' . __( 'Zonemaster engine', 'zm_text' ) . ' ' . esc_html( $zm_engine );
+			$text = __( 'The Swedish Internet Foundation presents', 'zm_text' ) . ' ' . __( 'Zonemaster', 'zm_text' ) . '  backend v' . esc_html( $zm_backend ) . ' ' . __( 'with', 'zm_text' ) . ' ' . __( 'Zonemaster engine', 'zm_text' ) . ' ' . esc_html( $zm_engine );
 		} else {
 			$text = $this->offline_text();
 		}
@@ -812,7 +812,7 @@ class Zonemaster extends ZonemasterSettings {
 						<span class="js-policy"></span>
 						<div class="js-message-area"></div>
 						<br>
-						<a href="/" class="expanded primary button js-cancel hide-if-no-js"><?php _e( 'Cancel test mode', 'zm_text' ); ?></a>
+						<a href="/" class="expanded button js-cancel hide-if-no-js"><?php _e( 'Cancel test mode', 'zm_text' ); ?></a>
 						<br>
 						<div class="secondary progress progress-waiting" role="progressbar" tabindex="0" aria-valuenow="<?php echo esc_attr( $current_progress ); ?>" aria-valuemin="0" aria-valuetext="<?php echo $current_progress; ?> percent" aria-valuemax="100">
 							<div class="progress-meter" style="width: <?php echo esc_attr( $current_progress ); ?>%">

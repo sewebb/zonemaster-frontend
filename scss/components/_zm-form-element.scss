@@ -22,6 +22,17 @@
 		text-decoration: underline;
 	}
 
+	&.success,
+	&.alert,
+	&.warning {
+		color: $white;
+
+		&:hover,
+		&:focus {
+			color: $white;
+		}
+	}
+
 }
 
 
@@ -42,7 +53,6 @@ form {
 		.submit-zone {
 			margin-left: rem-calc(5);
 			box-shadow: rem-calc(5 5 0) rgba(0, 0, 0, 1);
-			color: $primary-color;
 			padding: 0 $gutter;
 			font-weight: 700;
 

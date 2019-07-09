@@ -49,33 +49,33 @@
 .hero {
 
 	.hero-title {
-		color: $primary-color;
-		font-size: rem-calc(28);
+		color: $black;
+		font-size: rem-calc(18);
 		font-weight: 700;
 		margin: $gutter 0;
 
 		@include breakpoint(medium) {
-			font-size: rem-calc(36);
+			font-size: rem-calc(24);
 		}
 
 		@include breakpoint(large) {
-			font-size: rem-calc(48);
+			font-size: rem-calc(32);
 		}
 	}
 
 	img.hero-logo {
 		width: auto;
-		height: rem-calc(50);
+		height: rem-calc(40);
 
 
 		@include breakpoint(medium) {
 			width: auto;
-			height: rem-calc(60);
+			height: rem-calc(50);
 		}
 
 		@include breakpoint(large) {
 			width: auto;
-			height: rem-calc(80);
+			height: rem-calc(60);
 		}
 	}
 }
@@ -101,6 +101,10 @@
 	}
 }
 
+.page-wrapper {
+	background-color: $color-ash;
+}
+
 .standard-page {
 	margin-bottom: 0;
 	padding-top: $gutter;
@@ -110,8 +114,8 @@
 }
 
 .start-page-wp-content {
-	margin-bottom: $global-margin;
-	margin-top: $global-margin * 2;
+	padding: $global-margin;
+	padding-top: $global-margin * 2;
 }
 
 .copy-link, .expand-link {

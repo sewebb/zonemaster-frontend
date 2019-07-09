@@ -2,11 +2,15 @@
 
 // Your own colors
 $gray: #ccc;
-// $color: #fff;
+$color-granit: #8e9297 !default;
+$color-ash: #ededed !default;
+$color-ocean: #50b2fc !default;
+$color-ocean-light: #a7d8fd !default;
 
-$blue-color:       #3284bf;
+$blue-color:       #0477ce;
 $yellow-color:     #ffe100;
-$light-blue:       #d6e6f2;
+$site-bg-color:    #ededed;
+$light-blue:       #a7d8fd;
 $link-color:       $blue-color;
 $background:       $blue-color;
 $background-hover: lighten($background, 15%);
@@ -77,8 +81,8 @@ $dark-gray: #4c4c4c;
 $black: #000;
 $white: #fff;
 $primary-color: $blue-color; // set to your own base colors
-$secondary-color: $yellow-color; // set to your own base colors
-$body-background: $secondary-color;
+$secondary-color: $site-bg-color; // set to your own base colors
+$body-background: $white;
 $body-font-color: $black;
 $body-font-family: $open-sans;
 $body-antialiased: true;
@@ -278,9 +282,9 @@ $breadcrumbs-item-slash: true;
 $button-padding: 0.85em 1em;
 $button-margin: 0 0 $global-margin 0;
 $button-fill: solid;
-$button-background: $secondary-color;
+$button-background: $color-ocean-light;
 $button-background-hover: scale-color($button-background, $lightness: -15%);
-$button-color: $white;
+$button-color: scale-color($primary-color, $lightness: -15%);
 $button-color-alt: $primary-color;
 $button-radius: $global-radius;
 $button-sizes: (
@@ -386,7 +390,7 @@ $select-radius: $global-radius;
 $input-color: $black;
 $input-font-family: inherit;
 $input-font-size: rem-calc(16);
-$input-background: $light-blue;
+$input-background: $color-ash;
 $input-background-focus: $white;
 $input-background-disabled: $light-gray;
 $input-border: none;//1px solid $medium-gray;
