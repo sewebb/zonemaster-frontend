@@ -58,7 +58,7 @@ class Zonemaster extends ZonemasterSettings {
 		$request_method         = isset( $_REQUEST['method'] ) ? sanitize_text_field( $_REQUEST['method'] ) : '';
 		$request_params         = isset( $_REQUEST['params'] ) ? sanitize_text_field( $_REQUEST['params'] ) : '';
 		$request_test_id        = isset( $_REQUEST['test_id'] ) ? sanitize_text_field( $_REQUEST['test_id'] ) : '';
-		
+
 		// Check that backend is not offline
 		if ( strpos( $version, 'OFFLINE' ) !== false ) {
 			$GLOBALS['OFFLINE'] = $this->offline_text();
@@ -1214,7 +1214,7 @@ class Zonemaster extends ZonemasterSettings {
 									$sticky_class     = 'sticky';
 									$sticky_container = 'data-sticky-container';
 									$sticky_data      = 'data-sticky';
-									$up_button        = '<a class="button small primary top_link" href="#">' . __( 'Back to top', 'zm_text' ) . '</a>';
+									$up_button        = '<a class="button small secondary top_link" href="#">' . __( 'Back to top', 'zm_text' ) . '</a>';
 								} else {
 									$js_scroll        = 'js-scroll in-reveal';
 									$sticky_class     = '';
