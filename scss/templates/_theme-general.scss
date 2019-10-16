@@ -47,25 +47,37 @@
 }
 
 .hero {
+	.hero-inner {
+		display: flex;
+		justify-content: space-between;
+	}
 
 	.hero-title {
 		color: $black;
 		font-size: rem-calc(18);
 		font-weight: 700;
-		margin: $gutter 0;
+		margin: $gutter 0 $gutter $gutter;
 
 		@include breakpoint(medium) {
-			font-size: rem-calc(24);
+			font-size: rem-calc(32);
 		}
 
 		@include breakpoint(large) {
-			font-size: rem-calc(32);
+			font-size: rem-calc(48);
 		}
 	}
 
 	img.hero-logo {
 		width: auto;
 		height: rem-calc(20);
+	}
+
+	.hero-status {
+		margin-left: $gutter / 2;
+
+		@include breakpoint(large) {
+			margin-bottom: 0;
+		}
 	}
 }
 

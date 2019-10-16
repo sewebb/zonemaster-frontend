@@ -16,8 +16,8 @@
 
 		<div class="hero">
 
-			<div class="row align-middle">
-				<div class="columns">
+			<div class="row align-middle hero-inner">
+				<div>
 					<div class="row align-middle">
 						<a href="/"><h1 class="hero-title"><?php _e( 'Zonemaster', 'zm_text' ); ?></h1></a>
 					</div>
@@ -27,7 +27,7 @@
 				// Show extra messages only on frontpage
 				if ( is_front_page() ) {
 				?>
-				<div class="shrink columns">
+				<div class="hero-status">
 					<?php
 					if ( '' !== $GLOBALS['OFFLINE'] ) {
 						echo $GLOBALS['OFFLINE'];
