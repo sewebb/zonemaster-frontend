@@ -65,18 +65,7 @@
 
 	img.hero-logo {
 		width: auto;
-		height: rem-calc(40);
-
-
-		@include breakpoint(medium) {
-			width: auto;
-			height: rem-calc(50);
-		}
-
-		@include breakpoint(large) {
-			width: auto;
-			height: rem-calc(60);
-		}
+		height: rem-calc(20);
 	}
 }
 

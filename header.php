@@ -17,20 +17,12 @@
 		<div class="hero">
 
 			<div class="row align-middle">
-				<?php
-				$zm_settings = ZonemasterSettings::get_instance();
-				$site_logo   = sanitize_text_field( $zm_settings->settings( 'site_logo' ) );
-
-				if ( $site_logo ) {
-					echo '<div class="shrink columns">';
-					echo '<a href="/"><img class="hero-logo" src="' . esc_url( $site_logo ) . '"></a>';
-					echo '</div>';
-				}
-				?>
-
 				<div class="columns">
-					<a href="/"><h1 class="hero-title"><?php _e( 'Zonemaster', 'zm_text' ); ?></h1></a>
+					<div class="row align-middle">
+						<a href="/"><h1 class="hero-title"><?php _e( 'Zonemaster', 'zm_text' ); ?></h1></a>
+					</div>
 				</div>
+
 				<?php
 				// Show extra messages only on frontpage
 				if ( is_front_page() ) {
