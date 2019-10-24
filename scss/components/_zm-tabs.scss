@@ -34,9 +34,6 @@
 
 .polling-area {
 	padding: $gutter 0;
-	h3 {
-		color: $white;
-	}
 }
 
 .div-results {
@@ -44,7 +41,7 @@
 }
 
 .div-tab-area {
-	color: $white;
+	color: $color-cyberspace;
 
 	p {
 		margin: 0;
@@ -57,6 +54,12 @@
 
 	&.alert {
 		background-color: $alert-color;
+		color: $white;
+
+		a,
+		.result-text-three a {
+			color: $white;
+		}
 	}
 
 	&.warning {
@@ -93,7 +96,7 @@
 		margin-bottom: $gutter;
 
 		a {
-			color: $white;
+			color: $color-cyberspace;
 			text-decoration: underline;
 			font-size: $global-font-size;
 

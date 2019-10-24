@@ -1,12 +1,12 @@
 
 
 .test-form {
-	color: $white;
+	color: $color-cyberspace;
 	padding-bottom: $gutter;
 
 	a {
 		text-decoration: underline;
-		color: $white;
+		color: $color-cyberspace;
 
 		&:hover {
 			color: $black;
@@ -22,15 +22,20 @@
 		text-decoration: underline;
 	}
 
-	&.success,
-	&.alert,
-	&.warning {
-		color: $white;
-
+	&.alert {
 		&:hover,
 		&:focus {
 			color: $white;
 		}
+	}
+
+	&.success {
+		border: 1px solid $color-jade-light;
+		color: $color-cyberspace;
+	}
+
+	&.warning {
+		color: $color-cyberspace;
 	}
 
 }
@@ -52,7 +57,7 @@ form {
 
 		.submit-zone {
 			margin-left: rem-calc(5);
-			box-shadow: rem-calc(5 5 0) rgba(0, 0, 0, 1);
+			border-radius: 0.25rem;
 			padding: 0 $gutter;
 			font-weight: 700;
 

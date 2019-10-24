@@ -35,17 +35,17 @@
     padding: $tab-item-padding;
     line-height: 1;
     font-size: $global-font-size;
-    color: $color;
+    color: $color-cyberspace;
     text-decoration: underline;
     &:hover {
-      background: $tab-item-bg-hover;
-      color: $tab-text-color;
+      background: $color-ocean-light;
+      color: $color-cyberspace;
     }
 
     &:focus,
     &[aria-selected='true'] {
       background: $tab-bg-active;
-      color: $tab-text-color;
+      color: $color-cyberspace;
       text-decoration: none;
     }
   }

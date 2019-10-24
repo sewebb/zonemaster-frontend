@@ -50,7 +50,7 @@
 				?>
 				<div class="row align-center align-middle">
 				<div class="columns">
-				<ul class="tabs white" id="test-input-tabs">
+				<ul class="tabs" id="test-input-tabs">
 					<li class="tabs-title">
 						<a href="/?tab=tdc"><?php _e( 'Domain check', 'zm_text' ); ?></a>
 					</li>

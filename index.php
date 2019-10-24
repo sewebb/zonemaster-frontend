@@ -10,9 +10,9 @@ while ( have_posts() ) : the_post();
 			</div>
 			<div class="column hide-for-small-only medium-5 ">
 				<?php
-				$orange_fill = 'ff7900';
-				$red_fill    = 'e00034';
-				$green_fill  = '34b233';
+				$orange_fill = 'f99963';
+				$red_fill    = 'ff4069';
+				$green_fill  = '55c7b4';
 
 				$img_all_lights = '<svg id="all_streetlights" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540.5 360">
 						<defs><style>.cls-1{opacity:0.1;}.cls-2-all{fill:#575756;} .red-all{fill:#' . esc_attr( $red_fill ) . ';} .orange-all{fill:#' . esc_attr( $orange_fill ) . ';} .green-all{fill:#' . esc_attr( $green_fill ) . ';}</style></defs>

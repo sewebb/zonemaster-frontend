@@ -349,7 +349,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 				<div class="text-center">
 					<?php // default submit button for enter in zone-field - start test ?>
 					<button type="submit" class="hide"></button>
-					<button type="submit" name="get_data_from_parent_zone" class="small success button js-get-data-from-parent-zone">
+					<button type="submit" name="get_data_from_parent_zone" class="success button js-get-data-from-parent-zone">
 						<?php _e( 'Fetch data from parent zone', 'zm_text' ); ?>
 					</button>
 				</div>
@@ -371,7 +371,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 				</div>
 
 				<div>
-					<button type="submit" name="add_ns_field" class="small expanded button js-add-nameserver-button">
+					<button type="submit" name="add_ns_field" class="expanded button js-add-nameserver-button">
 						<?php _e( '+ Add more nameservers', 'zm_text' ); ?>
 					</button>
 				</div>
@@ -390,7 +390,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 				</div>
 
 				<div>
-					<button type="submit" name="add_digest_field" class="small expanded button js-digest-button">
+					<button type="submit" name="add_digest_field" class="expanded button js-digest-button">
 						<?php _e( '+ Add row for digest', 'zm_text' ); ?>
 					</button>
 				</div>
@@ -446,7 +446,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 		</div>
 
 		<?php // "reveal" is a modal ?>
-		<div class="small reveal" id="what-is-predelegated" data-reveal data-reveal data-v-offset="50">
+		<div class="reveal" id="what-is-predelegated" data-reveal data-reveal data-v-offset="50">
 			<?php // javascript will fill this div from above div "js-append-to-what-is-predelegated" ?>
 			<button class="close-button" data-close aria-label="Close modal" type="button">
 				<span aria-hidden="true">&times;</span>
@@ -497,9 +497,9 @@ if ( have_posts() ) {
 				</div>
 				<div class="column hide-for-small-only medium-5 ">
 					<?php
-					$orange_fill = 'ff7900';
-					$red_fill    = 'e00034';
-					$green_fill  = '34b233';
+					$orange_fill = 'f99963';
+					$red_fill    = 'ff4069';
+					$green_fill  = '55c7b4';
 
 					$img_all_lights = '<svg id="all_streetlights" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540.5 360">
 							<defs><style>.cls-1{opacity:0.1;}.cls-2-all{fill:#575756;} .red-all{fill:#' . esc_attr( $red_fill ) . ';} .orange-all{fill:#' . esc_attr( $orange_fill ) . ';} .green-all{fill:#' . esc_attr( $green_fill ) . ';}</style></defs>

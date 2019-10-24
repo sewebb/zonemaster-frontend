@@ -913,31 +913,31 @@ class Zonemaster extends ZonemasterSettings {
 					case 'warning':
 						$result_header_text = __( 'Contains warnings!', 'zm_text' );
 						$div_tab_area_color = 'warning';
-						$orange_fill        = 'ff7900';
+						$orange_fill        = 'f99963';
 						break;
 
 					case 'error':
 						$result_header_text = __( 'Contains errors!', 'zm_text' );
 						$div_tab_area_color = 'alert';
-						$red_fill           = 'e00034';
+						$red_fill           = 'ff4069';
 						break;
 
 					case 'critical':
 						$result_header_text = __( 'Contains critical errors!', 'zm_text' );
 						$div_tab_area_color = 'alert';
-						$red_fill           = 'e00034';
+						$red_fill           = 'ff4069';
 						break;
 
 					case 'INFO':
 						$result_header_text = __( 'All is well!', 'zm_text' );
 						$div_tab_area_color = 'success';
-						$green_fill         = '34b233';
+						$green_fill         = '55c7b4';
 						break;
 
 					case 'notice':
 						$result_header_text = __( 'All is well!', 'zm_text' );
 						$div_tab_area_color = 'success';
-						$green_fill         = '34b233';
+						$green_fill         = '55c7b4';
 						break;
 
 					default:
@@ -1076,7 +1076,7 @@ class Zonemaster extends ZonemasterSettings {
 
 							<ul class="tabs white column" data-tabs id="result-tabs<?php echo $oldtest_id; ?>">
 
-								<li class="tabs-title white<?php echo $tab_basic_result_class; ?>">
+								<li class="tabs-title white <?php echo $tab_basic_result_class; ?>">
 									<a href="/?resultid=<?php echo $testid; ?>&tab=tbr#basic_result<?php echo $oldtest_id; ?>"<?php echo $tab_basic_result_aria; ?>>
 										<?php _e( 'Result', 'zm_text' ); ?>
 									</a>
@@ -1086,7 +1086,7 @@ class Zonemaster extends ZonemasterSettings {
 								// if the test is not shown inline in tab "Earlier tests" (with javascript click)
 								if ( ! $oldtest_inline ) {
 								?>
-									<li class="tabs-title white<?php echo $tab_earlier_tests_class; ?>">
+									<li class="tabs-title white <?php echo $tab_earlier_tests_class; ?>">
 										<a href="/?resultid=<?php echo $testid; ?>&tab=tet#earlier_tests"<?php echo $tab_earlier_tests_aria; ?>>
 											<?php _e( 'Earlier tests of ', 'zm_text' ); ?> <?php echo $label_output; ?>
 										</a>
@@ -1214,7 +1214,7 @@ class Zonemaster extends ZonemasterSettings {
 									$sticky_class     = 'sticky';
 									$sticky_container = 'data-sticky-container';
 									$sticky_data      = 'data-sticky';
-									$up_button        = '<a class="button small secondary top_link" href="#">' . __( 'Back to top', 'zm_text' ) . '</a>';
+									$up_button        = '<a class="button small top_link" href="#">' . __( 'Back to top', 'zm_text' ) . '</a>';
 								} else {
 									$js_scroll        = 'js-scroll in-reveal';
 									$sticky_class     = '';
@@ -1251,7 +1251,7 @@ class Zonemaster extends ZonemasterSettings {
 												$notice_counts = absint( $badge_counts['NOTICE'] );
 
 												if ( $notice_counts > 0 ) {
-													$notice_badge = '<span class="badge primary top-right">' . esc_html( $notice_counts ) . '</span>';
+													$notice_badge = '<span class="badge success top-right">' . esc_html( $notice_counts ) . '</span>';
 												} else {
 													$notice_badge = '';
 												}
