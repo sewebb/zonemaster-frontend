@@ -463,7 +463,7 @@ if ( $do_test_progress || '' !== $requested_test_id ) {
 		} elseif ( '' !== $requested_test_id ) {
 			$check_progress = $zm->test_progress( $requested_test_id );
 
-			if ( '100' === $check_progress ) {
+			if ( '100' == $check_progress ) {
 				// test is finished
 				$zm->get_single_test( $requested_test_id, $get_single_test_tab );
 			} elseif ( ! $check_progress ) {
