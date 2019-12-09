@@ -36,28 +36,14 @@ module.exports = function( grunt ) {
 				src: [ '*.html', '*.php' ]
 			}
 		},
-		jscs: {
-			src: [ 'Gruntfile.js', 'js/app.js' ],
-			options: {
-				config: 'test/.jscsrc',
-				esnext: true, // If you use ES6 http://jscs.info/overview.html#esnext
-				verbose: true, // If you need output with rule names http://jscs.info/overview.html#verbose
-				fix: true, // Autofix code style violations when possible.
-				requireCurlyBraces: [ 'if' ]
-			}
-		},
 		jshint: {
 			options: {
 				jshintrc: '.jshintrc'
 			},
-			all: [
-				'<%= jscs.src %>'
-			]
+			all: [ 'Gruntfile.js', 'js/app.js' ]
 		},
 		jsvalidate: {
-			files: [
-				'<%= jscs.src %>'
-			]
+			files: [ 'Gruntfile.js', 'js/app.js' ]
 		},
 		phpcs: {
 			application: {
@@ -229,7 +215,6 @@ module.exports = function( grunt ) {
 		'scsslint',
 		'jshint',
 		'jsvalidate',
-		'jscs',
 		'phpcs',
 		'htmlhint_inline'
 	]);
