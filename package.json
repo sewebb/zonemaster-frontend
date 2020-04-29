@@ -33,6 +33,6 @@
 	},
 	"dependencies": {
 		"foundation-sites": "6.4.3",
-		"jquery": "^3.4.1"
+		"jquery": "^3.5.0"
 	}
 }
