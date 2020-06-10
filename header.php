@@ -16,26 +16,18 @@
 
 		<div class="hero">
 
-			<div class="row align-middle">
-				<?php
-				$zm_settings = ZonemasterSettings::get_instance();
-				$site_logo   = sanitize_text_field( $zm_settings->settings( 'site_logo' ) );
-
-				if ( $site_logo ) {
-					echo '<div class="shrink columns">';
-					echo '<img class="hero-logo" src="' . esc_url( $site_logo ) . '">';
-					echo '</div>';
-				}
-				?>
-
-				<div class="columns">
-					<a href="/"><h1 class="hero-title"><?php _e( 'Zonemaster', 'zm_text' ); ?></h1></a>
+			<div class="row align-middle hero-inner">
+				<div>
+					<div class="row align-middle">
+						<a href="/"><h1 class="hero-title"><?php _e( 'Zonemaster', 'zm_text' ); ?></h1></a>
+					</div>
 				</div>
+
 				<?php
 				// Show extra messages only on frontpage
 				if ( is_front_page() ) {
 				?>
-				<div class="shrink columns">
+				<div class="hero-status">
 					<?php
 					if ( '' !== $GLOBALS['OFFLINE'] ) {
 						echo $GLOBALS['OFFLINE'];
@@ -56,7 +48,7 @@
 				// Not on frontpage, menu is among tabs there
 			if ( ! is_front_page() ) {
 				?>
-				<div class="row">
+				<div class="row align-center align-middle">
 				<div class="columns">
 				<ul class="tabs" id="test-input-tabs">
 					<li class="tabs-title">
@@ -68,7 +60,7 @@
 				</ul>
 				</div>
 				<?php // WP-menu ?>
-				<div class="columns shrink align-self-bottom">
+				<div class="columns shrink">
 				<?php get_template_part( 'menuparts/nav', 'title-bar' ); ?>
 				</div>
 				</div>

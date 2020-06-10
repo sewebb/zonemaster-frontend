@@ -13,68 +13,6 @@ var zonalizer = {
 		main: function () {
 
 			$(document).on({
-				// to get ip address of nameserver if ip-field is empty
-				'blur': function () {
-					var this_fields   = $(this),
-						proxynonce    = $('#proxynonce').text(),
-						nameserver    = this_fields.val(),
-						next_ip_field = $(':input:eq(' + ($(':input').index(this_fields) + 1) + ')'),
-						get_ip        = '/?action=proxy&method=get_ns_ips&params=' + nameserver + '&nonce=' + proxynonce + '&cache=true',
-						debug         = 'no';
-
-						debug = zmDefs.debug;
-
-					if ( nameserver.length > 0 && next_ip_field.val().length === 0 ) {
-
-						$.getJSON(get_ip, function (data) {
-							// if we don't have a nonce problem, continue
-							if ( data != '-1' && data != '' ) {
-								var index,
-								api_ns,
-								len = data.result.length,
-								wrapper = $('.js-input-nameserver-wrap'); // Nameservers field wrapper;
-
-								for ( index = 0; index < len; ++index) {
-								  if ( index in data.result ) {
-									api_ns = data.result[index];
-
-									var ip_address = api_ns[nameserver];
-									if ( index === 0 ) {
-										next_ip_field.val(ip_address);
-									} else {
-										var data = {
-											'action': 'get_nameservers_html',
-											'index': index,
-											'ns': nameserver,
-											'ip': ip_address,
-											'nonce': $('#proxynonce').text()
-										};
-										// Post the AJAX query to Zonemaster class
-										$.post('/', data, function(response) {
-
-											if ( response != '' && response != '-1' ) {
-												var responseData = $.parseJSON(response);
-												$('.ns-error').remove();
-												$(wrapper).append(responseData);
-											} else {
-												$(wrapper).append('<span class="label alert fade-in fast ns-error">' + zmDefs.error_text + '</span>');
-											}
-										});
-									}
-								  }
-								}
-							} else {
-								if(debug === 'yes') { console.log( 'Check ip for nameserver: Nonce is not working or server is offline This is current nonce: ' + $('#proxynonce').text() ); }
-							}
-
-						});
-
-					}
-
-				}
-			}, 'input.js-field-blur');
-
-			$(document).on({
 				// to check that ip-address is correct (lighter check)
 				'blur': function () {
 					var this_field   = $(this),
@@ -394,7 +332,7 @@ var zonalizer = {
 							var temp,
 								starttest = true;
 							//check status
-							var urltocheck = '/?action=proxy&method=test_progress&params=' + id + '&nonce=' + proxynonce;
+							var urltocheck = '/?action=proxy&method=test_progress&test_id=' + id + '&nonce=' + proxynonce;
 							function checkstatus(urltocheck,callback){
 								starttest = false;
 								temp = $.getJSON(urltocheck, function (data) {

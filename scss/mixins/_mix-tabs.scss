@@ -2,10 +2,14 @@
 /// Adds styles for a tab container. Apply this to a `<ul>`.
 @mixin tabs-container ($tab-bg: $tab-background) {
   @include clearfix;
-  margin: $tab-margin;
+  margin: $gutter $tab-margin $tab-margin $tab-margin;
   list-style-type: none;
   background: $tab-bg;
   border: none;
+
+  @include breakpoint(large) {
+	  margin-top: $tab-margin;
+  }
 }
 
 /// Adds styles for the wrapper that surrounds a tab group's content panes.
@@ -31,17 +35,17 @@
     padding: $tab-item-padding;
     line-height: 1;
     font-size: $global-font-size;
-    color: $color;
+    color: $color-cyberspace;
     text-decoration: underline;
     &:hover {
-      background: $tab-item-bg-hover;
-      color: $tab-text-color;
+      background: $color-ocean-light;
+      color: $color-cyberspace;
     }
 
     &:focus,
     &[aria-selected='true'] {
       background: $tab-bg-active;
-      color: $tab-text-color;
+      color: $color-cyberspace;
       text-decoration: none;
     }
   }

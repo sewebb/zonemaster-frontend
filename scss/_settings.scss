@@ -2,12 +2,22 @@
 
 // Your own colors
 $gray: #ccc;
-// $color: #fff;
+$color-granit: #8e9297 !default;
+$color-cyberspace: #1f2a36 !default;
+$color-ash: #ededed !default;
+$color-ocean: #50b2fc !default;
+$color-ocean-light: #a7d8fd !default;
+$color-ocean-dark: #0477ce !default;
+$color-ruby-dark: #d9002f !default;
+$color-ruby: #ff4069 !default;
+$color-jade: #55c7b4 !default;
+$color-jade-light: #aae3d9 !default;
 
-$blue-color:       #3284bf;
-$yellow-color:     #ffe100;
-$light-blue:       #d6e6f2;
-$link-color:       $blue-color;
+$blue-color:       $color-ocean;
+$yellow-color:     #ffce2e;
+$site-bg-color:    #ededed;
+$light-blue:       #a7d8fd;
+$link-color:       $color-ocean-dark;
 $background:       $blue-color;
 $background-hover: lighten($background, 15%);
 
@@ -68,17 +78,17 @@ $gutter: 30px;
 $global-font-size: 100%;
 $global-width: rem-calc(1200);
 $global-lineheight: 1.5;
-$success-color: #34b233;
-$warning-color: #ff7900;
-$alert-color: #e00034;
+$success-color: $color-jade;
+$warning-color: #f99963;
+$alert-color: $color-ruby;
 $light-gray: #e5e5e5;
 $medium-gray: #b2b2b2;
 $dark-gray: #4c4c4c;
 $black: #000;
 $white: #fff;
 $primary-color: $blue-color; // set to your own base colors
-$secondary-color: $yellow-color; // set to your own base colors
-$body-background: $secondary-color;
+$secondary-color: $site-bg-color; // set to your own base colors
+$body-background: $white;
 $body-font-color: $black;
 $body-font-family: $open-sans;
 $body-antialiased: true;
@@ -278,7 +288,7 @@ $breadcrumbs-item-slash: true;
 $button-padding: 0.85em 1em;
 $button-margin: 0 0 $global-margin 0;
 $button-fill: solid;
-$button-background: $secondary-color;
+$button-background: $color-ocean-dark;
 $button-background-hover: scale-color($button-background, $lightness: -15%);
 $button-color: $white;
 $button-color-alt: $primary-color;
@@ -376,8 +386,8 @@ $input-prefix-color: $white;
 $input-prefix-background: $light-gray;
 $input-prefix-border: 1px solid $medium-gray;
 $input-prefix-padding: 1rem;
-$form-label-color: $white;
-$form-label-font-size: rem-calc(14);
+$form-label-color: $color-cyberspace;
+$form-label-font-size: rem-calc(16);
 $form-label-font-weight: $global-weight-normal;
 $form-label-line-height: 1.8;
 $select-background: $white;
@@ -386,7 +396,7 @@ $select-radius: $global-radius;
 $input-color: $black;
 $input-font-family: inherit;
 $input-font-size: rem-calc(16);
-$input-background: $light-blue;
+$input-background: $color-ash;
 $input-background-focus: $white;
 $input-background-disabled: $light-gray;
 $input-border: none;//1px solid $medium-gray;
@@ -403,7 +413,7 @@ $input-radius: $global-radius;
 
 $label-background: $primary-color;
 $label-color: foreground($label-background);
-$label-font-size: 0.8rem;
+$label-font-size: 1rem;
 $label-palette: $foundation-palette;
 $label-padding: 0.33333rem 0.5rem;
 $label-radius: $global-radius;

@@ -1,6 +1,4 @@
 <?php
-error_reporting( E_COMPILE_ERROR | E_RECOVERABLE_ERROR | E_ERROR | E_CORE_ERROR );
-
 /**
  * Helpful log to see what is goning on. Shows up in /wp-content/ as debug.log
  * @return void
@@ -36,7 +34,7 @@ require_once 'zonemaster/class-zonemaster.php';
 require_once 'inc/scripts.php';
 
 // ACF options api-server
-$pageapiserver = array(
+$pageapiserver = [
 
 	/* (string) The title displayed on the options page. Required. */
 	'page_title' => 'API-server',
@@ -52,7 +50,7 @@ $pageapiserver = array(
 	Defaults to 'options'. Added in v5.2.7 */
 	'post_id' => 'apiserver',
 
-);
+];
 if ( function_exists( 'acf_add_options_page' ) ) {
 	acf_add_options_page( $pageapiserver );
 }
