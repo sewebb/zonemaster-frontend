@@ -9,6 +9,14 @@
 		<meta name="author" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
+		<?php // OneTrust Cookies Consent Notice start for zonemaster.iis.se ?>
+		<script type="text/javascript" src="https://cdn.cookielaw.org/consent/f32d538f-b547-4bd0-98d3-a074ba60e2d6/OtAutoBlock.js" ></script>
+		<script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="f32d538f-b547-4bd0-98d3-a074ba60e2d6"></script>
+		<script type="text/javascript">
+		function OptanonWrapper() { }
+		</script>
+		<?php // OneTrust Cookies Consent Notice end for zonemaster.iis.se ?>
+
 		<?php wp_head();?>
 
 	</head>
