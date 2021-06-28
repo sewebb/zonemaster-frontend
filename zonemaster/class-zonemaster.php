@@ -571,7 +571,7 @@ class Zonemaster extends ZonemasterSettings {
 						</div>
 						<div class="small-6 medium-3 columns">
 							<select name="field_algorithm[]" class="js-algorithm">
-								<option value=""></option>
+								<option value="" disabled selected>Algorithm</option>
 								<option value="3" ' . $three . '>' . esc_html( $this->option_name( '3' ) ) . '</option>
 								<option value="5" ' . $five . '>' . esc_html( $this->option_name( '5' ) ) . '</option>
 								<option value="6" ' . $six . '>' . esc_html( $this->option_name( '6' ) ) . '</option>
@@ -582,7 +582,7 @@ class Zonemaster extends ZonemasterSettings {
 						</div>
 						<div class="small-6 medium-2 columns">
 							<select name="field_digest_type[]" class="js-digest-type">
-								<option value=""></option>
+								<option value="" disabled selected>Digest type</option>
 								<option value="1" ' . $sha_1 . '>' . esc_html( $this->option_name( '1', 'field_digest_type' ) ) . '</option>
 								<option value="2" ' . $sha_256 . '>' . esc_html( $this->option_name( '2', 'field_digest_type' ) ) . '</option>
 							</select>
