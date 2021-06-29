@@ -520,6 +520,7 @@ class Zonemaster extends ZonemasterSettings {
 	 */
 	public function digests_html( $key = '0', $key_tag = '', $algorithm = '', $digest_type = '', $digest = '' ) {
 
+
 		$three   = '';
 		$five    = '';
 		$six     = '';
@@ -621,27 +622,27 @@ class Zonemaster extends ZonemasterSettings {
 		} elseif ( 'field_algorithm' === $field ) {
 			switch ( $option_number ) {
 				case '3':
-					$name = 'DSA/SHA1';
+					$name = '3 - DSA/SHA1';
 					break;
 
 				case '5':
-					$name = 'RSA/SHA1';
+					$name = '5 - RSA/SHA1';
 					break;
 
 				case '6':
-					$name = 'DSA-NSEC3-SHA1';
+					$name = '6 - DSA-NSEC3-SHA1';
 					break;
 
 				case '7':
-					$name = 'RSASHA1-NSEC3-SHA1';
+					$name = '7 - RSASHA1-NSEC3-SHA1';
 					break;
 
 				case '8':
-					$name = 'RSA/SHA-256';
+					$name = '8 - RSA/SHA-256';
 					break;
 
 				case '9':
-					$name = 'RSA/SHA-512';
+					$name = '9 - RSA/SHA-512';
 					break;
 			}
 		}
