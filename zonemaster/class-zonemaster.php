@@ -521,16 +521,26 @@ class Zonemaster extends ZonemasterSettings {
 	public function digests_html( $key = '0', $key_tag = '', $algorithm = '', $digest_type = '', $digest = '' ) {
 
 
-		$three   = '';
-		$five    = '';
-		$six     = '';
-		$seven   = '';
-		$eight   = '';
-		$nine    = '';
-		$sha_1   = '';
-		$sha_256 = '';
+		$one      = '';
+		$three    = '';
+		$five     = '';
+		$six      = '';
+		$seven    = '';
+		$eight    = '';
+		$ten      = '';
+		$twelve   = '';
+		$thirteen = '';
+		$fourteen = '';
+		$fifteen  = '';
+		$sixteen  = '';
+		$sha_1    = '';
+		$sha_256  = '';
 
 		switch ( esc_attr( $algorithm ) ) {
+                        case '1':
+                                $one = 'selected';
+                                break;
+
 			case '3':
 				$three = 'selected';
 				break;
@@ -551,9 +561,30 @@ class Zonemaster extends ZonemasterSettings {
 				$eight = 'selected';
 				break;
 
-			case '9':
-				$nine = 'selected';
+			case '10':
+				$ten = 'selected';
 				break;
+
+                        case '12':
+                                $twelve = 'selected';
+                                break;
+
+                        case '13':
+                                $thirteen = 'selected';
+                                break;
+
+                        case '14':
+                                $fourteen = 'selected';
+                                break;
+
+                        case '15':
+                                $fifteen = 'selected';
+                                break;
+
+                        case '16':
+                                $sixteen = 'selected';
+                                break;
+
 		}
 
 		switch ( $digest_type ) {
@@ -573,12 +604,18 @@ class Zonemaster extends ZonemasterSettings {
 						<div class="small-6 medium-3 columns">
 							<select name="field_algorithm[]" class="js-algorithm" required>
 								<option value="" disabled selected>Algorithm</option>
+                                                                <option value="1" ' . $one . '>' . esc_html( $this->option_name( '1' ) ) . '</option>
 								<option value="3" ' . $three . '>' . esc_html( $this->option_name( '3' ) ) . '</option>
 								<option value="5" ' . $five . '>' . esc_html( $this->option_name( '5' ) ) . '</option>
 								<option value="6" ' . $six . '>' . esc_html( $this->option_name( '6' ) ) . '</option>
 								<option value="7" ' . $seven . '>' . esc_html( $this->option_name( '7' ) ) . '</option>
 								<option value="8" ' . $eight . '>' . esc_html( $this->option_name( '8' ) ) . '</option>
-								<option value="9" ' . $nine . '>' . esc_html( $this->option_name( '9' ) ) . '</option>
+								<option value="10" ' . $ten . '>' . esc_html( $this->option_name( '10' ) ) . '</option>
+                                                                <option value="12" ' . $twelve . '>' . esc_html( $this->option_name( '12' ) ) . '</option>
+                                                                <option value="13" ' . $thirteen . '>' . esc_html( $this->option_name( '13' ) ) . '</option>
+                                                                <option value="14" ' . $fourteen . '>' . esc_html( $this->option_name( '14' ) ) . '</option>
+                                                                <option value="15" ' . $fifteen . '>' . esc_html( $this->option_name( '15' ) ) . '</option>
+                                                                <option value="16" ' . $sixteen . '>' . esc_html( $this->option_name( '16' ) ) . '</option>
 							</select>
 						</div>
 						<div class="small-6 medium-2 columns">
@@ -621,12 +658,16 @@ class Zonemaster extends ZonemasterSettings {
 			}
 		} elseif ( 'field_algorithm' === $field ) {
 			switch ( $option_number ) {
+                                case '1':
+                                        $name = '1 - RSAMD5';
+                                        break;
+
 				case '3':
-					$name = '3 - DSA/SHA1';
+					$name = '3 - DSA';
 					break;
 
 				case '5':
-					$name = '5 - RSA/SHA1';
+					$name = '5 - RSASHA1';
 					break;
 
 				case '6':
@@ -638,12 +679,33 @@ class Zonemaster extends ZonemasterSettings {
 					break;
 
 				case '8':
-					$name = '8 - RSA/SHA-256';
+					$name = '8 - RSASHA256';
 					break;
 
-				case '9':
-					$name = '9 - RSA/SHA-512';
+				case '10':
+					$name = '10 - RSASHA512';
 					break;
+
+                                case '12':
+                                        $name = '12 - ECC-GOST';
+                                        break;
+
+                                case '13':
+                                        $name = '13 - ECDSAP256SHA256';
+                                        break;
+
+                                case '14':
+                                        $name = '14 - ECDSAP384SHA384';
+                                        break;
+
+                                case '15':
+                                        $name = '15 - ED25519';
+                                        break;
+
+                                case '16':
+                                        $name = '16 - ED448';
+                                        break;
+
 			}
 		}
 		return $name;
