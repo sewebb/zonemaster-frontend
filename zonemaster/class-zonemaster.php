@@ -535,6 +535,8 @@ class Zonemaster extends ZonemasterSettings {
 		$sixteen  = '';
 		$sha_1    = '';
 		$sha_256  = '';
+		$gost_r   = '';
+		$sha_384  = '';
 
 		switch ( esc_attr( $algorithm ) ) {
                         case '1':
@@ -595,6 +597,14 @@ class Zonemaster extends ZonemasterSettings {
 			case '2':
 				$sha_256 = 'selected';
 				break;
+
+                        case '3':
+                                $gost_r = 'selected';
+                                break;
+
+                        case '4':
+                                $sha_384 = 'selected';
+                                break;
 		}
 
 		$html = '<div class="row js-digest-container">
@@ -623,6 +633,8 @@ class Zonemaster extends ZonemasterSettings {
 								<option value="" disabled selected>Digest type</option>
 								<option value="1" ' . $sha_1 . '>' . esc_html( $this->option_name( '1', 'field_digest_type' ) ) . '</option>
 								<option value="2" ' . $sha_256 . '>' . esc_html( $this->option_name( '2', 'field_digest_type' ) ) . '</option>
+                                                                <option value="3" ' . $gost_r . '>' . esc_html( $this->option_name( '3', 'field_digest_type' ) ) . '</option>
+                                                                <option value="4" ' . $sha_384 . '>' . esc_html( $this->option_name( '4', 'field_digest_type' ) ) . '</option>
 							</select>
 						</div>
 						<div class="small-6 medium-4 columns">
@@ -649,12 +661,20 @@ class Zonemaster extends ZonemasterSettings {
 		if ( 'field_digest_type' === $field ) {
 			switch ( $option_number ) {
 				case '1':
-					$name = 'SHA-1';
+					$name = '1 - SHA-1';
 					break;
 
 				case '2':
-					$name = 'SHA-256';
+					$name = '2 - SHA-256';
 					break;
+
+                                case '3':
+                                        $name = '3 - GOST R 34.11-94';
+                                        break;
+
+                                case '4':
+                                        $name = '4 - SHA-384';
+                                        break;
 			}
 		} elseif ( 'field_algorithm' === $field ) {
 			switch ( $option_number ) {
