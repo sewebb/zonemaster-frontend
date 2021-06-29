@@ -493,11 +493,11 @@ class Zonemaster extends ZonemasterSettings {
 	public function nameservers_html( $key = '0', $ns = '', $ip = '' ) {
 		$html = '<div class="row js-ns-container">
 						<div class="small-6 columns">
-							<input type="text" name="field_ns[]" value="' . esc_attr( $ns ) . '" placeholder="NS" class="js-field-blur">
+							<input type="text" name="field_ns[]" value="' . esc_attr( $ns ) . '" placeholder="NS" class="js-field-blur" >
 						</div>
 						<div class="small-6 columns">
 							<div class="input-group">
-								<input type="text" class="input-group-field js-field-ip" name="field_ip[]" value="' . esc_attr( $ip ) . '" placeholder="IP">
+								<input type="text" class="input-group-field js-field-ip" name="field_ip[]" value="' . esc_attr( $ip ) . '" placeholder="IP" >
 								<div class="input-group-button">
 									<button type="submit" name="del_ns_field" value="' . esc_attr( $key ) . '" class="alert button js-remove-nameservers">X</button>
 								</div>
@@ -567,10 +567,10 @@ class Zonemaster extends ZonemasterSettings {
 
 		$html = '<div class="row js-digest-container">
 						<div class="small-6 medium-3 columns">
-							<input type="text" class="js-key-tag" name="field_key_tag[]" value="' . esc_attr( $key_tag ) . '" placeholder="Key tag">
+							<input type="text" class="js-key-tag" name="field_key_tag[]" value="' . esc_attr( $key_tag ) . '" placeholder="Key tag" required>
 						</div>
 						<div class="small-6 medium-3 columns">
-							<select name="field_algorithm[]" class="js-algorithm">
+							<select name="field_algorithm[]" class="js-algorithm" required>
 								<option value="" disabled selected>Algorithm</option>
 								<option value="3" ' . $three . '>' . esc_html( $this->option_name( '3' ) ) . '</option>
 								<option value="5" ' . $five . '>' . esc_html( $this->option_name( '5' ) ) . '</option>
@@ -581,7 +581,7 @@ class Zonemaster extends ZonemasterSettings {
 							</select>
 						</div>
 						<div class="small-6 medium-2 columns">
-							<select name="field_digest_type[]" class="js-digest-type">
+							<select name="field_digest_type[]" class="js-digest-type" required>
 								<option value="" disabled selected>Digest type</option>
 								<option value="1" ' . $sha_1 . '>' . esc_html( $this->option_name( '1', 'field_digest_type' ) ) . '</option>
 								<option value="2" ' . $sha_256 . '>' . esc_html( $this->option_name( '2', 'field_digest_type' ) ) . '</option>
@@ -589,7 +589,7 @@ class Zonemaster extends ZonemasterSettings {
 						</div>
 						<div class="small-6 medium-4 columns">
 							<div class="input-group">
-								<input type="text" class="input-group-field js-digest" name="field_digest[]" value="' . esc_attr( $digest ) . '" placeholder="Digest">
+								<input type="text" class="input-group-field js-digest" name="field_digest[]" value="' . esc_attr( $digest ) . '" placeholder="Digest" required>
 								<div class="input-group-button">
 									<button type="submit" name="del_digest_field" value="' . esc_attr( $key ) . '" class="alert button js-remove-digests">X</button>
 								</div>
