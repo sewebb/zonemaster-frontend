@@ -493,11 +493,11 @@ class Zonemaster extends ZonemasterSettings {
 	public function nameservers_html( $key = '0', $ns = '', $ip = '' ) {
 		$html = '<div class="row js-ns-container">
 						<div class="small-6 columns">
-							<input type="text" name="field_ns[]" value="' . esc_attr( $ns ) . '" placeholder="NS" class="js-field-blur">
+							<input type="text" name="field_ns[]" value="' . esc_attr( $ns ) . '" placeholder="NS" class="js-field-blur" >
 						</div>
 						<div class="small-6 columns">
 							<div class="input-group">
-								<input type="text" class="input-group-field js-field-ip" name="field_ip[]" value="' . esc_attr( $ip ) . '" placeholder="IP">
+								<input type="text" class="input-group-field js-field-ip" name="field_ip[]" value="' . esc_attr( $ip ) . '" placeholder="IP" >
 								<div class="input-group-button">
 									<button type="submit" name="del_ns_field" value="' . esc_attr( $key ) . '" class="alert button js-remove-nameservers">X</button>
 								</div>
@@ -520,16 +520,29 @@ class Zonemaster extends ZonemasterSettings {
 	 */
 	public function digests_html( $key = '0', $key_tag = '', $algorithm = '', $digest_type = '', $digest = '' ) {
 
-		$three   = '';
-		$five    = '';
-		$six     = '';
-		$seven   = '';
-		$eight   = '';
-		$nine    = '';
-		$sha_1   = '';
-		$sha_256 = '';
+
+		$one      = '';
+		$three    = '';
+		$five     = '';
+		$six      = '';
+		$seven    = '';
+		$eight    = '';
+		$ten      = '';
+		$twelve   = '';
+		$thirteen = '';
+		$fourteen = '';
+		$fifteen  = '';
+		$sixteen  = '';
+		$sha_1    = '';
+		$sha_256  = '';
+		$gost_r   = '';
+		$sha_384  = '';
 
 		switch ( esc_attr( $algorithm ) ) {
+                        case '1':
+                                $one = 'selected';
+                                break;
+
 			case '3':
 				$three = 'selected';
 				break;
@@ -550,9 +563,30 @@ class Zonemaster extends ZonemasterSettings {
 				$eight = 'selected';
 				break;
 
-			case '9':
-				$nine = 'selected';
+			case '10':
+				$ten = 'selected';
 				break;
+
+                        case '12':
+                                $twelve = 'selected';
+                                break;
+
+                        case '13':
+                                $thirteen = 'selected';
+                                break;
+
+                        case '14':
+                                $fourteen = 'selected';
+                                break;
+
+                        case '15':
+                                $fifteen = 'selected';
+                                break;
+
+                        case '16':
+                                $sixteen = 'selected';
+                                break;
+
 		}
 
 		switch ( $digest_type ) {
@@ -563,33 +597,49 @@ class Zonemaster extends ZonemasterSettings {
 			case '2':
 				$sha_256 = 'selected';
 				break;
+
+                        case '3':
+                                $gost_r = 'selected';
+                                break;
+
+                        case '4':
+                                $sha_384 = 'selected';
+                                break;
 		}
 
 		$html = '<div class="row js-digest-container">
 						<div class="small-6 medium-3 columns">
-							<input type="text" class="js-key-tag" name="field_key_tag[]" value="' . esc_attr( $key_tag ) . '" placeholder="Key tag">
+							<input type="text" class="js-key-tag" name="field_key_tag[]" value="' . esc_attr( $key_tag ) . '" placeholder="Key tag" required>
 						</div>
 						<div class="small-6 medium-3 columns">
-							<select name="field_algorithm[]" class="js-algorithm">
+							<select name="field_algorithm[]" class="js-algorithm" required>
 								<option value="" disabled selected>Algorithm</option>
+                                                                <option value="1" ' . $one . '>' . esc_html( $this->option_name( '1' ) ) . '</option>
 								<option value="3" ' . $three . '>' . esc_html( $this->option_name( '3' ) ) . '</option>
 								<option value="5" ' . $five . '>' . esc_html( $this->option_name( '5' ) ) . '</option>
 								<option value="6" ' . $six . '>' . esc_html( $this->option_name( '6' ) ) . '</option>
 								<option value="7" ' . $seven . '>' . esc_html( $this->option_name( '7' ) ) . '</option>
 								<option value="8" ' . $eight . '>' . esc_html( $this->option_name( '8' ) ) . '</option>
-								<option value="9" ' . $nine . '>' . esc_html( $this->option_name( '9' ) ) . '</option>
+								<option value="10" ' . $ten . '>' . esc_html( $this->option_name( '10' ) ) . '</option>
+                                                                <option value="12" ' . $twelve . '>' . esc_html( $this->option_name( '12' ) ) . '</option>
+                                                                <option value="13" ' . $thirteen . '>' . esc_html( $this->option_name( '13' ) ) . '</option>
+                                                                <option value="14" ' . $fourteen . '>' . esc_html( $this->option_name( '14' ) ) . '</option>
+                                                                <option value="15" ' . $fifteen . '>' . esc_html( $this->option_name( '15' ) ) . '</option>
+                                                                <option value="16" ' . $sixteen . '>' . esc_html( $this->option_name( '16' ) ) . '</option>
 							</select>
 						</div>
 						<div class="small-6 medium-2 columns">
-							<select name="field_digest_type[]" class="js-digest-type">
+							<select name="field_digest_type[]" class="js-digest-type" required>
 								<option value="" disabled selected>Digest type</option>
 								<option value="1" ' . $sha_1 . '>' . esc_html( $this->option_name( '1', 'field_digest_type' ) ) . '</option>
 								<option value="2" ' . $sha_256 . '>' . esc_html( $this->option_name( '2', 'field_digest_type' ) ) . '</option>
+                                                                <option value="3" ' . $gost_r . '>' . esc_html( $this->option_name( '3', 'field_digest_type' ) ) . '</option>
+                                                                <option value="4" ' . $sha_384 . '>' . esc_html( $this->option_name( '4', 'field_digest_type' ) ) . '</option>
 							</select>
 						</div>
 						<div class="small-6 medium-4 columns">
 							<div class="input-group">
-								<input type="text" class="input-group-field js-digest" name="field_digest[]" value="' . esc_attr( $digest ) . '" placeholder="Digest">
+								<input type="text" class="input-group-field js-digest" name="field_digest[]" value="' . esc_attr( $digest ) . '" placeholder="Digest" required>
 								<div class="input-group-button">
 									<button type="submit" name="del_digest_field" value="' . esc_attr( $key ) . '" class="alert button js-remove-digests">X</button>
 								</div>
@@ -611,38 +661,71 @@ class Zonemaster extends ZonemasterSettings {
 		if ( 'field_digest_type' === $field ) {
 			switch ( $option_number ) {
 				case '1':
-					$name = 'SHA-1';
+					$name = '1 - SHA-1';
 					break;
 
 				case '2':
-					$name = 'SHA-256';
+					$name = '2 - SHA-256';
 					break;
+
+                                case '3':
+                                        $name = '3 - GOST R 34.11-94';
+                                        break;
+
+                                case '4':
+                                        $name = '4 - SHA-384';
+                                        break;
 			}
 		} elseif ( 'field_algorithm' === $field ) {
 			switch ( $option_number ) {
+                                case '1':
+                                        $name = '1 - RSAMD5';
+                                        break;
+
 				case '3':
-					$name = 'DSA/SHA1';
+					$name = '3 - DSA';
 					break;
 
 				case '5':
-					$name = 'RSA/SHA1';
+					$name = '5 - RSASHA1';
 					break;
 
 				case '6':
-					$name = 'DSA-NSEC3-SHA1';
+					$name = '6 - DSA-NSEC3-SHA1';
 					break;
 
 				case '7':
-					$name = 'RSASHA1-NSEC3-SHA1';
+					$name = '7 - RSASHA1-NSEC3-SHA1';
 					break;
 
 				case '8':
-					$name = 'RSA/SHA-256';
+					$name = '8 - RSASHA256';
 					break;
 
-				case '9':
-					$name = 'RSA/SHA-512';
+				case '10':
+					$name = '10 - RSASHA512';
 					break;
+
+                                case '12':
+                                        $name = '12 - ECC-GOST';
+                                        break;
+
+                                case '13':
+                                        $name = '13 - ECDSAP256SHA256';
+                                        break;
+
+                                case '14':
+                                        $name = '14 - ECDSAP384SHA384';
+                                        break;
+
+                                case '15':
+                                        $name = '15 - ED25519';
+                                        break;
+
+                                case '16':
+                                        $name = '16 - ED448';
+                                        break;
+
 			}
 		}
 		return $name;
